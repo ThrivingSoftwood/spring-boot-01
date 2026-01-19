@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <jdk.version>25</jdk.version>
+        <maven.compiler.source>${jdk.version}</maven.compiler.source>
+        <maven.compiler.target>${jdk.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--项目版本指定-->
+        <current.version>1.0-SNAPSHOT</current.version>
+        <!--依赖版本管理-->
+        <springboot.version>4.0.1</springboot.version>
+        <spring.version>7.0.2</spring.version>
+        <jakarta.servlet-api.version>6.2.0-M1</jakarta.servlet-api.version>
+        <jakarta.servlet.jsp-api.version>4.1.0-M1</jakarta.servlet.jsp-api.version>
+        <org.junit.jupiter.junit-jupiter-api.version>6.1.0-M1</org.junit.jupiter.junit-jupiter-api.version>
+        <hibernate-validator.version>9.0.0.Beta3</hibernate-validator.version>
+        <fastjson.version>2.0.60</fastjson.version>
+        <jackson.version>3.0.3</jackson.version>
+        <jackson-annotation.version>3.0-rc5</jackson-annotation.version>
+        <mvn.compiler.plugin.version>3.14.1</mvn.compiler.plugin.version>
+        <lombok.version>1.18.42</lombok.version>
+        <mybatis.version>3.5.19</mybatis.version>
+        <mysql.connector.version>9.5.0</mysql.connector.version>
+        <postgresql.connector.version>42.7.8</postgresql.connector.version>
+        <log4j2.version>2.25.3</log4j2.version>
+        <disruptor.version>4.0.0</disruptor.version>
+        <mybatis.redis.version>1.1.0</mybatis.redis.version>
+        <pagehelper.version>6.1.1</pagehelper.version>
+        <mybatis.generator.version>1.4.2</mybatis.generator.version>
+        <aspectjweaver.version>1.9.25.1</aspectjweaver.version>
+        <mybatis.spring.version>4.0.0</mybatis.spring.version>
+        <druid.version>1.2.27</druid.version>
+        <hutool.version>7.0.0-M4</hutool.version>
+    </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.1</version>
+    </parent>
+
+    <groupId>thriving.softwood</groupId>
+    <artifactId>springboot-01</artifactId>
+    <version>${current.version</version>
+
+    <!--依赖管理-->
+    <dependencyManagement>
+        <dependencies>
+            <!--log4j2 依赖管理-->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>${log4j2.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <dependencies>
+        <!--工具库依赖 begin-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool.v7</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+        <!--工具库依赖 begin-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!--加载插件-->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mvn.compiler.plugin.version}</version>
+                <configuration>
+                    <!-- 🔥 关键配置：告诉 javac 保留参数名 -->
+                    <parameters>true</parameters>
+
+                    <!-- 确保源码和目标版本适配你的 JDK (比如 17, 21, 25) -->
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <encoding>UTF-8</encoding>
+
+                    <!-- 🔥 必须显式添加这一段，否则 Maven 可能找不到 Lombok 处理器 -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <!-- 这里的版本最好和你 dependencies 里的保持一致 -->
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.springframework.boot</groupId>-->
+            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--            </plugin>-->
+        </plugins>
+        <!--识别 Mapper.xml 文件为资源文件-->
+        <resources>
+            <!-- 1. 原有的 resources 目录依然要保留 (放 properties, yml 等) -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+
+            <!-- 2. 🔥 关键：将 src/main/java 下的 xml 也包含进来 -->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>thriving/softwood/mapper/**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <finalName>springboot-01</finalName>
+    </build>
+
+</project>
