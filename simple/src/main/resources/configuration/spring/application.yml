@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: simple
+
+logging:
+  config: classpath:configuration/logging/log4j2-spring.xml
+
+server:
+  port: 6160
+  servlet:
+    context-path: /ts

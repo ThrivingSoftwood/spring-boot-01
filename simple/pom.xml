@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>spring-boot-01</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>simple</artifactId>
+    <name>simple</name>
+    <description>simple</description>
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+    <dependencies>
+        <!--00.项目内依赖 begin-->
+        <dependency>
+            <groupId>thriving.softwood</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--00.项目内依赖 end-->
+        <!--01.工具库依赖 begin-->
+        <!--01.工具库依赖 end-->
+        <!--Step 02 : 添加 spring-boot-start 依赖 begin-->
+        <!--spring-boot-start begin-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!--spring-boot-start end-->
+        <!--Step 02 : 添加 spring-boot-start 依赖 end-->
+    </dependencies>
+
+    <build>
+        <!--加载插件-->
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <finalName>spring-boot-01-simple</finalName>
+    </build>
+
+</project>

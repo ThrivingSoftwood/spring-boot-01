@@ -4,30 +4,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--显示项目结构: tree -I "target|node_modules|.git|out|*.iml" -执行时删除这部分文字-dirsfirst-->
     <properties>
         <jdk.version>25</jdk.version>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!--项目版本指定-->
-        <current.version>1.0-SNAPSHOT</current.version>
         <!--依赖版本管理-->
         <springboot.version>4.0.1</springboot.version>
         <spring.version>7.0.2</spring.version>
         <jakarta.servlet-api.version>6.2.0-M1</jakarta.servlet-api.version>
         <jakarta.servlet.jsp-api.version>4.1.0-M1</jakarta.servlet.jsp-api.version>
-        <org.junit.jupiter.junit-jupiter-api.version>6.1.0-M1</org.junit.jupiter.junit-jupiter-api.version>
+        <junit.jupiter.version>6.1.0-M1</junit.jupiter.version>
         <hibernate-validator.version>9.0.0.Beta3</hibernate-validator.version>
         <fastjson.version>2.0.60</fastjson.version>
         <jackson.version>3.0.3</jackson.version>
         <jackson-annotation.version>3.0-rc5</jackson-annotation.version>
         <mvn.compiler.plugin.version>3.14.1</mvn.compiler.plugin.version>
+        <mvn.surefire.plugin.version>3.5.4</mvn.surefire.plugin.version>
         <lombok.version>1.18.42</lombok.version>
         <mybatis.version>3.5.19</mybatis.version>
         <mysql.connector.version>9.5.0</mysql.connector.version>
         <postgresql.connector.version>42.7.8</postgresql.connector.version>
-        <log4j2.version>2.25.3</log4j2.version>
         <disruptor.version>4.0.0</disruptor.version>
         <mybatis.redis.version>1.1.0</mybatis.redis.version>
         <pagehelper.version>6.1.1</pagehelper.version>
@@ -36,17 +35,28 @@
         <mybatis.spring.version>4.0.0</mybatis.spring.version>
         <druid.version>1.2.27</druid.version>
         <hutool.version>7.0.0-M4</hutool.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <guava.version>33.5.0-jre</guava.version>
     </properties>
 
+    <!--Step 01 : 添加 spring-boot 父项目 begin-->
+    <!--spring-boot-starter-parent 引入了 spring-boot-dependencies 来管理通用依赖的版本-->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>4.0.1</version>
     </parent>
+    <!--Step 01 : 添加 Springboot 父项目 end-->
 
     <groupId>thriving.softwood</groupId>
-    <artifactId>springboot-01</artifactId>
-    <version>${current.version</version>
+    <artifactId>spring-boot-01</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>common</module>
+        <module>simple</module>
+    </modules>
 
     <!--依赖管理-->
     <dependencyManagement>
@@ -64,56 +74,133 @@
 
 
     <dependencies>
-        <!--工具库依赖 begin-->
+        <!--01.工具库依赖 begin-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
+        <!--高性能记录日志的组件-->
         <dependency>
-            <groupId>cn.hutool.v7</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>${disruptor.version}</version>
         </dependency>
-        <!--工具库依赖 begin-->
+        <!--高效类型转换(无反射开销-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <!--junit 依赖 begin-->
+        <!-- 1. JUnit Jupiter API (编写测试时使用的注解和断言) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- 2. JUnit Jupiter 引擎 (用于运行测试) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- 3. (可选) JUnit Jupiter 参数化测试支持 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--junit 依赖 end-->
+        <!--01.工具库依赖 end-->
+        <!--Step 02 : 添加 spring-boot-start 依赖 begin-->
+        <!--spring-boot-start begin-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- 单元测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--spring-boot-start end-->
+        <!--Step 02 : 添加 spring-boot-start 依赖 end-->
     </dependencies>
 
     <build>
-        <!--加载插件-->
+        <!--插件版本管理-->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${mvn.compiler.plugin.version}</version>
+                    <configuration>
+                        <!-- 🔥 关键配置：告诉 javac 保留参数名 -->
+                        <parameters>true</parameters>
+
+                        <!-- 确保源码和目标版本适配你的 JDK (比如 17, 21, 25) -->
+                        <source>${jdk.version}</source>
+                        <target>${jdk.version}</target>
+                        <encoding>UTF-8</encoding>
+
+                        <!-- 🔥 必须显式添加这一段，否则 Maven 可能找不到 Lombok 处理器 -->
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <!-- 这里的版本最好和你 dependencies 里的保持一致 -->
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!--
+           全局生效的插件
+           Maven Compiler Plugin 需要对所有模块生效，所以放在 build/plugins 下
+        -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${mvn.compiler.plugin.version}</version>
-                <configuration>
-                    <!-- 🔥 关键配置：告诉 javac 保留参数名 -->
-                    <parameters>true</parameters>
-
-                    <!-- 确保源码和目标版本适配你的 JDK (比如 17, 21, 25) -->
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                    <encoding>UTF-8</encoding>
-
-                    <!-- 🔥 必须显式添加这一段，否则 Maven 可能找不到 Lombok 处理器 -->
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <!-- 这里的版本最好和你 dependencies 里的保持一致 -->
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.springframework.boot</groupId>-->
-            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-            <!--            </plugin>-->
+            <!-- 4. 配置 Maven Surefire 插件以支持 JUnit -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${mvn.surefire.plugin.version}</version> <!-- 使用较新版本以更好支持 JUnit 5 -->
+            </plugin>
         </plugins>
+
         <!--识别 Mapper.xml 文件为资源文件-->
         <resources>
             <!-- 1. 原有的 resources 目录依然要保留 (放 properties, yml 等) -->
@@ -130,7 +217,7 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-        <finalName>springboot-01</finalName>
+        <finalName>spring-boot-01</finalName>
     </build>
 
 </project>

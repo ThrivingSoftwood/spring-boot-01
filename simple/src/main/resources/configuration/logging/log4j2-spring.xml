@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+
+    <Properties>
+        <Property name="APP_NAME">${spring:spring.application.name:-springboot-app}</Property>
+        <Property name="LOG_HOME">logs/${APP_NAME}</Property>
+        <Property name="FILE_NAME">${APP_NAME}</Property>
+
+        <!--
+            🎨 CodeOmni 极客配色方案
+            _________________________________________________________________________________
+            %style{%d}{faint}       : 时间戳灰色/暗淡 (弱化噪音)
+            %highlight{%-5level}    : 级别高亮 (INFO=绿, WARN=黄, ERROR=红, DEBUG=青)
+            %style{${sys:PID}}{magenta} : 进程ID品红色 (Spring经典色)
+            %style{- - -}{faint}      : 分隔符暗淡
+            %style{[%15.15t]}{faint,yellow} : 线程名固定15字符宽度，暗黄色
+            %style{%-40.40c{1.}}{cyan} : 类名固定40字符宽度，青色 (对齐超爽)
+            %msg                    : 消息本体
+            %style{%throwable}{red} : 异常堆栈强制红色
+            _________________________________________________________________________________
+        -->
+        <Property name="CONSOLE_PATTERN">%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %highlight{%-5level}{FATAL=Bright
+            Red, ERROR=Bright Red, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White}
+            %style{${sys:PID}}{magenta} %style{---}{faint} %style{[%15.15t]}{faint,yellow} %style{%-40.40c{1.}}{cyan} :
+            %msg%n%style{%throwable}{red}
+        </Property>
+
+        <!-- 文件日志格式 (保持纯文本，对齐即可，不要颜色) -->
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${sys:PID} --- [%15.15t] %-40.40c{1.} :
+            %msg%n
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 控制台：开发环境的核心 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- Windows 系统如果颜色乱码，需增加 noConsoleNoAnsi="false" -->
+            <PatternLayout pattern="${CONSOLE_PATTERN}"/>
+        </Console>
+
+        <!-- Info 文件 -->
+        <RollingRandomAccessFile name="InfoFile"
+                                 fileName="${LOG_HOME}/${FILE_NAME}-info.log"
+                                 filePattern="${LOG_HOME}/${FILE_NAME}-info-%d{yyyy-MM-dd}-%i.log.gz">
+            <immediateFlush>false</immediateFlush>
+            <bufferSize>262144</bufferSize>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="1 GB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50"/>
+        </RollingRandomAccessFile>
+
+        <!-- Error 文件 -->
+        <RollingRandomAccessFile name="ErrorFile"
+                                 fileName="${LOG_HOME}/${FILE_NAME}-error.log"
+                                 filePattern="${LOG_HOME}/${FILE_NAME}-error-%d{yyyy-MM-dd}-%i.log.gz">
+            <immediateFlush>false</immediateFlush>
+            <bufferSize>262144</bufferSize>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="1 GB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50"/>
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.mybatis" level="DEBUG"/>
+        <Logger name="org.mybatis.generator" level="DEBUG"/>
+
+        <!-- 你的业务包 -->
+        <Logger name="thriving.softwood.mapper" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Root level="INFO" includeLocation="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="ErrorFile"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
