@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import thriving.softwood.common.framework.annotation.PtAsync;
-import thriving.softwood.common.framework.annotation.VtAsync;
+import thriving.softwood.common.framework.annotation.async.PtAsync;
+import thriving.softwood.common.framework.annotation.async.VtAsync;
 
 /**
  * 多线程示例

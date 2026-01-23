@@ -1,4 +1,4 @@
-package thriving.softwood.simple.component.configuration;
+package thriving.softwood.simple.component.config;
 
 import java.util.List;
 import java.util.Map;

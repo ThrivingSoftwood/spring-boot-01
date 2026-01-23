@@ -1,4 +1,4 @@
-package thriving.softwood.common.framework.annotation;
+package thriving.softwood.common.framework.annotation.async;
 
 import java.lang.annotation.*;
 

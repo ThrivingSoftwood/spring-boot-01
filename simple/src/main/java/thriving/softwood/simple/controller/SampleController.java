@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import thriving.softwood.common.core.result.Result;
 import thriving.softwood.simple.api.AncestorAsyncApi;
-import thriving.softwood.simple.component.configuration.Sample;
+import thriving.softwood.simple.component.config.Sample;
 
 /**
  * @author ThrivingSoftwood
