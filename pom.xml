@@ -4,7 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--显示项目结构: tree -I "target|node_modules|.git|out|*.iml|logs" -执行时删除这部分文字-dirsfirst-->
+    <!--显示项目结构: tree -I "target|node_modules|.git|out|*.iml|logs|package-info.java|mvnw*|*.md|.git*" -执行时删除这部分文字-dirsfirst-->
+    <!--输出所有配置文件内容:
+    find . -type f \( -name "*.xml" -o -name "*.yml" -o -name "*.properties" \) ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+        echo "File: $file"
+        echo "\n\`\`\`xml"
+        cat "$file"
+        echo "\n\`\`\`"
+    done
+    -->
+    <!--输出所有java 文件的内容:
+    find . -type f -name "*.java" ! -name "package-info.java" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+        echo "\n\n"
+        echo "File: $file"
+        echo "\`\`\`java"
+        cat "$file"
+        echo "\n\`\`\`"
+        echo ""
+    done
+    -->
     <properties>
         <jdk.version>25</jdk.version>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
