@@ -2,6 +2,7 @@ package thriving.softwood.common.core.result;
 
 import static thriving.softwood.common.core.enums.RespCodeEnum.OK;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -12,10 +13,12 @@ import thriving.softwood.common.core.enums.RespCodeEnum;
  * 
  * @author ThrivingSoftwood
  * @param <T> 数据载荷的类型
+ * @since version 2026-01-23
  */
 @Data
 public class Result<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Boolean success;

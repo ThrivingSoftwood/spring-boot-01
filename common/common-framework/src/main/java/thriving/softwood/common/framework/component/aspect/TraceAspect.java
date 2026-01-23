@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import cn.hutool.v7.core.text.StrUtil;
 import thriving.softwood.common.logging.util.TraceUtil;
 
+/**
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
+ */
 @Aspect
 @Component
 @Order(1) // 切面优先级，越小越早执行

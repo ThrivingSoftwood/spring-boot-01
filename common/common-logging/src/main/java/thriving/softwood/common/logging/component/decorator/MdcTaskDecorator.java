@@ -8,15 +8,20 @@ import java.util.Map;
 import org.slf4j.MDC;
 import org.springframework.core.task.TaskDecorator;
 
+import lombok.NonNull;
 import thriving.softwood.common.logging.util.TraceUtil;
 
 /**
  * 📘 MDC 任务装饰器 作用：实现父子线程间日志上下文的丝滑传递
+ *
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
  */
 public class MdcTaskDecorator implements TaskDecorator {
 
     @Override
-    public Runnable decorate(Runnable runnable) {
+    @NonNull
+    public Runnable decorate(@NonNull Runnable runnable) {
         // 1. 【此时在父线程】获取当前 MDC 的副本
         Map<String, String> contextMap = MDC.getCopyOfContextMap();
 

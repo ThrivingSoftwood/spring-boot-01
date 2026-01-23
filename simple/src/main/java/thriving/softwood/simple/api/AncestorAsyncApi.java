@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
  * 多线程示例
  * 
  * @author ThrivingSoftwood
+ * @since version 2026-01-23
  */
 public interface AncestorAsyncApi {
 

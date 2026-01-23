@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Bean;
 
 import thriving.softwood.common.web.component.filter.TraceFilter;
 
+/**
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
+ */
 @AutoConfiguration
 public class WebTraceConfig {
 
@@ -13,9 +17,11 @@ public class WebTraceConfig {
     public FilterRegistrationBean<TraceFilter> traceIdFilterRegistration() {
         FilterRegistrationBean<TraceFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new TraceFilter());
-        registration.addUrlPatterns("/*"); // 拦截所有路径
+        // 拦截所有路径
+        registration.addUrlPatterns("/*");
         registration.setName("traceFilter");
-        registration.setOrder(Integer.MIN_VALUE); // 再次确保优先级
+        // 再次确保优先级
+        registration.setOrder(Integer.MIN_VALUE);
         return registration;
     }
 }

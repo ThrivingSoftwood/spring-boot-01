@@ -29,8 +29,6 @@
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!--内部版本号-->
-        <inner.version>1.0-SNAPSHOT</inner.version>
         <!--依赖版本管理-->
         <springboot.version>4.0.1</springboot.version>
         <springboot.aop.version>4.0.0-M2</springboot.aop.version>
@@ -71,7 +69,7 @@
 
     <groupId>thriving.softwood</groupId>
     <artifactId>spring-boot-01</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
 
     <modules>

@@ -14,6 +14,7 @@ import thriving.softwood.common.framework.annotation.async.VtAsync;
  * 多线程示例
  * 
  * @author ThrivingSoftwood
+ * @since version 2026-01-23
  */
 @Service
 public class AncestorAsyncSvc implements AncestorAsyncApi {

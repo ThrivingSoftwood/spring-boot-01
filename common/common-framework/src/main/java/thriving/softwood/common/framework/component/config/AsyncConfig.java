@@ -18,6 +18,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import thriving.softwood.common.logging.component.decorator.MdcTaskDecorator;
 
+/**
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
+ */
 @Configuration
 @EnableAsync
 public class AsyncConfig implements AsyncConfigurer {

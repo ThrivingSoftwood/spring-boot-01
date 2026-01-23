@@ -3,7 +3,7 @@ package thriving.softwood.common.core.enums;
 /**
  * 网络请求返回 status code 的含义枚举
  * 
- * @author Eastean
+ * @author ThrivingSoftwood
  * @since version 2023-07-11
  */
 public enum RespCodeEnum {

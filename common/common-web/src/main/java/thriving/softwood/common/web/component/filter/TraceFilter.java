@@ -14,6 +14,9 @@ import thriving.softwood.common.logging.util.TraceUtil;
 
 /**
  * Web 端链路追踪过滤器 优先级：最高 (Integer.MIN_VALUE)，保证是第一个执行
+ *
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceFilter extends OncePerRequestFilter {

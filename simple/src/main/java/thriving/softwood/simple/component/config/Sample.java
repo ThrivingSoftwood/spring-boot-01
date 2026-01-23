@@ -12,7 +12,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * @author ThrivingSoftwood ConfigurationProperties 支持 JSR-303 数据校验,但是需要引入对应的实现依赖
+ * ConfigurationProperties 支持 JSR-303 数据校验,但是需要引入对应的实现依赖
+ *
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
  */
 @Data
 @Configuration

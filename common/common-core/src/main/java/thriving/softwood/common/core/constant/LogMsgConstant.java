@@ -1,5 +1,9 @@
 package thriving.softwood.common.core.constant;
 
+/**
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
+ */
 public class LogMsgConstant {
     /**
      * 多线程日志前缀

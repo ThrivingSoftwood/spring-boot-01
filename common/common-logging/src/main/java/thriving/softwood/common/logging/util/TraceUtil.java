@@ -7,6 +7,10 @@ import org.slf4j.MDC;
 import cn.hutool.v7.core.data.id.IdUtil;
 import cn.hutool.v7.core.text.StrUtil;
 
+/**
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
+ */
 public class TraceUtil {
 
     /**

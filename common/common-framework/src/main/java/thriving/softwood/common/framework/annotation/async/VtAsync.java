@@ -6,6 +6,9 @@ import org.springframework.scheduling.annotation.Async;
 
 /**
  * 🚀 虚拟线程异步执行注解 适用于：高并发、IO 密集型任务 映射至：AsyncConfig 中的 vtExecutor
+ *
+ * @author ThrivingSoftwood
+ * @since version 2026-01-23
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

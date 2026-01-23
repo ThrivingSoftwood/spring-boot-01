@@ -5,8 +5,9 @@ package thriving.softwood.common.core.constant;
  * <p>
  * 定义常用中英文标点符号，用于避免代码中的“魔法字符串”，提高代码可读性、一致性和可维护性。 所有常量均使用 {@code public static final} 修饰，并通过私有构造方法防止实例化。
  * </p>
- * 
+ *
  * @author ThrivingSoftwood
+ * @since version 2026-01-23
  */
 public final class PunctuationConstants {
 
@@ -34,7 +35,7 @@ public final class PunctuationConstants {
     public static final String TILDE = "~";
     /** 与符号 */
     public static final String AMPERSAND = "&";
-    /** @符号 */
+    /** @ 符号 */
     public static final String AT_SIGN = "@";
     /** 井号 */
     public static final String HASH = "#";
