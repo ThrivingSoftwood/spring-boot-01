@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -10,28 +10,20 @@
     <artifactId>simple</artifactId>
     <name>simple</name>
     <description>simple</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
     <dependencies>
         <!--00.项目内依赖 begin-->
         <dependency>
-            <groupId>thriving.softwood</groupId>
-            <artifactId>common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-framework</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <!--00.项目内依赖 end-->
         <!--01.工具库依赖 begin-->

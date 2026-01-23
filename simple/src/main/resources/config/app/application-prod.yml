@@ -1,0 +1,12 @@
+server:
+  port: 6160
+  servlet:
+    context-path: /prod
+
+logging:
+  # log4j2-dev.xml 配置文件提供骨架
+  config: classpath:config/logging/log4j2-prod.xml
+  # application.yml 进行精细控制
+  level:
+    thriving:
+      softwood: trace

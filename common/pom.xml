@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -8,68 +8,48 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>common</artifactId>
+    <packaging>pom</packaging>
     <name>common</name>
-    <description>common</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+    <description>公共工具模块</description>
+    <modules>
+        <module>common-core</module>
+        <module>common-logging</module>
+        <module>common-framework</module>
+        <module>common-web</module>
+    </modules>
+
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
-    <dependencies>
-        <!--01.工具库依赖 begin-->
-        <dependency>
-            <groupId>cn.hutool.v7</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>tools.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>tools.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-annotations</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson-annotation.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <!--01.工具库依赖 end-->
-    </dependencies>
 
-    <build>
-        <plugins>
-        </plugins>
-    </build>
+
+    <!-- ⬇️ [新增] 核心补充 1: 依赖管理 (Dependency Management) -->
+    <!-- 作用：只声明版本，不实际引入。让子模块引用时无需写 version -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 1. 内部模块版本统管 (最重要！) -->
+            <!-- 这样 common-web 引用 common-core 时，直接写 groupId 和 artifactId 即可，自动跟随主版本 -->
+            <dependency>
+                <groupId>thriving.softwood</groupId>
+                <artifactId>common-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood</groupId>
+                <artifactId>common-logging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood</groupId>
+                <artifactId>common-framework</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood</groupId>
+                <artifactId>common-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

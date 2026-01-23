@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Log4j2 进阶生产级配置
+    优化点：MDC 链路追踪 | 自动清理策略 | 异步高性能适配
+-->
+<Configuration status="WARN" monitorInterval="30">
+
+    <Properties>
+        <Property name="APP_NAME">${spring:spring.application.name:-springboot-app}</Property>
+        <Property name="LOG_HOME">logs/${APP_NAME}</Property>
+        <Property name="FILE_NAME">app</Property>
+
+        <!--
+            🎨 升级版控制台格式 (已优化顺序)：
+            修改点：将 %style{[%X{traceId}]}{cyan} 移到了 %highlight{%-5level} 后面。
+            视觉顺序：时间 -> 级别 -> [TraceID] -> PID -> ...
+        -->
+        <!-- 🎨 开发者控制台格式：保持不变，已经包含了 spanId -->
+        <Property name="CONSOLE_PATTERN">%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{dim} %highlight{%-5level}{FATAL=red bright,
+            ERROR=red, WARN=yellow bold, INFO=green, DEBUG=cyan bold, TRACE=blue}
+            %style{[%X{traceId}][%X{spanId}]}{cyan} %style{${sys:PID}}{magenta} %style{---}{dim}
+            %style{[%15.15t]}{dim,yellow} %style{%-40.40c{1.}}{cyan} : %msg%n%style{%throwable}{red}
+        </Property>
+
+        <!-- 📄 生产文件格式：补全了 [%X{spanId}] -->
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceId}][%X{spanId}] ${sys:PID} ---
+            [%15.15t] %-40.40c{1.} : %msg%n
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${CONSOLE_PATTERN}" disableAnsi="false" noConsoleNoAnsi="false"/>
+        </Console>
+
+        <!-- Info 文件 (包含 INFO, WARN, ERROR) -->
+        <RollingRandomAccessFile name="InfoFile"
+                                 fileName="${LOG_HOME}/${FILE_NAME}-info.log"
+                                 filePattern="${LOG_HOME}/${FILE_NAME}-info-%d{yyyy-MM-dd}-%i.log.gz">
+            <!-- ⚡ 性能优化：生产环境设为 false，利用 buffer 批量写入，大幅减少磁盘 IO -->
+            <immediateFlush>false</immediateFlush>
+            <bufferSize>262144</bufferSize>
+
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="1 GB"/>
+            </Policies>
+
+            <!-- 🗑️ 自动清理策略：防止磁盘打满 -->
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${LOG_HOME}/" maxDepth="1">
+                    <IfFileName glob="${FILE_NAME}-info-*.log.gz"/>
+                    <!-- 保留 30 天的日志 -->
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- Error 文件 (只包含 ERROR) -->
+        <RollingRandomAccessFile name="ErrorFile"
+                                 fileName="${LOG_HOME}/${FILE_NAME}-error.log"
+                                 filePattern="${LOG_HOME}/${FILE_NAME}-error-%d{yyyy-MM-dd}-%i.log.gz">
+            <immediateFlush>false</immediateFlush>
+            <bufferSize>262144</bufferSize>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="1 GB"/>
+            </Policies>
+
+            <!-- 🗑️ Error 日志通常更重要，保留时间更长或数量更多 -->
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${LOG_HOME}/" maxDepth="1">
+                    <IfFileName glob="${FILE_NAME}-error-*.log.gz"/>
+                    <IfLastModified age="60d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.mybatis" level="DEBUG"/>
+
+        <!-- 业务包 Logger -->
+        <Logger name="thriving.softwood.mapper" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <!--
+            ⚡ 关键优化：includeLocation="false"
+            如果开启了全异步模式 (Global Async)，必须关闭位置信息（行号、方法名），
+            否则异步性能会退化为同步性能的 1/10！
+        -->
+        <Root level="INFO" includeLocation="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="ErrorFile"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

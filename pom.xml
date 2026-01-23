@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--显示项目结构: tree -I "target|node_modules|.git|out|*.iml" -执行时删除这部分文字-dirsfirst-->
+    <!--显示项目结构: tree -I "target|node_modules|.git|out|*.iml|logs" -执行时删除这部分文字-dirsfirst-->
     <properties>
         <jdk.version>25</jdk.version>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!--内部版本号-->
+        <inner.version>1.0-SNAPSHOT</inner.version>
         <!--依赖版本管理-->
         <springboot.version>4.0.1</springboot.version>
+        <springboot.aop.version>4.0.0-M2</springboot.aop.version>
         <spring.version>7.0.2</spring.version>
         <jakarta.servlet-api.version>6.2.0-M1</jakarta.servlet-api.version>
         <jakarta.servlet.jsp-api.version>4.1.0-M1</jakarta.servlet.jsp-api.version>
@@ -106,6 +109,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit-jupiter-api</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- 3. (可选) JUnit Jupiter 参数化测试支持 -->
         <dependency>
@@ -113,11 +122,23 @@
             <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit-jupiter-api</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--junit 依赖 end-->
+        <!-- spring-boot-devtools 开发时热部署-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--01.工具库依赖 end-->
-        <!--Step 02 : 添加 spring-boot-start 依赖 begin-->
-        <!--spring-boot-start begin-->
+        <!--Step 02 : 添加 spring-boot-starter 依赖 begin-->
+        <!--spring-boot-starter begin-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
@@ -132,14 +153,38 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- 单元测试依赖 -->
+        <!--单元测试依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit-jupiter-api</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>junit-jupiter-engine</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>junit-jupiter-params</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <!--spring-boot-start end-->
-        <!--Step 02 : 添加 spring-boot-start 依赖 end-->
+        <!--数据校验-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-layout-template-json</artifactId>
+            <!-- 版本号通常随 spring-boot-starter-log4j2 自动管理，无需指定 -->
+        </dependency>
+        <!--spring-boot-starter end-->
+        <!--Step 02 : 添加 spring-boot-starter 依赖 end-->
     </dependencies>
 
     <build>
@@ -157,6 +202,7 @@
                         <!-- 确保源码和目标版本适配你的 JDK (比如 17, 21, 25) -->
                         <source>${jdk.version}</source>
                         <target>${jdk.version}</target>
+                        <release>${jdk.version}</release>
                         <encoding>UTF-8</encoding>
 
                         <!-- 🔥 必须显式添加这一段，否则 Maven 可能找不到 Lombok 处理器 -->

@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: simple
+  profiles:
+    active: dev
+#    active: prod
+#  main:
+#    laz y-initialization: true
+
+# 查看配置类加载详情 debug: true
+
+## 演示配置文件参数值如何注入到 bean 中
+#sample:
+#  # 重复调用并不会使用重复的值,相当于调用两次 random 方法;random 样例如下
+#  #  my:
+#  #    secret: "${random.value}"
+#  #    number: "${random.int}"
+#  #    bignumber: "${random.long}"
+#  #    uuid: "${random.uuid}"
+#  #    number-less-than-ten: "${random.int(10)}"
+#  #    number-in-range: "${random.int[1024,65536]}"
+#  id: ${random.int}
+#  name: ${random.name}
+#  hobbies:
+#    - 唱
+#    - 跳
+#    - rap
+#    - 篮球
+#  pets: [ 猫,狗 ]
+#  ageWithEvent:
+#    5: 意外导致被切完饺子馅的菜刀砍到右手背留 10 厘米疤痕
+#    13: 被大客车撞飞掉半颗门牙
+#  ageWithGirl: { 16: 她一, 27: 她二 }
+#  testNotNull: 记性太好也不好,总有东西忘不掉

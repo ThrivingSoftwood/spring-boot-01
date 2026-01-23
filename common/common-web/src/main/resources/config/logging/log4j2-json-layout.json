@@ -1,0 +1,38 @@
+{
+  "time": {
+    "$resolver": "timestamp",
+    "pattern": {
+      "format": "yyyy-MM-dd HH:mm:ss.SSS"
+    }
+  },
+  "serviceName": "${spring:spring.application.name}",
+  "level": {
+    "$resolver": "level",
+    "field": "name"
+  },
+  "traceId": {
+    "$resolver": "mdc",
+    "key": "traceId"
+  },
+  "spanId": {
+    "$resolver": "mdc",
+    "key": "spanId"
+  },
+  "thread": {
+    "$resolver": "thread",
+    "field": "name"
+  },
+  "class": {
+    "$resolver": "logger",
+    "field": "name"
+  },
+  "message": {
+    "$resolver": "message",
+    "stringified": true
+  },
+  "exception": {
+    "$resolver": "exception",
+    "field": "stackTrace",
+    "stringified": true
+  }
+}

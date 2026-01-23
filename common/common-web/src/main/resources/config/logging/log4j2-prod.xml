@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="APP_NAME">${spring:spring.application.name:-springboot-app}</Property>
+        <Property name="LOG_HOME">logs/${APP_NAME}</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 控制台：依然保留文本格式，给人看 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- 开发环境控制台可以开启行号，因为不需要抗高并发 -->
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}] %-5level %logger{36}:%L - %msg%n%throwable"/>
+        </Console>
+
+        <!-- 文件：使用 JSON 格式，给机器(ELK)看 -->
+        <RollingRandomAccessFile name="InfoFile" fileName="${LOG_HOME}/app-info.json"
+                                 filePattern="${LOG_HOME}/app-info-%d{yyyy-MM-dd}-%i.json.gz">
+            <immediateFlush>false</immediateFlush>
+            <bufferSize>262144</bufferSize>
+
+            <!-- ✅ 使用 JSON 布局 -->
+            <JsonTemplateLayout eventTemplateUri="classpath:config/logging/log4j2-json-layout.json">
+                <!-- 注入应用名，方便在 ES 里按服务筛选 -->
+                <EventTemplateAdditionalField key="service.name" value="${APP_NAME}"/>
+            </JsonTemplateLayout>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="1 GB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <!--
+           ⚠️ 生产环境关键决策：
+           includeLocation="false" : 为了性能，JSON 日志里不会有代码行号。
+           如果必须要有行号，请改为 true，但要做好性能下降的心理准备。
+        -->
+        <Root level="INFO" includeLocation="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="InfoFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
