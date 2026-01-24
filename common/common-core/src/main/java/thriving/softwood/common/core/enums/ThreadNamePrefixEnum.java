@@ -14,6 +14,11 @@ public enum ThreadNamePrefixEnum {
     VMT("v", "虚拟多线程(Virtual Thread),当任务是 IO 密集型（如查数据库、调 API、写文件）时使用.,占用资源远低于平台线程"),
     STS(SUBTHREAD_NAME_PREFIX, "开启多线程后线程池中的子线程,可能是虚拟线程,也可能是平台线程");
 
+    /**
+     * 主线程标识
+     */
+    private final String threadMark;
+
     ThreadNamePrefixEnum(String mark, String desc) {
         switch (mark) {
             case SYNC_NAME_PREFIX:
@@ -30,11 +35,6 @@ public enum ThreadNamePrefixEnum {
                 throw new UnsupportedOperationException("ThreadNamePrefixEnum 的错误初始化:参数 mark 值非法:" + mark);
         }
     }
-
-    /**
-     * 主线程标识
-     */
-    private final String threadMark;
 
     public String mark() {
         return threadMark;
