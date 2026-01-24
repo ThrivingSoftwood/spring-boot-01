@@ -1,8 +1,5 @@
 package thriving.softwood.common.framework.component.config;
 
-import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.PT;
-import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.VT;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -16,7 +13,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import thriving.softwood.common.logging.component.decorator.MdcTaskDecorator;
+import thriving.softwood.common.framework.component.decorator.MdcTaskDecorator;
 
 /**
  * @author ThrivingSoftwood
@@ -33,7 +30,6 @@ public class AsyncConfig implements AsyncConfigurer {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(20);
-        executor.setThreadNamePrefix(PT.mtPrefix());
 
         // 🔥 关键：挂载装饰器
         executor.setTaskDecorator(new MdcTaskDecorator());
@@ -46,7 +42,7 @@ public class AsyncConfig implements AsyncConfigurer {
     @Bean
     public Executor vtExecutor() {
         // 1. 使用支持虚拟线程的执行器
-        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor(VT.mtPrefix());
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
 
         // 2. 开启虚拟线程模式 (JDK 21+)
         executor.setVirtualThreads(true);

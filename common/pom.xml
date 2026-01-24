@@ -10,7 +10,7 @@
     <artifactId>common</artifactId>
     <packaging>pom</packaging>
     <name>common</name>
-    <description>公共工具模块</description>
+    <description>公共工具模块聚合层</description>
     <modules>
         <module>common-core</module>
         <module>common-logging</module>
@@ -22,41 +22,8 @@
         <java.version>${jdk.version}</java.version>
     </properties>
 
-
-    <!-- ⬇️ [新增] 核心补充 1: 依赖管理 (Dependency Management) -->
-    <!-- 作用：只声明版本，不实际引入。让子模块引用时无需写 version -->
-    <dependencyManagement>
-        <dependencies>
-            <!-- 1. 内部模块版本统管 (最重要！) -->
-            <!-- 这样 common-web 引用 common-core 时，直接写 groupId 和 artifactId 即可，自动跟随主版本 -->
-            <dependency>
-                <groupId>thriving.softwood</groupId>
-                <artifactId>common-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>thriving.softwood</groupId>
-                <artifactId>common-logging</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>thriving.softwood</groupId>
-                <artifactId>common-framework</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>thriving.softwood</groupId>
-                <artifactId>common-web</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-
     <build>
-        <!--识别 Mapper.xml 文件为资源文件-->
         <resources>
-            <!-- 1. 原有的 resources 目录依然要保留 (放 properties, yml 等) -->
             <resource>
                 <directory>src/main/resources</directory>
             </resource>

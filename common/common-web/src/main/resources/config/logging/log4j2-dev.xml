@@ -19,12 +19,12 @@
         <Property name="CONSOLE_PATTERN">%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{dim} %highlight{%-5level}{FATAL=red bright,
             ERROR=red, WARN=yellow bold, INFO=green, DEBUG=cyan bold, TRACE=blue}
             %style{[%X{traceId}][%X{spanId}]}{cyan} %style{${sys:PID}}{magenta} %style{---}{dim}
-            %style{[%15.15t]}{dim,yellow} %style{%-40.40c{1.}}{cyan} : %msg%n%style{%throwable}{red}
+            %style{%-40.40c{1.}}{cyan} : %msg%n%style{%throwable}{red}
         </Property>
 
         <!-- 📄 生产文件格式：补全了 [%X{spanId}] -->
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceId}][%X{spanId}] ${sys:PID} ---
-            [%15.15t] %-40.40c{1.} : %msg%n
+            %-40.40c{1.} : %msg%n
         </Property>
     </Properties>
 

@@ -1,5 +1,9 @@
 package thriving.softwood.common.logging.util;
 
+import static thriving.softwood.common.core.constant.PunctuationConstants.HYPHEN;
+import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.SPT;
+import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.STS;
+
 import java.util.Map;
 
 import org.slf4j.MDC;
@@ -37,7 +41,7 @@ public class TraceUtil {
      */
     public static String start(String traceId) {
         if (StrUtil.isBlank(traceId)) {
-            traceId = generateTraceId();
+            traceId = SPT.mark() + HYPHEN + generateTraceId();
         }
         MDC.put(TRACE_ID_KEY, traceId);
         MDC.put(SPAN_ID_KEY, MAIN_SPAN_ID);
@@ -48,14 +52,16 @@ public class TraceUtil {
      * 为子线程生成上下文（由装饰器调用）
      * 
      * @param contextMap 父线程的 MDC 内容
+     * @param threadMark 主线程标识(main thread mark)
      */
-    public static void applyContext(Map<String, String> contextMap, String stPrefix) {
+    public static void applyContext(Map<String, String> contextMap, String threadMark) {
         if (contextMap != null) {
             MDC.setContextMap(contextMap);
         }
-        // 🚀 核心逻辑：即使复制了父线程，也要给子线程一个独一无二的 SpanID
-        // 使用 4 位简短随机码，既区分了线程，又不占用过多日志空间，对新手极其友好
-        MDC.put(SPAN_ID_KEY, stPrefix + IdUtil.getSnowflakeNextIdStr());
+        // 🚀 核心逻辑：区分是否为多线程/多线程类型,需要增加前缀. SPT : Sync Platform Thread
+        MDC.put(TRACE_ID_KEY, MDC.get(TRACE_ID_KEY).replace(SPT.mark(), threadMark));
+        // 🚀 核心逻辑：即使复制了父线程，也要给子线程一个独一无二的 SpanID; STS : Sub Threads
+        MDC.put(SPAN_ID_KEY, STS.mark() + HYPHEN + IdUtil.getSnowflakeNextIdStr());
     }
 
     /**

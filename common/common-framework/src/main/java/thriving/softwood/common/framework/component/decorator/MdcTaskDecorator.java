@@ -1,7 +1,7 @@
-package thriving.softwood.common.logging.component.decorator;
+package thriving.softwood.common.framework.component.decorator;
 
-import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.PT;
-import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.VT;
+import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.PMT;
+import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.VMT;
 
 import java.util.Map;
 
@@ -28,7 +28,8 @@ public class MdcTaskDecorator implements TaskDecorator {
         return () -> {
             try {
                 // 2. 【此时在子线程】将父线程的上下文注入，并生成新的 SpanID
-                TraceUtil.applyContext(contextMap, Thread.currentThread().isVirtual() ? VT.stPrefix() : PT.stPrefix());
+                // 需要使用线程标识(thread mark). P(V)MT : Platform(Virtual) Multithread
+                TraceUtil.applyContext(contextMap, Thread.currentThread().isVirtual() ? VMT.mark() : PMT.mark());
                 // 3. 执行真正的业务逻辑
                 runnable.run();
             } finally {

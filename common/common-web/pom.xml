@@ -10,26 +10,34 @@
     <groupId>thriving.softwood.common</groupId>
     <artifactId>common-web</artifactId>
     <name>common-web</name>
-    <description>common-web</description>
+    <description>Web增强模块</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
+
     <dependencies>
-        <!--内部依赖 begin-->
+        <!--01.内部依赖 begin-->
         <dependency>
             <groupId>thriving.softwood.common</groupId>
             <artifactId>common-framework</artifactId>
-            <version>${project.version}</version>
         </dependency>
-        <!--内部依赖 end-->
+        <!--01.内部依赖 end-->
+
+        <!--02.Web 相关依赖 begin-->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+        <!--02.Web 相关依赖 end-->
     </dependencies>
 </project>

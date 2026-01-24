@@ -4,25 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--显示项目结构: tree -I "target|node_modules|.git|out|*.iml|logs|package-info.java|mvnw*|*.md|.git*" -执行时删除这部分文字-dirsfirst-->
-    <!--输出所有配置文件内容:
-    find . -type f \( -name "*.xml" -o -name "*.yml" -o -name "*.properties" \) ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
-        echo "File: $file"
-        echo "\n\`\`\`xml"
-        cat "$file"
-        echo "\n\`\`\`"
-    done
-    -->
-    <!--输出所有java 文件的内容:
-    find . -type f -name "*.java" ! -name "package-info.java" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
-        echo "\n\n"
-        echo "File: $file"
-        echo "\`\`\`java"
-        cat "$file"
-        echo "\n\`\`\`"
-        echo ""
-    done
-    -->
     <properties>
         <jdk.version>25</jdk.version>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
@@ -56,10 +37,10 @@
         <hutool.version>7.0.0-M4</hutool.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <guava.version>33.5.0-jre</guava.version>
+        <slf4j.version>2.0.16</slf4j.version>
     </properties>
 
     <!--Step 01 : 添加 spring-boot 父项目 begin-->
-    <!--spring-boot-starter-parent 引入了 spring-boot-dependencies 来管理通用依赖的版本-->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -77,10 +58,33 @@
         <module>simple</module>
     </modules>
 
-    <!--依赖管理-->
+    <!--依赖管理 (BOM模式) begin-->
     <dependencyManagement>
         <dependencies>
-            <!--log4j2 依赖管理-->
+            <!-- 1. 内部模块版本统管 (CRITICAL FIX: 修正 GroupID 为 thriving.softwood.common) begin -->
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-logging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-framework</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- 1. 内部模块版本统管 end -->
+
+            <!-- 2. 第三方工具库版本管理 begin -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-bom</artifactId>
@@ -88,38 +92,43 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <!-- 2. 第三方工具库版本管理 end -->
         </dependencies>
     </dependencyManagement>
-
+    <!--依赖管理 end-->
 
     <dependencies>
-        <!--01.工具库依赖 begin-->
+        <!--01.全局通用工具库依赖 begin-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
-        <!--高性能记录日志的组件-->
-        <dependency>
-            <groupId>com.lmax</groupId>
-            <artifactId>disruptor</artifactId>
-            <version>${disruptor.version}</version>
-        </dependency>
-        <!--高效类型转换(无反射开销-->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${mapstruct.version}</version>
-        </dependency>
-        <!--junit 依赖 begin-->
-        <!-- 1. JUnit Jupiter API (编写测试时使用的注解和断言) -->
+        <!--01.全局通用工具库依赖 end-->
+
+        <!--02.单元测试相关依赖 begin-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- 2. JUnit Jupiter 引擎 (用于运行测试) -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -132,7 +141,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- 3. (可选) JUnit Jupiter 参数化测试支持 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
@@ -145,31 +153,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--junit 依赖 end-->
-        <!-- spring-boot-devtools 开发时热部署-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <!--01.工具库依赖 end-->
-        <!--Step 02 : 添加 spring-boot-starter 依赖 begin-->
-        <!--spring-boot-starter begin-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!--单元测试依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -187,24 +170,16 @@
                     <artifactId>junit-jupiter-params</artifactId>
                     <groupId>org.junit.jupiter</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
-        <!--数据校验-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-layout-template-json</artifactId>
-            <!-- 版本号通常随 spring-boot-starter-log4j2 自动管理，无需指定 -->
-        </dependency>
-        <!--spring-boot-starter end-->
-        <!--Step 02 : 添加 spring-boot-starter 依赖 end-->
+        <!--02.单元测试相关依赖 end-->
     </dependencies>
 
     <build>
-        <!--插件版本管理-->
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -212,22 +187,21 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${mvn.compiler.plugin.version}</version>
                     <configuration>
-                        <!-- 🔥 关键配置：告诉 javac 保留参数名 -->
                         <parameters>true</parameters>
-
-                        <!-- 确保源码和目标版本适配你的 JDK (比如 17, 21, 25) -->
                         <source>${jdk.version}</source>
                         <target>${jdk.version}</target>
                         <release>${jdk.version}</release>
                         <encoding>UTF-8</encoding>
-
-                        <!-- 🔥 必须显式添加这一段，否则 Maven 可能找不到 Lombok 处理器 -->
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
-                                <!-- 这里的版本最好和你 dependencies 里的保持一致 -->
                                 <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${mapstruct.version}</version>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
@@ -246,31 +220,22 @@
             </plugins>
         </pluginManagement>
 
-        <!--
-           全局生效的插件
-           Maven Compiler Plugin 需要对所有模块生效，所以放在 build/plugins 下
-        -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
-            <!-- 4. 配置 Maven Surefire 插件以支持 JUnit -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${mvn.surefire.plugin.version}</version> <!-- 使用较新版本以更好支持 JUnit 5 -->
+                <version>${mvn.surefire.plugin.version}</version>
             </plugin>
         </plugins>
 
-        <!--识别 Mapper.xml 文件为资源文件-->
         <resources>
-            <!-- 1. 原有的 resources 目录依然要保留 (放 properties, yml 等) -->
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
-
-            <!-- 2. 🔥 关键：将 src/main/java 下的 xml 也包含进来 -->
             <resource>
                 <directory>src/main/java</directory>
                 <includes>

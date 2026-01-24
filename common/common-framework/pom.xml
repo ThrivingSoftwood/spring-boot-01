@@ -10,23 +10,39 @@
     <groupId>thriving.softwood.common</groupId>
     <artifactId>common-framework</artifactId>
     <name>common-framework</name>
-    <description>common-framework</description>
+    <description>框架整合模块</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
+
     <dependencies>
-        <!--内部依赖 begin-->
+        <!--01.内部依赖 begin-->
         <dependency>
             <groupId>thriving.softwood.common</groupId>
             <artifactId>common-logging</artifactId>
-            <version>${project.version}</version>
         </dependency>
-        <!--内部依赖 end-->
+        <!--01.内部依赖 end-->
+
+        <!--02.Spring 核心依赖 begin-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
             <version>${springboot.aop.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <!--02.Spring 核心依赖 end-->
     </dependencies>
-
 </project>

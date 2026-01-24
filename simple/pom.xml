@@ -9,37 +9,40 @@
     </parent>
     <artifactId>simple</artifactId>
     <name>simple</name>
-    <description>simple</description>
+    <description>应用示例</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
+
     <dependencies>
         <!--00.项目内依赖 begin-->
         <dependency>
-            <groupId>thriving.softwood.common</groupId>
+            <groupId>thriving.softwood.common</groupId> <!-- 注意这里是 common -->
             <artifactId>common-web</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>thriving.softwood.common</groupId>
-            <artifactId>common-framework</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <!--00.项目内依赖 end-->
-        <!--01.工具库依赖 begin-->
-        <!--01.工具库依赖 end-->
-        <!--Step 02 : 添加 spring-boot-start 依赖 begin-->
-        <!--spring-boot-start begin-->
+
+        <!--01.日志实现依赖 begin-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-        <!--spring-boot-start end-->
-        <!--Step 02 : 添加 spring-boot-start 依赖 end-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-layout-template-json</artifactId>
+        </dependency>
+        <!--01.日志实现依赖 end-->
+
+        <!--02.开发辅助依赖 begin-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--02.开发辅助依赖 end-->
     </dependencies>
 
     <build>
-        <!--加载插件-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
