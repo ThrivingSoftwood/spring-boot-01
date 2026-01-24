@@ -55,15 +55,19 @@ spring-boot-01
 
 ```java
 // 1. 同步主线程 (日志前缀: sync-xxxx)
-log.info("Request received");
+// log.info("Request received");
 
 // 2. 虚拟线程异步任务 (日志前缀: async-v-xxxx)
 @VtAsync
-public void processIO() { ...}
+public void processIO() {
+    //具体逻辑
+}
 
 // 3. 平台线程异步任务 (日志前缀: async-p-xxxx)
 @PtAsync
-public void processCPU() { ...}
+public void processCPU() {
+    // 具体逻辑
+}
 ```
 
 ### 2. 智能全链路追踪 (Smart Distributed Tracing)
