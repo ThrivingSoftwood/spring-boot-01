@@ -1,0 +1,41 @@
+services:
+  zipkin-20260126-latest:
+    container_name: "zipkin-20260126-latest"
+    entrypoint:
+      - "start-zipkin"
+    environment:
+      - "STORAGE_TYPE=elasticsearch"
+      - "ES_HOSTS=http://host.docker.internal:9200"
+      - "ES_HTTP_LOGGING=BASIC"
+      - "ES_INDEX=zipkin"
+      - "PATH=/usr/lib/jvm/java-21-openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "LANG=en_US.UTF-8"
+      - "LANGUAGE=en_US:en"
+      - "LC_ALL=en_US.UTF-8"
+      - "JAVA_VERSION=21.0.7_p6"
+      - "JAVA_HOME=/usr/lib/jvm/java-21-openjdk"
+      - "MODULE_OPTS="
+    hostname: "bb8d94ba96ea"
+    image: "openzipkin/zipkin:3.5-arm64"
+    ipc: "private"
+    labels:
+      alpine-version: "3.21.3"
+      java-home: "/usr/lib/jvm/java-21-openjdk"
+      java-version: "21.0.7_p6"
+      maintainer: "OpenZipkin https://gitter.im/openzipkin/zipkin"
+      maven-version: "3.9.9"
+      org.opencontainers.image.authors: "OpenZipkin https://gitter.im/openzipkin/zipkin"
+      org.opencontainers.image.created: "2025-04-27"
+      org.opencontainers.image.description: "Zipkin full distribution on OpenJDK and Alpine Linux"
+      org.opencontainers.image.revision: "b7e22588e"
+    logging:
+      driver: "json-file"
+      options: { }
+    network_mode: "bridge"
+    ports:
+      - "9410:9410/tcp"
+      - "9411:9411/tcp"
+    user: "zipkin"
+    working_dir: "/zipkin"
+
+version: "3.6"

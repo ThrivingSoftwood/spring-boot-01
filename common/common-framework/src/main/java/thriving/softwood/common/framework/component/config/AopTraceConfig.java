@@ -10,5 +10,6 @@ import thriving.softwood.common.framework.component.aspect.TraceAspect;
  * @since version 2026-01-23
  */
 @AutoConfiguration
-@Import(TraceAspect.class) // 显式导入切面
+// 显式导入切面
+@Import(TraceAspect.class)
 public class AopTraceConfig {}

@@ -13,7 +13,7 @@
     <description>公共工具模块聚合层</description>
     <modules>
         <module>common-core</module>
-        <module>common-logging</module>
+        <module>common-observability</module>
         <module>common-framework</module>
         <module>common-web</module>
     </modules>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
+    </parent>
+    <groupId>thriving.softwood.common</groupId>
+    <artifactId>common-observability</artifactId>
+    <name>common-observability</name>
+    <description>可观测性底座：集成日志增强、链路追踪（Tracing）与指标监控（Metrics）</description>
+
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- ======================================================== -->
+        <!-- 01. 内部核心依赖                                          -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-core</artifactId>
+            <!-- 依赖项目基础工具类、常量定义及枚举 -->
+        </dependency>
+
+        <!-- ======================================================== -->
+        <!-- 02. 基础日志体系 (Logging Facade & Performance)          -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <!-- SLF4J 日志门面，解耦底层日志实现 -->
+        </dependency>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <!-- 无锁并发队列，用于 Log4j2 的全异步高性能日志处理 -->
+        </dependency>
+
+        <!-- ======================================================== -->
+        <!-- 03. Spring Boot 观测性核心 (Actuator & Observation)      -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                    <!-- 核心操作：排除默认的 Logback 实现，防止与 Log4j2 冲突 -->
+                </exclusion>
+            </exclusions>
+            <!-- Spring 生态观测性枢纽：管理 ObservationRegistry 与基础 Metrics -->
+        </dependency>
+
+        <!-- ======================================================== -->
+        <!-- 04. Micrometer Tracing 抽象层 (Sleuth 的继任者)            -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-micrometer-tracing</artifactId>
+            <!-- Spring Boot 4 对 Micrometer Tracing 的自动配置支持 -->
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing</artifactId>
+            <!-- Micrometer 链路追踪核心 API 抽象 -->
+        </dependency>
+
+        <!-- ======================================================== -->
+        <!-- 05. OpenTelemetry 实现与桥接 (Tracing Implementation)     -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-micrometer-tracing-opentelemetry</artifactId>
+            <!-- Spring Boot 官方提供的 OpenTelemetry 自动装配适配器 -->
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-otel</artifactId>
+            <!-- 关键桥接包：将 Micrometer Tracing API 映射至 OpenTelemetry SDK -->
+        </dependency>
+
+        <!-- ======================================================== -->
+        <!-- 06. 链路数据导出器 (Exporters - 数据外流管道)               -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-exporter-otlp</artifactId>
+            <scope>runtime</scope>
+            <!-- 工业标准 OTLP 协议导出器：用于将 Trace 数据发送至 OTel Collector -->
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-exporter-zipkin</artifactId>
+            <scope>runtime</scope>
+            <!-- Zipkin 专用导出器：用于直接将 Span 数据推送至 Zipkin 持久化后端 -->
+        </dependency>
+    </dependencies>
+</project>

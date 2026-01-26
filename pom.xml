@@ -11,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--依赖版本管理-->
-        <springboot.version>4.0.1</springboot.version>
+        <springboot.version>4.0.2</springboot.version>
         <springboot.aop.version>4.0.0-M2</springboot.aop.version>
         <spring.version>7.0.2</spring.version>
         <jakarta.servlet-api.version>6.2.0-M1</jakarta.servlet-api.version>
@@ -44,7 +44,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.1</version>
+        <version>4.0.2</version>
     </parent>
     <!--Step 01 : 添加 Springboot 父项目 end-->
 
@@ -69,7 +69,7 @@
             </dependency>
             <dependency>
                 <groupId>thriving.softwood.common</groupId>
-                <artifactId>common-logging</artifactId>
+                <artifactId>common-observability</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

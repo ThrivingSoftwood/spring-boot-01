@@ -13,11 +13,14 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import thriving.softwood.common.framework.component.decorator.MdcTaskDecorator;
+import io.micrometer.tracing.Tracer;
+import thriving.softwood.common.framework.component.decorator.MicrometerTracingDecorator;
 
 /**
+ * 异步线程池配置 (Micrometer Native)
+ *
  * @author ThrivingSoftwood
- * @since version 2026-01-23
+ * @since 2026-01-26
  */
 @Configuration
 @EnableAsync
@@ -25,31 +28,36 @@ public class AsyncConfig implements AsyncConfigurer {
 
     private static final Logger logger = LoggerFactory.getLogger(AsyncConfig.class);
 
-    @Bean
-    public Executor ptExecutor() {
+    /**
+     * 🧱 平台线程池：适用于 CPU 密集型任务
+     */
+    @Bean("ptExecutor")
+    public Executor ptExecutor(Tracer tracer) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(20);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("pt-exec-");
 
-        // 🔥 关键：挂载装饰器
-        executor.setTaskDecorator(new MdcTaskDecorator());
-        // ⚠️ 生产级必选：拒绝策略。当池子满时，由调用者线程执行（此时装饰器依然生效）
+        // 核心：挂载 Micrometer 装饰器
+        executor.setTaskDecorator(new MicrometerTracingDecorator(tracer));
+
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;
     }
 
-    @Bean
-    public Executor vtExecutor() {
-        // 1. 使用支持虚拟线程的执行器
-        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
-
-        // 2. 开启虚拟线程模式 (JDK 21+)
+    /**
+     * 🚀 虚拟线程池：适用于 IO 密集型任务 (JDK 21+)
+     */
+    @Bean("vtExecutor")
+    public Executor vtExecutor(Tracer tracer) {
+        // 使用 SimpleAsyncTaskExecutor 并开启虚拟线程支持
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("vt-exec-");
         executor.setVirtualThreads(true);
 
-        // 3. 挂载我们之前的 MDC 装饰器
-        // 逻辑完全复用：捕获主线程 MDC，注入虚拟线程，生成子任务 SpanID
-        executor.setTaskDecorator(new MdcTaskDecorator());
+        // 核心：同样挂载装饰器，确保虚拟线程也能传递 Trace
+        executor.setTaskDecorator(new MicrometerTracingDecorator(tracer));
 
         return executor;
     }
@@ -57,8 +65,8 @@ public class AsyncConfig implements AsyncConfigurer {
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (ex, method, params) -> {
-            // 💡 这里的日志会自动带上 TraceID 和 SpanID（因为装饰器已经初始化了上下文）
-            logger.error("❌ 异步任务执行异常! 方法: {}, 参数: {}, 异常信息: {}", method.getName(), params, ex.getMessage(), ex);
+            // Micrometer 会自动将 TraceContext 注入到 MDC，这里的日志会自动带上 ID
+            logger.error("❌ Async Exception in method: {}", method.getName(), ex);
         };
     }
 }

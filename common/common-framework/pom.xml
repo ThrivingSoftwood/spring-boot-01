@@ -19,7 +19,7 @@
         <!--01.内部依赖 begin-->
         <dependency>
             <groupId>thriving.softwood.common</groupId>
-            <artifactId>common-logging</artifactId>
+            <artifactId>common-observability</artifactId>
         </dependency>
         <!--01.内部依赖 end-->
 

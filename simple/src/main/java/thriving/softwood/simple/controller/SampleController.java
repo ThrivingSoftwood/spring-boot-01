@@ -5,11 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import thriving.softwood.common.core.result.Result;
 import thriving.softwood.simple.api.AncestorAsyncApi;
 import thriving.softwood.simple.component.config.Sample;
+import thriving.softwood.simple.pojo.vo.AncestorVO;
+import thriving.softwood.simple.pojo.vo.ComplexTraceVO;
 
 /**
  * @author ThrivingSoftwood
@@ -64,5 +67,23 @@ public class SampleController {
 
         logger.info("=== 主线程逻辑执行完毕，已响应前端 ===");
         return Result.success("请求已受理，请查看后台控制台日志。");
+    }
+
+    /**
+     * 触发多层级线程调用链 GET /simple/chain?msg=hello
+     */
+    @RequestMapping("/chain")
+    public AncestorVO triggerChain(@RequestParam(defaultValue = "hello") String msg) {
+        return ancestorAsyncApi.startChain(msg);
+    }
+
+    // ... (保留 /chain 接口)
+
+    /**
+     * 触发复杂的多层级并行调用链 GET /simple/complex-chain
+     */
+    @RequestMapping("/complex-chain")
+    public ComplexTraceVO triggerComplexChain() {
+        return ancestorAsyncApi.startComplexChain();
     }
 }
