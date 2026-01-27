@@ -3,7 +3,7 @@
     Log4j2 进阶生产级配置
     优化点：MDC 链路追踪 | 自动清理策略 | 异步高性能适配
 -->
-<Configuration status="WARN" monitorInterval="30">
+<Configuration status="WARN" monitorInterval="30" packages="io.opentelemetry.instrumentation.log4j.appender.v2_17">
 
     <Properties>
         <Property name="APP_NAME">${spring:spring.application.name:-springboot-app}</Property>
@@ -83,6 +83,10 @@
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingRandomAccessFile>
+
+        <!-- 🚀 OTLP 日志导出器 -->
+        <!-- 它会自动读取环境变量 OTEL_EXPORTER_OTLP_ENDPOINT (默认 localhost:4318) -->
+        <OpenTelemetry name="OTEL"/>
     </Appenders>
 
     <Loggers>
@@ -103,6 +107,7 @@
             <AppenderRef ref="Console"/>
             <AppenderRef ref="InfoFile"/>
             <AppenderRef ref="ErrorFile"/>
+            <AppenderRef ref="OTEL"/>
         </Root>
     </Loggers>
 

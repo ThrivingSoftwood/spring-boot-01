@@ -38,6 +38,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <guava.version>33.5.0-jre</guava.version>
         <slf4j.version>2.0.16</slf4j.version>
+        <otel.log4j.appender.version>2.24.0-alpha</otel.log4j.appender.version>
     </properties>
 
     <!--Step 01 : 添加 spring-boot 父项目 begin-->

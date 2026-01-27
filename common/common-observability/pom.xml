@@ -40,6 +40,11 @@
             <artifactId>disruptor</artifactId>
             <!-- 无锁并发队列，用于 Log4j2 的全异步高性能日志处理 -->
         </dependency>
+        <!-- 🚀 引入 Log4j2 Starter (提供 log4j-core 和 log4j-api) ,这解决了 AbstractAppender 找不到的问题 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
 
         <!-- ======================================================== -->
         <!-- 03. Spring Boot 观测性核心 (Actuator & Observation)      -->
@@ -100,5 +105,29 @@
             <scope>runtime</scope>
             <!-- Zipkin 专用导出器：用于直接将 Span 数据推送至 Zipkin 持久化后端 -->
         </dependency>
+        <!-- OpenTelemetry Log4j2 Appender 这个库允许 Log4j2 直接将日志转换成 OTLP 格式发送 -->
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-log4j-appender-2.17</artifactId>
+            <version>${otel.log4j.appender.version}</version>
+        </dependency>
+        <!--OTEL SDK,用于托管 OpenTelemetry 对象到 Spring-->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api</artifactId>
+        </dependency>
+        <!-- 🚀 新增：OpenTelemetry SDK (用于编写自定义 Processor) -->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-sdk</artifactId>
+        </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
 </project>

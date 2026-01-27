@@ -16,6 +16,7 @@ services:
       - "http.compression=false"
       - "discovery.type=single-node"
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "action.auto_create_index=true"
       - "PATH=/usr/share/elasticsearch/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
       - "ELASTIC_CONTAINER=true"
       - "SHELL=/bin/bash"

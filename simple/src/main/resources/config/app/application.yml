@@ -3,7 +3,7 @@ spring:
     name: simple
   profiles:
     #    active: dev
-    active: dev
+    active: prod
 #  main:
 #    laz y-initialization: true
 
@@ -40,6 +40,12 @@ management:
       export:
         otlp:
           endpoint: "http://localhost:4318/v1/traces"
+    logging:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/logs"
+    # 🚀 必须新增：显式指定日志导出地址
+
 
 # 查看配置类加载详情 debug: true
 
