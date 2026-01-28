@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" monitorInterval="30">
+<!--
+    🚀 生产级配置要点：
+    1. packages: 必须引入 OTel 插件包。
+    2. Async: 网络日志必须异步，防止 Collector 阻塞拖垮业务。
+    3. No Layout in OTel: OTel Appender 不使用 Layout，直接发送结构化数据。
+-->
+<Configuration status="WARN" monitorInterval="30" packages="io.opentelemetry.instrumentation.log4j.appender.v2_17">
+
     <Properties>
         <Property name="APP_NAME">${spring:spring.application.name:-springboot-app}</Property>
-        <Property name="LOG_HOME">logs/${APP_NAME}</Property>
+        <!-- 优先读取系统属性 log.home，读不到则使用默认的 logs/${APP_NAME} -->
+        <Property name="LOG_HOME">${sys:log.home:-logs/${APP_NAME}}</Property>
     </Properties>
 
     <Appenders>
-        <!-- 控制台：依然保留文本格式，给人看 -->
+        <!-- ========================================== -->
+        <!-- 1. 控制台 (K8s/Docker 推荐保留)            -->
+        <!-- ========================================== -->
         <Console name="Console" target="SYSTEM_OUT">
-            <!-- 开发环境控制台可以开启行号，因为不需要抗高并发 -->
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}] %-5level %logger{36}:%L - %msg%n%throwable"/>
+            <!-- 生产环境去掉 %L (行号) 以提升性能 -->
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}][%X{spanId}] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <!-- 文件：使用 JSON 格式，给机器(ELK)看 -->
+        <!-- ========================================== -->
+        <!-- 2. 本地文件 (磁盘兜底，以防网络丢失)       -->
+        <!-- ========================================== -->
         <RollingRandomAccessFile name="InfoFile" fileName="${LOG_HOME}/app-info.json"
                                  filePattern="${LOG_HOME}/app-info-%d{yyyy-MM-dd}-%i.json.gz">
             <immediateFlush>false</immediateFlush>
             <bufferSize>262144</bufferSize>
 
-            <!-- ✅ 使用 JSON 布局 -->
+            <!-- 写入磁盘依然使用 JSON 模板，方便 Filebeat 采集或人工排查 -->
             <JsonTemplateLayout eventTemplateUri="classpath:config/logging/log4j2-json-layout.json">
-                <!-- 注入应用名，方便在 ES 里按服务筛选 -->
                 <EventTemplateAdditionalField key="service.name" value="${APP_NAME}"/>
             </JsonTemplateLayout>
 
@@ -30,17 +41,42 @@
             </Policies>
             <DefaultRolloverStrategy max="50"/>
         </RollingRandomAccessFile>
+
+        <!-- ========================================== -->
+        <!-- 3. OpenTelemetry 核心 Appender             -->
+        <!-- ========================================== -->
+        <!-- 注意：这里不配置 Layout，直接发原生 LogRecord 给 Collector -->
+        <OpenTelemetry name="OTEL_CORE"/>
+
+        <!-- ========================================== -->
+        <!-- 4. 异步包装器 (生产环境关键！)             -->
+        <!-- ========================================== -->
+        <!--
+             作用：将日志放入内存队列，由独立线程发送给 OTel Collector。
+             blocking="false": 如果队列满了，直接丢弃日志，绝不阻塞业务线程 (Fail-fast)。
+             bufferSize: 队列大小，根据内存调整。
+        -->
+        <Async name="OTEL_ASYNC" blocking="false" bufferSize="4096">
+            <AppenderRef ref="OTEL_CORE">
+                <PatternLayout pattern="%m"/>
+            </AppenderRef>
+        </Async>
+
     </Appenders>
 
     <Loggers>
         <!--
-           ⚠️ 生产环境关键决策：
-           includeLocation="false" : 为了性能，JSON 日志里不会有代码行号。
-           如果必须要有行号，请改为 true，但要做好性能下降的心理准备。
+            Root Logger
+            includeLocation="false": 再次强调，关闭行号获取，提升 10 倍性能
         -->
         <Root level="INFO" includeLocation="false">
+            <!-- 输出到控制台 (可选，如果是纯虚机部署建议保留) -->
             <AppenderRef ref="Console"/>
+            <!-- 输出到本地文件 (兜底) -->
             <AppenderRef ref="InfoFile"/>
+            <!-- 🚀 异步发送到 Elasticsearch -->
+            <AppenderRef ref="OTEL_ASYNC"/>
         </Root>
     </Loggers>
+
 </Configuration>

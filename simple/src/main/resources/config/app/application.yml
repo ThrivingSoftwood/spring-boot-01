@@ -2,10 +2,50 @@ spring:
   application:
     name: simple
   profiles:
-    active: dev
-#    active: prod
+    #    active: dev
+    active: prod
 #  main:
 #    laz y-initialization: true
+
+management:
+  # 开启 Actuator 端点（可选，方便调试）
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus,metrics"
+
+  # 开启观测性
+  observations:
+    annotations:
+      enabled: true
+
+  # ⚡ 链路追踪核心配置
+  tracing:
+    sampling:
+      # ⚠️ 关键：采样率 1.0 表示 100% 记录。
+      # 生产环境通常设为 0.1 或更低，开发环境务必设为 1.0，否则看不到 TraceID！
+      probability: 1.0
+    # 自动将 TraceID/SpanID 注入到 MDC 中
+    baggage:
+      correlation:
+        enabled: true
+        # 如果你需要自定义字段在链路传递，加在这里
+        fields: "traceId,spanId"
+    export:
+      enabled: true
+
+  # 🚀 配置 OTLP 导出逻辑
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/traces"
+    # 🚀 必须新增：显式指定日志导出地址
+    logging:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/logs"
+
 
 # 查看配置类加载详情 debug: true
 

@@ -1,0 +1,28 @@
+services:
+  mysql-9.5:
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    container_name: "mysql-9.5"
+    entrypoint:
+      - "docker-entrypoint.sh"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${你的密码}"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "GOSU_VERSION=1.19"
+      - "MYSQL_MAJOR=innovation"
+      - "MYSQL_VERSION=9.5.0-1.el9"
+      - "MYSQL_SHELL_VERSION=9.5.0-1.el9"
+    hostname: "d95815199296"
+    image: "mysql:latest"
+    ipc: "private"
+    logging:
+      driver: "json-file"
+      options: { }
+    network_mode: "bridge"
+    ports:
+      - "3306:3306/tcp"
+    volumes:
+      - "${你的实际路径}:/var/lib/mysql"
+    working_dir: "/"
+version: "3.6"

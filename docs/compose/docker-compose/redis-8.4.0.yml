@@ -1,0 +1,34 @@
+services:
+  redis-20260110-latest:
+    command:
+      - "redis-server"
+      - "--appendonly"
+      - "yes"
+      - "--requirepass"
+      - "${你的密码}"
+    container_name: "redis-20260110-latest"
+    entrypoint:
+      - "docker-entrypoint.sh"
+    environment:
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "REDIS_DOWNLOAD_URL=https://github.com/redis/redis/archive/refs/tags/8.4.0.tar.gz"
+      - "REDIS_DOWNLOAD_SHA=b947d9015622669b5bee8ec954f658b3278d42dbefae23a92d9b7704bfe143f9"
+    hostname: "e55a2f2d6934"
+    image: "redis:latest"
+    ipc: "private"
+    logging:
+      driver: "json-file"
+      options: { }
+    network_mode: "bridge"
+    ports:
+      - "6379:6379/tcp"
+    volumes:
+      - "bd44fc8ccd3b57a7568796fc8b3b767d173cba2c09ce91d7c77c5bb61bc8dc5d:/data"
+      - "redis-data:${你的实际路径}"
+    working_dir: "/data"
+version: "3.6"
+volumes:
+  bd44fc8ccd3b57a7568796fc8b3b767d173cba2c09ce91d7c77c5bb61bc8dc5d:
+    external: true
+  redis-data:
+    external: true

@@ -3,11 +3,12 @@
     Log4j2 进阶生产级配置
     优化点：MDC 链路追踪 | 自动清理策略 | 异步高性能适配
 -->
-<Configuration status="WARN" monitorInterval="30">
+<Configuration status="WARN" monitorInterval="30" packages="io.opentelemetry.instrumentation.log4j.appender.v2_17">
 
     <Properties>
         <Property name="APP_NAME">${spring:spring.application.name:-springboot-app}</Property>
-        <Property name="LOG_HOME">logs/${APP_NAME}</Property>
+        <!-- 优先读取系统属性 log.home，读不到则使用默认的 logs/${APP_NAME} -->
+        <Property name="LOG_HOME">${sys:log.home:-logs/${APP_NAME}}</Property>
         <Property name="FILE_NAME">app</Property>
 
         <!--
@@ -19,12 +20,12 @@
         <Property name="CONSOLE_PATTERN">%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{dim} %highlight{%-5level}{FATAL=red bright,
             ERROR=red, WARN=yellow bold, INFO=green, DEBUG=cyan bold, TRACE=blue}
             %style{[%X{traceId}][%X{spanId}]}{cyan} %style{${sys:PID}}{magenta} %style{---}{dim}
-            %style{[%15.15t]}{dim,yellow} %style{%-40.40c{1.}}{cyan} : %msg%n%style{%throwable}{red}
+            %style{%-40.40c{1.}}{cyan} : %msg%n%style{%throwable}{red}
         </Property>
 
         <!-- 📄 生产文件格式：补全了 [%X{spanId}] -->
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceId}][%X{spanId}] ${sys:PID} ---
-            [%15.15t] %-40.40c{1.} : %msg%n
+            %-40.40c{1.} : %msg%n
         </Property>
     </Properties>
 
@@ -83,6 +84,12 @@
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingRandomAccessFile>
+
+        <!-- 🚀 OTLP 日志导出器 -->
+        <!-- 它会自动读取环境变量 OTEL_EXPORTER_OTLP_ENDPOINT (默认 localhost:4318) -->
+        <OpenTelemetry name="OTEL">
+            <PatternLayout pattern="%m"/>
+        </OpenTelemetry>
     </Appenders>
 
     <Loggers>
@@ -103,6 +110,7 @@
             <AppenderRef ref="Console"/>
             <AppenderRef ref="InfoFile"/>
             <AppenderRef ref="ErrorFile"/>
+            <AppenderRef ref="OTEL"/>
         </Root>
     </Loggers>
 

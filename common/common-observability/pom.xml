@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.2</version>
+    </parent>
+    <groupId>thriving.softwood.common</groupId>
+    <artifactId>common-observability</artifactId>
+    <name>common-observability</name>
+    <description>可观测性底座：集成日志增强、链路追踪（Tracing）与指标监控（Metrics）</description>
+
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- ======================================================== -->
+        <!-- 01. 内部核心依赖                                          -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-core</artifactId>
+            <!-- 依赖项目基础工具类、常量定义及枚举 -->
+        </dependency>
+
+        <!-- ======================================================== -->
+        <!-- 02. 基础日志体系 (Logging Facade & Performance)          -->
+        <!-- ======================================================== -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <!-- SLF4J 日志门面，解耦底层日志实现 -->
+        </dependency>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <!-- 无锁并发队列，用于 Log4j2 的全异步高性能日志处理 -->
+        </dependency>
+        <!-- 🚀 引入 Log4j2 Starter (提供 log4j-core 和 log4j-api) ,这解决了 AbstractAppender 找不到的问题 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+
+        <!-- ======================================================== -->
+        <!-- 03. Spring Boot 观测性核心 (Actuator & Observation)      -->
+        <!-- ======================================================== -->
+        <!-- 1. Spring Boot 观测性核心 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                    <!-- 核心操作：排除默认的 Logback 实现，防止与 Log4j2 冲突 -->
+                </exclusion>
+            </exclusions>
+            <!-- Spring 生态观测性枢纽：管理 ObservationRegistry 与基础 Metrics -->
+        </dependency>
+
+        <!-- 2. Micrometer Tracing 桥接 OpenTelemetry -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-otel</artifactId>
+            <!-- 关键桥接包：将 Micrometer Tracing API 映射至 OpenTelemetry SDK -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-micrometer-tracing-opentelemetry</artifactId>
+            <!-- Spring Boot 官方提供的 OpenTelemetry 自动装配适配器 -->
+        </dependency>
+
+        <!-- 3. 数据导出器 (Exporters) -->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-exporter-otlp</artifactId>
+            <scope>runtime</scope>
+            <!-- 工业标准 OTLP 协议导出器：用于将 Trace 数据发送至 OTel Collector -->
+        </dependency>
+
+        <!-- 4. Log4j2 OTLP Appender (关键：日志上报核心) -->
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-log4j-appender-2.17</artifactId>
+            <version>${otel.log4j.appender.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
+</project>

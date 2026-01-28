@@ -5,18 +5,20 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </parent>
     <groupId>thriving.softwood.common</groupId>
     <artifactId>common-core</artifactId>
     <name>common-core</name>
-    <description>common-core</description>
+    <description>核心基础模块：纯净工具类与数据模型</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
+
     <dependencies>
-        <!--01.工具库依赖 begin-->
-        <!--hutool 工具清单-->
+        <!--01.基础工具库依赖 begin-->
+        <!-- Hutool: 小而全的Java工具类库 -->
+        <!--hutool 工具清单 begin-->
         <!--    hutool-all 全部依赖(不推介)-->
         <!--    hutool-aop JDK动态代理封装，提供非IOC下的切面支持-->
         <!--    hutool-bloomFilter 布隆过滤，提供一些Hash算法的布隆过滤-->
@@ -38,22 +40,32 @@
         <!--    hutool-socket 基于Java的NIO和AIO的Socket封装-->
         <!--    hutool-jwt JSON Web Token (JWT)封装实现-->
         <!--    hutool-ai AI大模型封装实现-->
+        <!--hutool 工具清单 begin-->
         <dependency>
             <groupId>cn.hutool.v7</groupId>
             <artifactId>hutool-core</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-        <!--先不使用 fastjson-->
-        <!--    <dependency>-->
-        <!--        <groupId>com.alibaba</groupId>-->
-        <!--        <artifactId>fastjson</artifactId>-->
-        <!--        <version>${fastjson.version}</version>-->
-        <!--    </dependency>-->
+        <!-- Guava: Google 核心库 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <!-- Jakarta Validation API: 仅引入校验注解接口，不含实现 -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <!--01.基础工具库依赖 end-->
+
+        <!--02.JSON 处理依赖 begin-->
+        <!-- Jackson Core: 低级流式API -->
         <dependency>
             <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        <!-- Jackson Databind: 数据绑定 (对象 <-> JSON) -->
         <dependency>
             <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -65,23 +77,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- Jackson Annotations: 注解支持 -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson-annotation.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <!--01.工具库依赖 end-->
+        <!--02.JSON 处理依赖 end-->
     </dependencies>
-
-    <build>
-        <plugins>
-        </plugins>
-    </build>
-
-
 </project>

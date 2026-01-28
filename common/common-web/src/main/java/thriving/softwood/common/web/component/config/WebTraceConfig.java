@@ -4,24 +4,18 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
-import thriving.softwood.common.web.component.filter.TraceFilter;
+import io.micrometer.tracing.Tracer;
+import thriving.softwood.common.web.component.filter.WebTraceFilter;
 
-/**
- * @author ThrivingSoftwood
- * @since version 2026-01-23
- */
 @AutoConfiguration
 public class WebTraceConfig {
 
     @Bean
-    public FilterRegistrationBean<TraceFilter> traceIdFilterRegistration() {
-        FilterRegistrationBean<TraceFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new TraceFilter());
-        // 拦截所有路径
+    public FilterRegistrationBean<WebTraceFilter> webTraceFilterRegistration(Tracer tracer) {
+        FilterRegistrationBean<WebTraceFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new WebTraceFilter(tracer));
         registration.addUrlPatterns("/*");
-        registration.setName("traceFilter");
-        // 再次确保优先级
-        registration.setOrder(Integer.MIN_VALUE);
+        registration.setName("webTraceResponseFilter");
         return registration;
     }
 }

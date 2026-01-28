@@ -11,14 +11,10 @@ package thriving.softwood.common.core.constant;
  */
 public final class PunctuationConstants {
 
-    // 私有构造方法，防止工具类被实例化
-    private PunctuationConstants() {
-        throw new UnsupportedOperationException("这是一个工具类常量，禁止实例化");
-    }
-
-    /* ========== 常用分隔符 ========== */
     /** 逗号 */
     public static final String COMMA = ",";
+
+    /* ========== 常用分隔符 ========== */
     /** 句号 */
     public static final String PERIOD = ".";
     /** 分号 */
@@ -55,10 +51,10 @@ public final class PunctuationConstants {
     public static final String DOLLAR_SIGN = "$";
     /** 人民币/日元符号 */
     public static final String YEN_SIGN = "¥";
-
-    /* ========== 括号类 ========== */
     /** 左圆括号 */
     public static final String LEFT_PARENTHESIS = "(";
+
+    /* ========== 括号类 ========== */
     /** 右圆括号 */
     public static final String RIGHT_PARENTHESIS = ")";
     /** 左方括号 */
@@ -73,28 +69,28 @@ public final class PunctuationConstants {
     public static final String LEFT_ANGLE_BRACKET = "<";
     /** 右尖括号 */
     public static final String RIGHT_ANGLE_BRACKET = ">";
-
-    /* ========== 引号类 ========== */
     /** 双引号 */
     public static final String DOUBLE_QUOTE = "\"";
+
+    /* ========== 引号类 ========== */
     /** 单引号 */
     public static final String SINGLE_QUOTE = "'";
     /** 反引号 */
     public static final String BACKTICK = "`";
-
-    /* ========== 空白与不可见字符 ========== */
     /** 空格 */
     public static final String SPACE = " ";
+
+    /* ========== 空白与不可见字符 ========== */
     /** 制表符 (Tab) */
     public static final String TAB = "\t";
     /** 换行符 (系统相关，此常量表示通用新行) */
     public static final String NEWLINE = System.lineSeparator();
     /** 空字符串 */
     public static final String EMPTY = "";
-
-    /* ========== 中文标点符号 (全角) ========== */
     /** 中文逗号 */
     public static final String CN_COMMA = "，";
+
+    /* ========== 中文标点符号 (全角) ========== */
     /** 中文句号 */
     public static final String CN_PERIOD = "。";
     /** 中文分号 */
@@ -115,4 +111,9 @@ public final class PunctuationConstants {
     public static final String CN_RIGHT_ANGLE_BRACKET = "》";
     /** 中文间隔号 (中点) */
     public static final String CN_MIDDLE_DOT = "·";
+
+    // 私有构造方法，防止工具类被实例化
+    private PunctuationConstants() {
+        throw new UnsupportedOperationException("这是一个工具类常量，禁止实例化");
+    }
 }

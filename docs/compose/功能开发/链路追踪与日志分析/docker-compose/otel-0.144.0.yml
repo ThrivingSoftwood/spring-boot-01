@@ -1,0 +1,33 @@
+services:
+  otel-20260126-latest:
+    command:
+      - "--config"
+      - "/etc/otelcol-contrib/config.yaml"
+    container_name: "otel-20260126-latest"
+    entrypoint:
+      - "/otelcol-contrib"
+    environment:
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    hostname: "d97198db9f79"
+    image: "otel/opentelemetry-collector-contrib:latest"
+    ipc: "private"
+    labels:
+      org.opencontainers.image.created: "2026-01-20T16:08:18Z"
+      org.opencontainers.image.licenses: "Apache-2.0"
+      org.opencontainers.image.name: "opentelemetry-collector-releases"
+      org.opencontainers.image.revision: "9e444f54f4033bf6b7c254f0a8797ffd3917b6de"
+      org.opencontainers.image.source: "https://github.com/open-telemetry/opentelemetry-collector-releases"
+      org.opencontainers.image.version: "0.144.0"
+    logging:
+      driver: "json-file"
+      options: { }
+    network_mode: "bridge"
+    ports:
+      - "4317:4317/tcp"
+      - "4318:4318/tcp"
+      - "55679:55679/tcp"
+    user: "10001:10001"
+    volumes:
+      - "${你的实际路径}:/etc/otelcol-contrib"
+    working_dir: "/"
+version: "3.6"

@@ -1,0 +1,66 @@
+services:
+  elasticsearch-20260127-8.19.10:
+
+    command:
+      - "eswrapper"
+
+    container_name: "elasticsearch-20260127-8.19.10"
+
+    entrypoint:
+      - "/bin/tini"
+      - "--"
+      - "/usr/local/bin/docker-entrypoint.sh"
+
+    environment:
+      - "xpack.security.enabled=false"
+      - "http.compression=false"
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "action.auto_create_index=true"
+      - "PATH=/usr/share/elasticsearch/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "ELASTIC_CONTAINER=true"
+      - "SHELL=/bin/bash"
+
+    hostname: "04eb5da4358c"
+
+    image: "elasticsearch:8.19.10"
+
+    ipc: "private"
+
+    labels:
+      org.label-schema.build-date: "2026-01-08T22:07:49.939644068Z"
+      org.label-schema.license: "Elastic-License-2.0"
+      org.label-schema.name: "Elasticsearch"
+      org.label-schema.schema-version: "1.0"
+      org.label-schema.url: "https://www.elastic.co/products/elasticsearch"
+      org.label-schema.usage: "https://www.elastic.co/guide/en/elasticsearch/reference/index.html"
+      org.label-schema.vcs-ref: "493241b351be6d9f40d52a1406c91a23b4148821"
+      org.label-schema.vcs-url: "https://github.com/elastic/elasticsearch"
+      org.label-schema.vendor: "Elastic"
+      org.label-schema.version: "8.19.10"
+      org.opencontainers.image.created: "2026-01-08T22:07:49.939644068Z"
+      org.opencontainers.image.documentation: "https://www.elastic.co/guide/en/elasticsearch/reference/index.html"
+      org.opencontainers.image.licenses: "Elastic-License-2.0"
+      org.opencontainers.image.ref.name: "ubuntu"
+      org.opencontainers.image.revision: "493241b351be6d9f40d52a1406c91a23b4148821"
+      org.opencontainers.image.source: "https://github.com/elastic/elasticsearch"
+      org.opencontainers.image.title: "Elasticsearch"
+      org.opencontainers.image.url: "https://www.elastic.co/products/elasticsearch"
+      org.opencontainers.image.vendor: "Elastic"
+      org.opencontainers.image.version: "8.19.10"
+
+    logging:
+      driver: "json-file"
+      options: { }
+
+    network_mode: "bridge"
+
+    ports:
+      - "9200:9200/tcp"
+      - "9300:9300/tcp"
+
+    user: "1000:0"
+
+    working_dir: "/usr/share/elasticsearch"
+
+version: "3.6"
