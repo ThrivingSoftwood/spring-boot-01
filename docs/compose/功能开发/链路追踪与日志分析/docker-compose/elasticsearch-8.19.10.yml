@@ -1,10 +1,10 @@
 services:
-  elasticsearch-20260126-8.19.10:
+  elasticsearch-20260127-8.19.10:
 
     command:
       - "eswrapper"
 
-    container_name: "elasticsearch-20260126-8.19.10"
+    container_name: "elasticsearch-20260127-8.19.10"
 
     entrypoint:
       - "/bin/tini"
@@ -21,7 +21,7 @@ services:
       - "ELASTIC_CONTAINER=true"
       - "SHELL=/bin/bash"
 
-    hostname: "67ab0ca54829"
+    hostname: "04eb5da4358c"
 
     image: "elasticsearch:8.19.10"
 

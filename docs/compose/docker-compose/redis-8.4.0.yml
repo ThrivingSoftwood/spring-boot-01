@@ -24,7 +24,7 @@ services:
       - "6379:6379/tcp"
     volumes:
       - "bd44fc8ccd3b57a7568796fc8b3b767d173cba2c09ce91d7c77c5bb61bc8dc5d:/data"
-      - "redis-data:/Users/metathriving/docker-volumes/redis-data"
+      - "redis-data:${你的实际路径}"
     working_dir: "/data"
 version: "3.6"
 volumes:

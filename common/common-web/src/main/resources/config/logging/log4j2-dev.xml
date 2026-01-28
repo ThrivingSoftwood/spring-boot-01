@@ -86,7 +86,9 @@
 
         <!-- 🚀 OTLP 日志导出器 -->
         <!-- 它会自动读取环境变量 OTEL_EXPORTER_OTLP_ENDPOINT (默认 localhost:4318) -->
-        <OpenTelemetry name="OTEL"/>
+        <OpenTelemetry name="OTEL">
+            <PatternLayout pattern="%m"/>
+        </OpenTelemetry>
     </Appenders>
 
     <Loggers>

@@ -23,6 +23,6 @@ services:
     ports:
       - "3306:3306/tcp"
     volumes:
-      - "/Users/metathriving/docker-volumes/mysql-data:/var/lib/mysql"
+      - "${你的实际路径}:/var/lib/mysql"
     working_dir: "/"
 version: "3.6"

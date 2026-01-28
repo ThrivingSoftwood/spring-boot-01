@@ -1,0 +1,44 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+processors:
+  batch: { }
+
+
+exporters:
+  # ✅ 内置调试导出器 (无需 endpoint，直接打日志)
+  debug:
+    # 调试时设置为 detailed 以显示完整 Body
+    # verbosity: detailed
+    verbosity: normal
+  zipkin:
+    endpoint: "http://host.docker.internal:9411/api/v2/spans"
+
+  # 必须使用 "elasticsearch" 作为类型才能将日志传给 elasticsearch
+  elasticsearch:
+    # 1. 调试用导出器 (指向 Python 脚本)
+    # 调试阶段：使用 elasticsearch 发给 Python 脚本
+    # endpoints: [ "http://host.docker.internal:9999" ]
+    # 2. 真实的 ES 导出器 (生产用)
+    # 验证通过后：改为 elasticsearch 发给真实 ES
+    endpoints: [ "http://host.docker.internal:9200" ]
+    tls:
+      insecure: true
+    logs_index: "logs-app"
+
+service:
+  pipelines:
+    traces:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ zipkin ]
+
+    logs:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ elasticsearch, debug ]

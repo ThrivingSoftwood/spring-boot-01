@@ -56,7 +56,9 @@
              bufferSize: 队列大小，根据内存调整。
         -->
         <Async name="OTEL_ASYNC" blocking="false" bufferSize="4096">
-            <AppenderRef ref="OTEL_CORE"/>
+            <AppenderRef ref="OTEL_CORE">
+                <PatternLayout pattern="%m"/>
+            </AppenderRef>
         </Async>
 
     </Appenders>

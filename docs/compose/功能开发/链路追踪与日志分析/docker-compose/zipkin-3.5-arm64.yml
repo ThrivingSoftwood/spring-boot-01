@@ -16,7 +16,7 @@ services:
       - "JAVA_HOME=/usr/lib/jvm/java-21-openjdk"
       - "MODULE_OPTS="
     hostname: "bb8d94ba96ea"
-    image: "openzipkin/zipkin:3.5-arm64"
+    image: "openzipkin/zipkin:latest"
     ipc: "private"
     labels:
       alpine-version: "3.21.3"

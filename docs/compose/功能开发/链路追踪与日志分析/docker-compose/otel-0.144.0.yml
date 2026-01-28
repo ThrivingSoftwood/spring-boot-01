@@ -28,6 +28,6 @@ services:
       - "55679:55679/tcp"
     user: "10001:10001"
     volumes:
-      - "/Library/0 - MetaThrivingSoftwood/0002 - Environment/0003 - OTEL/otel-collector:/etc/otelcol-contrib"
+      - "${你的实际路径}:/etc/otelcol-contrib"
     working_dir: "/"
 version: "3.6"
