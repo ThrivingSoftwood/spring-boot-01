@@ -5,7 +5,7 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.2</version>
     </parent>
     <groupId>thriving.softwood.common</groupId>
     <artifactId>common-observability</artifactId>
@@ -82,7 +82,7 @@
             <scope>runtime</scope>
             <!-- 工业标准 OTLP 协议导出器：用于将 Trace 数据发送至 OTel Collector -->
         </dependency>
-        
+
         <!-- 4. Log4j2 OTLP Appender (关键：日志上报核心) -->
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>

@@ -51,7 +51,7 @@
 
     <groupId>thriving.softwood</groupId>
     <artifactId>spring-boot-01</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -230,6 +230,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${mvn.surefire.plugin.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <log.home>${project.build.directory}/logs</log.home>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
 
