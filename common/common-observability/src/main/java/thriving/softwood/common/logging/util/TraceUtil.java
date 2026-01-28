@@ -4,6 +4,7 @@ import static thriving.softwood.common.core.constant.PunctuationConstant.HYPHEN;
 import static thriving.softwood.common.core.constant.TraceConstant.*;
 import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.SPT;
 import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.STS;
+import static thriving.softwood.common.core.util.StringUtil.getLastPart;
 
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class TraceUtil {
             MDC.setContextMap(contextMap);
         }
         // 🚀 核心逻辑：区分是否为多线程/多线程类型,需要增加前缀. SPT : Sync Platform Thread
-        MDC.put(TRACE_ID_KEY, MDC.get(TRACE_ID_KEY).replace(SPT.mark(), threadMark));
+        MDC.put(TRACE_ID_KEY, threadMark + HYPHEN + getLastPart(MDC.get(TRACE_ID_KEY), HYPHEN));
 
         String parentId = MDC.get(SPAN_ID_KEY);
         if (StrUtil.isBlank(parentId)) {

@@ -50,7 +50,7 @@
 
     <groupId>thriving.softwood</groupId>
     <artifactId>spring-boot-01</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -69,7 +69,7 @@
             </dependency>
             <dependency>
                 <groupId>thriving.softwood.common</groupId>
-                <artifactId>common-logging</artifactId>
+                <artifactId>common-observability</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

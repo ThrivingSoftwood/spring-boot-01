@@ -5,11 +5,11 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.2</version>
     </parent>
     <groupId>thriving.softwood.common</groupId>
-    <artifactId>common-logging</artifactId>
-    <name>common-logging</name>
+    <artifactId>common-observability</artifactId>
+    <name>common-observability</name>
     <description>日志增强模块</description>
     <properties>
         <java.version>${jdk.version}</java.version>

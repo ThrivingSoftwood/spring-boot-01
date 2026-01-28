@@ -9,7 +9,8 @@
         <!-- 控制台：依然保留文本格式，给人看 -->
         <Console name="Console" target="SYSTEM_OUT">
             <!-- 开发环境控制台可以开启行号，因为不需要抗高并发 -->
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}] %-5level %logger{36}:%L - %msg%n%throwable"/>
+            <PatternLayout
+                    pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}][%X{spanId}] %-5level %logger{36}:%L - %msg%n%throwable"/>
         </Console>
 
         <!-- 文件：使用 JSON 格式，给机器(ELK)看 -->

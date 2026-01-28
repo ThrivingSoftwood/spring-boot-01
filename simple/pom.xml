@@ -5,7 +5,7 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>spring-boot-01</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.2</version>
     </parent>
     <artifactId>simple</artifactId>
     <name>simple</name>

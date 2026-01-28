@@ -5,7 +5,7 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>spring-boot-01</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.2</version>
     </parent>
     <artifactId>common</artifactId>
     <packaging>pom</packaging>
@@ -13,7 +13,7 @@
     <description>公共工具模块聚合层</description>
     <modules>
         <module>common-core</module>
-        <module>common-logging</module>
+        <module>common-observability</module>
         <module>common-framework</module>
         <module>common-web</module>
     </modules>
