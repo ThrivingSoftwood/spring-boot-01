@@ -2,8 +2,8 @@ spring:
   application:
     name: simple
   profiles:
-    active: dev
-#    active: prod
+    #    active: dev
+    active: prod
 #  main:
 #    laz y-initialization: true
 
@@ -34,17 +34,17 @@ management:
     export:
       enabled: true
 
-    # 🚀 配置 OTLP 导出逻辑
-    #  opentelemetry:
-    #    tracing:
-    #      export:
-    #        otlp:
-    #          endpoint: "http://localhost:4318/v1/traces"
-    #    logging:
-    #      export:
-    #        otlp:
-    #          endpoint: "http://localhost:4318/v1/logs"
+  # 🚀 配置 OTLP 导出逻辑
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/traces"
     # 🚀 必须新增：显式指定日志导出地址
+    logging:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/logs"
 
 
 # 查看配置类加载详情 debug: true

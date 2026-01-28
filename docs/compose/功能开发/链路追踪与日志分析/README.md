@@ -1,57 +1,46 @@
-# Spring Boot 4 + OpenTelemetry 可观测性实战总结
+***
 
-## 1. Maven 依赖管理
+# Thriving Softwood 可观测性架构升级方案
 
-本项目采用 **BOM (Bill of Materials)** 模式管理版本，核心依赖主要集中在 `common-observability` 模块中。
+## 1. 方案背景与目标
 
-### 1.1 父工程版本控制 (`pom.xml`)
+**原始版本痛点：**
 
-定义全局版本号，确保 Spring Boot 4、Micrometer 和 OpenTelemetry 组件兼容。
+* 手动维护 `TraceUtil` 和 `MDC`，代码侵入性强。
+* 依赖自定义的 `ThreadNamePrefixEnum` 进行线程染色，不够标准。
+* 缺乏统一的收集端，日志分散在本地文件。
+* 无法跨服务传递链路上下文。
 
-```xml
+**升级后目标：**
 
-<properties>
-    <jdk.version>25</jdk.version>
-    <springboot.version>4.0.2</springboot.version>
-    <otel.log4j.appender.version>2.24.0-alpha</otel.log4j.appender.version>
-    <disruptor.version>4.0.0</disruptor.version>
-</properties>
-```
+* **标准化**：全面拥抱 Spring Boot 4 原生支持的 **Micrometer Tracing** 和 **OpenTelemetry** 标准。
+* **可视化**：链路数据上报 **Zipkin**，日志数据上报 **Elasticsearch (Kibana)**。
+* **健壮性**：解决结构化日志上报时的类型冲突，适配虚拟线程（Virtual Threads）。
 
-### 1.2 核心模块依赖 (`common-observability/pom.xml`)
+> 原始版本已单独存放至 dev-no-otel 分支并同时兼容了多层线程池套用时的链路追踪场景
 
-这里实现了日志框架的替换（Logback -> Log4j2）以及 OTel 的集成。
+---
+
+## 2. 模块重构与依赖升级
+
+### 2.1 模块调整
+
+* **调整**：`common-logging` 模块重命名为 `common-observability` 模块，作为新的观测性底座。
+
+### 2.2 Maven 依赖配置 (`pom.xml`)
+
+在 `common-observability` 中引入核心组件：
 
 ```xml
 
 <dependencies>
-    <!-- 1. 日志门面与高性能队列 -->
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.lmax</groupId>
-        <artifactId>disruptor</artifactId> <!-- Log4j2 异步核心 -->
-    </dependency>
-
-    <!-- 2. Log4j2 集成 (排除默认 Logback) -->
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-log4j2</artifactId>
-    </dependency>
+    <!-- 1. Spring Boot 观测性核心 -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-actuator</artifactId>
-        <exclusions>
-            <exclusion>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-logging</artifactId>
-            </exclusion>
-        </exclusions>
     </dependency>
 
-    <!-- 3. Micrometer Tracing 桥接 OpenTelemetry -->
+    <!-- 2. Micrometer Tracing 桥接 OpenTelemetry -->
     <dependency>
         <groupId>io.micrometer</groupId>
         <artifactId>micrometer-tracing-bridge-otel</artifactId>
@@ -61,33 +50,30 @@
         <artifactId>spring-boot-micrometer-tracing-opentelemetry</artifactId>
     </dependency>
 
-    <!-- 4. 数据导出器 (Exporters) -->
+    <!-- 3. 数据导出器 (Exporters) -->
     <dependency>
         <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-exporter-otlp</artifactId> <!-- 发送给 Collector -->
-    </dependency>
-    <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-exporter-zipkin</artifactId> <!-- 备用/调试 -->
+        <artifactId>opentelemetry-exporter-otlp</artifactId>
     </dependency>
 
-    <!-- 5. 关键组件：Log4j2 OTel Appender -->
-    <!-- 允许 Log4j2 直接将 LogEvent 转换为 OTel LogRecord -->
+    <!-- 4. Log4j2 OTLP Appender (关键：日志上报核心) -->
     <dependency>
         <groupId>io.opentelemetry.instrumentation</groupId>
         <artifactId>opentelemetry-log4j-appender-2.17</artifactId>
-        <version>${otel.log4j.appender.version}</version>
+        <version>2.24.0-alpha</version>
     </dependency>
 </dependencies>
 ```
 
 ---
 
-## 2. 应用端配置
+## 3. 核心 Java 配置实现
 
-### 2.1 Java 配置注入
+### 3.1 Log4j2 与 Spring 上下文桥接
 
-解决 Log4j2 初始化早于 Spring Context 的问题，手动将 Spring 管理的 `OpenTelemetry` 实例注入到 Log4j 系统中。
+为解决 Log4j2 初始化早于 Spring Bean 的时序问题，手动安装 OTel Appender。
+
+**文件**: `common-observability/.../config/Log4j2OtlpConfig.java`
 
 ```java
 
@@ -98,26 +84,80 @@ public class Log4j2OtlpConfig {
 
     @PostConstruct
     public void start() {
-        // 核心：激活 OTel Appender
+        // 将 Spring 托管的 OTel 实例注入到 Log4j2 系统
         OpenTelemetryAppender.install(openTelemetry);
     }
 }
 ```
 
-### 2.2 Log4j2 生产配置 (`log4j2-prod.xml`)
+### 3.2 跨线程上下文传递 (适配虚拟线程)
 
-配置异步 Appender 以保证业务性能，并使用 OpenTelemetry Appender 进行上报。
+弃用了旧的 `MdcTaskDecorator`，新增 `MicrometerTracingDecorator`，利用 `Tracer` 创建子 Span，确保父子线程链路不断裂。
+
+**文件**: `common-framework/.../decorator/MicrometerTracingDecorator.java`
+
+```java
+public class MicrometerTracingDecorator implements TaskDecorator {
+    private final Tracer tracer;
+    // 构造器注入 Tracer
+
+    @Override
+    public Runnable decorate(@NonNull Runnable runnable) {
+        // 1. 获取父线程 Span
+        Span parentSpan = tracer.currentSpan();
+        // 2. 创建子 Span
+        Span childSpan = tracer.nextSpan().name("async-task");
+
+        // 3. 打印衔接日志 [pSpanId -> spanId]
+        logger.info("🧵 Thread Dispatch: [{} -> {}] Task submitted.",
+                parentSpan != null ? parentSpan.context().spanId() : "root",
+                childSpan.context().spanId());
+
+        return () -> {
+            // 4. 子线程 Scope 开启
+            try (Tracer.SpanInScope ws = tracer.withSpan(childSpan.start())) {
+                runnable.run();
+            } finally {
+                childSpan.end();
+            }
+        };
+    }
+}
+```
+
+### 3.3 异步线程池配置更新
+
+在 `AsyncConfig` 中，将平台线程池（PT）和虚拟线程池（VT）的装饰器统一替换为 MicrometerTracingDecorator,便于 traceId 和 spanID
+的传递。
+
+```java
+// ptExecutor 初始化逻辑相似
+@Bean("vtExecutor")
+public Executor vtExecutor(Tracer tracer) {
+    SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("vt-exec-");
+    executor.setVirtualThreads(true);
+    // 挂载新装饰器
+    executor.setTaskDecorator(new MicrometerTracingDecorator(tracer));
+    return executor;
+}
+```
+
+---
+
+## 4. 日志配置改造 (Log4j2)
+
+在 `log4j2-dev.xml` 和 `log4j2-prod.xml` 中引入 `OpenTelemetry` Appender 并配置异步队列。
 
 ```xml
 
 <Appenders>
     <!-- OTel 核心 Appender -->
+    <!-- 注意：不配置 Layout，但在代码层解决了 Map 结构问题 -->
     <OpenTelemetry name="OTEL_CORE">
-        <!-- 即使加了 Layout，Alpha 版依赖仍可能发送 Map 结构 -->
         <PatternLayout pattern="%m"/>
     </OpenTelemetry>
 
-    <!-- Async 包装器：防止网络抖动阻塞业务线程 -->
+    <!-- Async 包装器：高性能缓冲 -->
     <Async name="OTEL_ASYNC" blocking="false" bufferSize="4096">
         <AppenderRef ref="OTEL_CORE"/>
     </Async>
@@ -125,62 +165,40 @@ public class Log4j2OtlpConfig {
 
 <Loggers>
 <Root level="INFO" includeLocation="false">
-    <AppenderRef ref="OTEL_ASYNC"/>
+    <AppenderRef ref="Console"/>
+    <AppenderRef ref="InfoFile"/>
+    <AppenderRef ref="OTEL_ASYNC"/> <!-- 启用上报 -->
 </Root>
 </Loggers>
 ```
 
 ---
 
-## 3. 遇到的核心挑战
+## 5. 基础设施与数据治理 (Infrastructure)
 
-### 3.1 问题描述
+### 5.1 Docker Compose 部署
 
-在日志上报至 Elasticsearch 时，出现 **Type Mismatch** 错误：
-> `failed to parse field [body] ... IllegalArgumentException: Expected text ... but found START_OBJECT`
+新增了 `otel-collector`(opentelemetry-collector-contrib 镜像), `elasticsearch`, `kibana`, `zipkin` 的编排文件,位于
+`docs/compose/功能开发/链路追踪与日志分析/docker-compose`。
 
-### 3.2 深度排查 (Mock Debugging)
+### 5.2 解决 "DocumentParsingException" (核心修复)
 
-为了确认 Java 端发出的真实数据格式（排除配置干扰），编写了 Python 脚本 `mock_es.py` 伪装成 ES 服务，拦截 OTel Collector
-的请求并解压 GZIP。
+针对 Log4j2 OTel Appender 发送 Map 结构 (`{"text": "..."}`) 导致 ES 报错的问题，采用了 **Ingest Pipeline** 方案。
 
-**排查结果：**
-Java 端发送的 LogRecord Body 是结构化的 Map：
+1. **Ingest Pipeline (`fix_body_pipeline`)**:
 
-```
-"body": {
-"text": "✅ [1. Main Thread] 任务完成..."
-}
-```
+* ES 端预处理脚本：`if (ctx.body instanceof String) { 包装为 Map }`。
+* 作用：无论上报的是 String 还是 Object，入库前统一格式。
 
-而 Elasticsearch 索引 Mapping 期望 `body` 是 String (`text` 类型)，导致写入失败。
-
----
-
-## 4. 最终解决方案 (ES Ingest Pipeline)
-
-相比在 Collector 层使用复杂脚本清洗数据，我们在 **存储层 (Elasticsearch)** 实施了更稳健的兼容方案。
-
-### 4.1 方案架构
-
-1. **Collector**: 保持“哑管道”模式，只负责转发，不做复杂转换。
-2. **Elasticsearch**: 使用 `Ingest Pipeline` 拦截写入请求，动态修正数据格式。
-
-### 4.2 实施步骤
-
-**步骤一：定义清洗管道 (Ingest Pipeline)**
-无论上游发送的是 String 还是 Map，统一转换为 Map 结构。
-
-```
+```shell
 PUT _ingest/pipeline/fix_body_pipeline
 {
-  "description": "兼容性修复：确保 body 永远是 Object 结构",
+  "description": "Ensure body is always an object to avoid mapping conflicts",
   "processors": [
     {
       "script": {
         "lang": "painless",
         "source": """
-          // 如果收到的是纯字符串，将其包装为 map，避免类型冲突
           if (ctx.body instanceof String) {
             Map m = new HashMap();
             m.put('message', ctx.body);
@@ -193,75 +211,118 @@ PUT _ingest/pipeline/fix_body_pipeline
 }
 ```
 
-**步骤二：应用索引模版 (Index Template)**
-使用 `flattened` 类型处理日志体，防止字段爆炸；将 Trace ID 设为 `keyword` 优化查询。
+2. **Index Template (`logs-global-template`)**:
 
-```
+* **Data Stream**: 启用数据流模式，解决日志数据上报无法创还能索引、无法正常存储应用日志数据的问题。
+* **Mapping**:
+    * `body`: 类型设为 `flattened` (容忍任意 JSON 结构)。
+    * `trace_id`: 类型设为 `keyword` (高性能检索)。
+
+```shell
 PUT _index_template/logs-global-template
 {
-  "index_patterns": ["logs-*"],
+  "index_patterns": ["logs-*"],  // 👈 匹配所有 logs- 开头的名称
+  "data_stream": { },           // 声明所有匹配的都作为 Data Stream
+  "priority": 500,              // 高优先级确保它比 Kibana 自己的模板先生效
   "template": {
     "settings": {
-      "index.default_pipeline": "fix_body_pipeline", // 绑定清洗管道
-      "number_of_shards": 1
+      "index.default_pipeline": "fix_body_pipeline",
+      "number_of_shards": 1,
+      "number_of_replicas": 0
     },
     "mappings": {
       "properties": {
         "@timestamp": { "type": "date" },
-        "trace_id":   { "type": "keyword" },
-        "span_id":    { "type": "keyword" },
-        // 关键：允许 body 内部结构动态变化而不报错
-        "body":       { "type": "flattened" }
+        "trace_id": { "type": "keyword" }, // 设为 keyword 才能高效聚合和搜索
+        "span_id": { "type": "keyword" },
+        "body": { "type": "flattened" }
       }
     }
   }
 }
 ```
 
-### 4.3 Collector 最终配置 (`otel-collector.yml`)
+### 5.3 调试工具
 
-配置回归简洁，生产就绪。
+新增 `mock_es.py` 脚本，用于拦截并解压 GZIP 流量，验证 OTel Collector 发出的真实数据结构。
+
+---
+
+## 6. 业务层应用 (`simple` 模块)
+
+### 6.1 开启采样
+
+**文件**: `application.yml`
 
 ```yaml
-receivers:
-  otlp:
-    protocols:
-      http: { endpoint: "0.0.0.0:4318" }
-      grpc: { endpoint: "0.0.0.0:4317" }
 
-processors:
-  batch: { }
+management:
+  # 开启 Actuator 端点（可选，方便调试）
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus,metrics"
 
-exporters:
-  zipkin:
-    endpoint: "http://host.docker.internal:9411/api/v2/spans"
-  elasticsearch:
-    endpoints: [ "http://host.docker.internal:9200" ]
-    tls: { insecure: true }
-    logs_index: "logs-app"
+  # 开启观测性
+  observations:
+    annotations:
+      enabled: true
 
-service:
-  pipelines:
-    traces:
-      receivers: [ otlp ]
-      processors: [ batch ]
-      exporters: [ zipkin ]
-    logs:
-      receivers: [ otlp ]
-      processors: [ batch ]
-      exporters: [ elasticsearch ]
+  # ⚡ 链路追踪核心配置
+  tracing:
+    sampling:
+      # ⚠️ 关键：采样率 1.0 表示 100% 记录。
+      # 生产环境通常设为 0.1 或更低，开发环境务必设为 1.0，否则看不到 TraceID！
+      probability: 1.0
+    # 自动将 TraceID/SpanID 注入到 MDC 中
+    baggage:
+      correlation:
+        enabled: true
+        # 如果你需要自定义字段在链路传递，加在这里
+        fields: "traceId,spanId"
+    export:
+      enabled: true
+
+  # 🚀 配置 OTLP 导出逻辑
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/traces"
+    # 🚀 必须新增：显式指定日志导出地址
+    logging:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/logs"
+```
+
+### 6.2 业务代码示例
+
+请通过 thriving.softwood.simple.controller.SampleController.java 的 triggerComplexChain 方法查看如何在 Service 中注入
+`Tracer` 获取当前 TraceID，并演示多层级异步调用。
+
+```java
+
+@RequestMapping("/complex-chain")
+public ComplexTraceVO triggerComplexChain() {
+    return ancestorAsyncApi.startComplexChain();
+}
 ```
 
 ---
 
-## 5. 成果总结
+## 7. 方案总结
 
-1. **全链路打通**：成功实现了 Spring Boot 应用 -> OTel Collector -> Elasticsearch/Zipkin 的完整数据流。
-2. **高健壮性**：通过 Elasticsearch 的 `flattened` 映射和 `Ingest Pipeline`，系统现在能够容忍日志格式的动态变化（String/Map
-   均可），彻底解决了依赖库版本差异导致的格式兼容问题。
-3. **调试能力沉淀**：掌握了使用 Python Mock Server 拦截并分析 OTel GZIP 流量的调试方法。
+通过本次重构，Thriving Softwood 实现了从**应用层采集**到**传输层缓冲**再到**存储层治理**的闭环：
 
-[待完善]
+1. **采集**: App 内部使用 Micrometer + OTel Appender 自动采集 Logs & Traces。
+2. **传输**: OTel Collector 接收 OTLP 流量，分流 Trace 至 Zipkin，Log 至 ES。
+3. **治理**: Elasticsearch 使用 Ingest Pipeline 和 Flattened Mapping 消除结构差异，保证数据不丢失。
+4. **展示**: Zipkin 查看链路拓扑，Kibana 查看关联日志。
+
+---
+
+## 8. 待办事项
 
 1. 配置 Elasticsearch 索引生命周期管理 (ILM) 策略，设定 Hot/Warm 阶段以自动清理陈旧日志，防止磁盘空间溢出。
 2. 在 Kibana 中构建可观测性仪表盘（Dashboard），集成 Tracing 聚合图表与 Logs 实时流分析视图。

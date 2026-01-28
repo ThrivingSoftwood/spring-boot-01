@@ -49,6 +49,7 @@
         <!-- ======================================================== -->
         <!-- 03. Spring Boot 观测性核心 (Actuator & Observation)      -->
         <!-- ======================================================== -->
+        <!-- 1. Spring Boot 观测性核心 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -62,64 +63,31 @@
             <!-- Spring 生态观测性枢纽：管理 ObservationRegistry 与基础 Metrics -->
         </dependency>
 
-        <!-- ======================================================== -->
-        <!-- 04. Micrometer Tracing 抽象层 (Sleuth 的继任者)            -->
-        <!-- ======================================================== -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-micrometer-tracing</artifactId>
-            <!-- Spring Boot 4 对 Micrometer Tracing 的自动配置支持 -->
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-tracing</artifactId>
-            <!-- Micrometer 链路追踪核心 API 抽象 -->
-        </dependency>
-
-        <!-- ======================================================== -->
-        <!-- 05. OpenTelemetry 实现与桥接 (Tracing Implementation)     -->
-        <!-- ======================================================== -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-micrometer-tracing-opentelemetry</artifactId>
-            <!-- Spring Boot 官方提供的 OpenTelemetry 自动装配适配器 -->
-        </dependency>
+        <!-- 2. Micrometer Tracing 桥接 OpenTelemetry -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing-bridge-otel</artifactId>
             <!-- 关键桥接包：将 Micrometer Tracing API 映射至 OpenTelemetry SDK -->
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-micrometer-tracing-opentelemetry</artifactId>
+            <!-- Spring Boot 官方提供的 OpenTelemetry 自动装配适配器 -->
+        </dependency>
 
-        <!-- ======================================================== -->
-        <!-- 06. 链路数据导出器 (Exporters - 数据外流管道)               -->
-        <!-- ======================================================== -->
+        <!-- 3. 数据导出器 (Exporters) -->
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-exporter-otlp</artifactId>
             <scope>runtime</scope>
             <!-- 工业标准 OTLP 协议导出器：用于将 Trace 数据发送至 OTel Collector -->
         </dependency>
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-exporter-zipkin</artifactId>
-            <scope>runtime</scope>
-            <!-- Zipkin 专用导出器：用于直接将 Span 数据推送至 Zipkin 持久化后端 -->
-        </dependency>
-        <!-- OpenTelemetry Log4j2 Appender 这个库允许 Log4j2 直接将日志转换成 OTLP 格式发送 -->
+        
+        <!-- 4. Log4j2 OTLP Appender (关键：日志上报核心) -->
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-log4j-appender-2.17</artifactId>
             <version>${otel.log4j.appender.version}</version>
-        </dependency>
-        <!--OTEL SDK,用于托管 OpenTelemetry 对象到 Spring-->
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-api</artifactId>
-        </dependency>
-        <!-- 🚀 新增：OpenTelemetry SDK (用于编写自定义 Processor) -->
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-sdk</artifactId>
         </dependency>
     </dependencies>
 

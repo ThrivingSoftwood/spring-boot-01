@@ -18,7 +18,7 @@
         <!-- ========================================== -->
         <Console name="Console" target="SYSTEM_OUT">
             <!-- 生产环境去掉 %L (行号) 以提升性能 -->
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}][%X{spanId}] %-5level %logger{36} - %msg%n"/>
         </Console>
 
         <!-- ========================================== -->
