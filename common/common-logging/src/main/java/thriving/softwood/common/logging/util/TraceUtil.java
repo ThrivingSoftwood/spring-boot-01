@@ -1,11 +1,14 @@
 package thriving.softwood.common.logging.util;
 
-import static thriving.softwood.common.core.constant.PunctuationConstants.HYPHEN;
+import static thriving.softwood.common.core.constant.PunctuationConstant.HYPHEN;
+import static thriving.softwood.common.core.constant.TraceConstant.*;
 import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.SPT;
 import static thriving.softwood.common.core.enums.ThreadNamePrefixEnum.STS;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import cn.hutool.v7.core.data.id.IdUtil;
@@ -17,20 +20,7 @@ import cn.hutool.v7.core.text.StrUtil;
  */
 public class TraceUtil {
 
-    /**
-     * 日志配置文件中引用的 Key
-     */
-    public static final String TRACE_ID_KEY = "traceId";
-
-    // 多线程相关 begin
-    // 子线程标识 ID 的 key
-    public static final String SPAN_ID_KEY = "spanId";
-    public static final String MAIN_SPAN_ID = "main";
-
-    /**
-     * HTTP Header 中的 Key (用于跨服务透传)
-     */
-    public static final String TRACE_ID_HEADER = "X-Trace-Id";
+    private static final Logger logger = LoggerFactory.getLogger(TraceUtil.class);
 
     /**
      * 开启追踪
@@ -60,8 +50,19 @@ public class TraceUtil {
         }
         // 🚀 核心逻辑：区分是否为多线程/多线程类型,需要增加前缀. SPT : Sync Platform Thread
         MDC.put(TRACE_ID_KEY, MDC.get(TRACE_ID_KEY).replace(SPT.mark(), threadMark));
-        // 🚀 核心逻辑：即使复制了父线程，也要给子线程一个独一无二的 SpanID; STS : Sub Threads
-        MDC.put(SPAN_ID_KEY, STS.mark() + HYPHEN + IdUtil.getSnowflakeNextIdStr());
+
+        String parentId = MDC.get(SPAN_ID_KEY);
+        if (StrUtil.isBlank(parentId)) {
+            // 🚀 核心逻辑：即使复制了父线程，也要给子线程一个独一无二的 SpanID; STS : Sub Threads
+            MDC.put(SPAN_ID_KEY, STS.mark() + HYPHEN + IdUtil.getSnowflakeNextIdStr());
+        } else {
+            String childId = STS.mark() + HYPHEN + IdUtil.getSnowflakeNextIdStr();
+            // 记录此时发生的线程派发行为
+            // 注意：此时 Logger MDC 依然是 Parent 的上下文
+            logger.info("🧵 Thread Dispatch: [{} -> {}] Task submitted.", parentId, childId);
+            MDC.put(PARENT_SPAN_ID_KEY, parentId);
+            MDC.put(SPAN_ID_KEY, childId);
+        }
     }
 
     /**

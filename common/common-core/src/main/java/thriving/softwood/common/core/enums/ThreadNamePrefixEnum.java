@@ -1,7 +1,7 @@
 package thriving.softwood.common.core.enums;
 
 import static thriving.softwood.common.core.constant.LogMsgConstant.*;
-import static thriving.softwood.common.core.constant.PunctuationConstants.HYPHEN;
+import static thriving.softwood.common.core.constant.PunctuationConstant.HYPHEN;
 
 /**
  * @author ThrivingSoftwood

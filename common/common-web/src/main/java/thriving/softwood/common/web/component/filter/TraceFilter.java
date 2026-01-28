@@ -1,5 +1,7 @@
 package thriving.softwood.common.web.component.filter;
 
+import static thriving.softwood.common.core.constant.WebKeyConstant.Headers.X_TRACE_ID;
+
 import java.io.IOException;
 
 import org.springframework.core.Ordered;
@@ -27,13 +29,13 @@ public class TraceFilter extends OncePerRequestFilter {
 
         try {
             // 1. 尝试从 Header 获取 TraceID (微服务透传)
-            String traceId = request.getHeader(TraceUtil.TRACE_ID_HEADER);
+            String traceId = request.getHeader(X_TRACE_ID);
 
             // 2. 开启追踪 (如果 Header 没有，Util 内部会自动生成)
             String currentTraceId = TraceUtil.start(traceId);
 
             // 3. 【关键】将 TraceID 写入 Response Header，方便前端/移动端排查问题
-            response.setHeader(TraceUtil.TRACE_ID_HEADER, currentTraceId);
+            response.setHeader(X_TRACE_ID, currentTraceId);
 
             // 4. 放行请求
             filterChain.doFilter(request, response);

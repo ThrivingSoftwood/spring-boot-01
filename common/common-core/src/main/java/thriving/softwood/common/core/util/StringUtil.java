@@ -1,6 +1,6 @@
 package thriving.softwood.common.core.util;
 
-import static thriving.softwood.common.core.constant.PunctuationConstants.SPACE;
+import static thriving.softwood.common.core.constant.PunctuationConstant.SPACE;
 
 import cn.hutool.v7.core.text.StrUtil;
 

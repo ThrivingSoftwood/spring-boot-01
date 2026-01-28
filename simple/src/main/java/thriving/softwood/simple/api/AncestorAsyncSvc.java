@@ -5,8 +5,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.Resource;
 import thriving.softwood.common.framework.annotation.async.PtAsync;
 import thriving.softwood.common.framework.annotation.async.VtAsync;
 
@@ -20,6 +22,11 @@ import thriving.softwood.common.framework.annotation.async.VtAsync;
 public class AncestorAsyncSvc implements AncestorAsyncApi {
 
     private static final Logger logger = LoggerFactory.getLogger(AncestorAsyncSvc.class);
+
+    // 注入自己（代理对象）
+    @Resource
+    @Lazy
+    private AncestorAsyncSvc self;
 
     /**
      * 🚀 模拟 I/O 密集型任务 (使用虚拟线程 VT) 场景：调用第三方接口、查询数据库、读取文件
@@ -52,6 +59,8 @@ public class AncestorAsyncSvc implements AncestorAsyncApi {
         logger.info("开始进行重度计算, Seed: {}", seed);
 
         long start = System.currentTimeMillis();
+        // 开启内部并发,排查 spanId
+        self.innerCalculation(seed);
         // 模拟 CPU 耗时操作：循环计算哈希或大数运算
         long sum = 0;
         for (int i = 0; i < 100_000_000; i++) {
@@ -60,6 +69,21 @@ public class AncestorAsyncSvc implements AncestorAsyncApi {
 
         long duration = System.currentTimeMillis() - start;
         logger.info("重度计算完成, 耗时: {}ms, 结果摘要: {}", duration, sum);
+    }
+
+    @PtAsync
+    protected void innerCalculation(int seed) {
+        logger.info("开始进行内部重度计算, Seed: {}", seed);
+
+        long start = System.currentTimeMillis();
+        // 模拟 CPU 耗时操作：循环计算哈希或大数运算
+        long sum = 0;
+        for (int i = 0; i < 100_000_000; i++) {
+            sum += (long)i * seed;
+        }
+
+        long duration = System.currentTimeMillis() - start;
+        logger.info("内部重度计算完成, 耗时: {}ms, 结果摘要: {}", duration, sum);
     }
 
     /**

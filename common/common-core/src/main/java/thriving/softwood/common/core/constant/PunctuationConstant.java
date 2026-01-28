@@ -9,7 +9,7 @@ package thriving.softwood.common.core.constant;
  * @author ThrivingSoftwood
  * @since version 2026-01-23
  */
-public final class PunctuationConstants {
+public final class PunctuationConstant {
 
     /** 逗号 */
     public static final String COMMA = ",";
@@ -113,7 +113,7 @@ public final class PunctuationConstants {
     public static final String CN_MIDDLE_DOT = "·";
 
     // 私有构造方法，防止工具类被实例化
-    private PunctuationConstants() {
+    private PunctuationConstant() {
         throw new UnsupportedOperationException("这是一个工具类常量，禁止实例化");
     }
 }
