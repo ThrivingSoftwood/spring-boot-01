@@ -2,8 +2,8 @@ spring:
   application:
     name: simple
   profiles:
-    #    active: dev
-    active: prod
+    active: dev
+#    active: prod
 #  main:
 #    laz y-initialization: true
 

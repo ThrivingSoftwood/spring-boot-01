@@ -2,12 +2,12 @@ package thriving.softwood.simple.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.annotation.Resource;
 import thriving.softwood.common.core.result.Result;
 import thriving.softwood.simple.api.AncestorAsyncApi;
 import thriving.softwood.simple.component.config.Sample;
@@ -31,16 +31,12 @@ public class SampleController {
     String sampleName;
     // 2. 通过注解 @ConfigurationProperties 直接注入,
     // 类名必须与对应层级的配置项名一致
+    @Resource
     Sample sample;
 
     // 多线程注解使用示例
+    @Resource
     AncestorAsyncApi ancestorAsyncApi;
-
-    @Autowired
-    public SampleController(Sample sample, AncestorAsyncApi ancestorAsyncApi) {
-        this.sample = sample;
-        this.ancestorAsyncApi = ancestorAsyncApi;
-    }
 
     @RequestMapping("/sample01")
     public String sample01() {

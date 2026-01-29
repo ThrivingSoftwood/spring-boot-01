@@ -1,1 +1,3 @@
 thriving.softwood.common.web.component.config.WebTraceConfig
+thriving.softwood.common.web.component.config.RestClientConfig
+thriving.softwood.common.web.component.config.WebMvcConfig

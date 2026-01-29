@@ -10,3 +10,14 @@ logging:
   level:
     thriving:
       softwood: trace
+
+async:
+  vt:
+    thread-name-prefix: vt-exec-
+    concurrency-limit: 3000
+  pt:
+    core-pool-size: 10
+    max-pool-size: 20
+    queue-capacity: 500
+    thread-name-prefix: pt-exec
+    rejected-exec-handler-type: AbortPolicy

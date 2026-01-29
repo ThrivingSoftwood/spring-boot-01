@@ -7,11 +7,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.tracing.Tracer;
+import jakarta.annotation.Resource;
 import thriving.softwood.common.framework.annotation.async.PtAsync;
 import thriving.softwood.common.framework.annotation.async.VtAsync;
 import thriving.softwood.simple.pojo.vo.AncestorVO;
@@ -28,24 +28,15 @@ public class AncestorAsyncSvc implements AncestorAsyncApi {
 
     private static final Logger logger = LoggerFactory.getLogger(AncestorAsyncSvc.class);
 
-    private final Tracer tracer;
+    @Resource
+    private Tracer tracer;
 
     /**
      * 注入自身代理，解决类内部调用 @Async 失效的问题
      */
-    private AncestorAsyncSvc self;
-
-    @Autowired
+    @Resource
     @Lazy
-    public void setSelf(AncestorAsyncSvc self) {
-        this.self = self;
-    }
-
-    @Autowired
-    public AncestorAsyncSvc(Tracer tracer) {
-        this.tracer = tracer;
-        self = this;
-    }
+    private AncestorAsyncSvc self;
 
     /**
      * 🚀 模拟 I/O 密集型任务 (使用虚拟线程 VT) 场景：调用第三方接口、查询数据库、读取文件

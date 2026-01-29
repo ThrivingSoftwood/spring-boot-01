@@ -16,17 +16,15 @@
 ## 📖 项目简介 (Introduction)
 
 本项目不仅仅是一个简单的 Web 工程，而是一个**探索未来 Java 并发与观测模式**的实验场。它深度整合了 JDK 25 的先进特性与
-Micrometer Tracing 标准，旨在解决分布式系统在引入虚拟线程后的**逻辑链条断裂**、**数据持久化**及**性能瓶颈**痛点。
+Micrometer Tracing 标准，旨在解决分布式系统在引入虚拟线程后的**逻辑链条断裂**、**多线程拓扑混乱**及**跨服务调用不可信**
+等痛点。
 
 核心亮点：
 
-* **精细化双模并发**：原生支持平台线程（PT）与虚拟线程（VT）的平滑切换，提供自定义异步注解 `@PtAsync` 与 `@VtAsync`，实现
-  CPU/IO 任务物理隔离。
-* **标准化观测底座**：彻底弃用手动维护 TraceID 的旧模式，全面拥抱 **Micrometer Tracing + OpenTelemetry (OTLP)**，支持 W3C
-  标准链路追踪。
-* **弹性日志架构**：自研 **Elasticsearch Ingest Pipeline** 预处理机制，采用 **Flattened Mapping**
-  技术，完美解决结构化日志上报时的类型冲突，支持日志内容的动态模式演进。
-* **智能跨线程上下文**：自研 `MicrometerTracingDecorator`，实现嵌套多线程场景下的 **[pSpanId -> spanId]** 语义化衔接日志。
+* **精细化双模并发**：原生支持平台线程（PT）与虚拟线程（VT）的物理隔离。**VT 采用信号量限流模式**，追求零队列损耗。
+* **全链路边界突破**：适配 Spring Boot 4.0.2，实现 `RestClient/RestTemplate` 自动注入 W3C `traceparent`，打通微服务间信任链。
+* **语义化命名治理**：通过拦截器与 AOP 精准控制 Span 命名，实现 **“类名.方法名”** 的标准化拓扑呈现。
+* **极致性能观测**：自研 `MicrometerTracingDecorator`，通过 **惰性日志 (Lazy Logging)** 与 **并行链路修正**，兼顾低开销与高透明度。
 
 ## 🏗 模块架构 (Module Structure)
 
@@ -37,55 +35,56 @@ spring-boot-01
 ├── common                  # 公共父模块 (BOM & Dependency Management)
 │   ├── common-core         # [基石] 纯净工具类 (Hutool/Guava)、通用常量、枚举
 │   ├── common-observability# [之眼] OTel SDK 配置、Log4j2 OTLP 桥接、ES Ingest Pipeline 治理
-│   ├── common-framework    # [引擎] 混合异步配置、MapStruct 整合、Micrometer 装饰器
-│   └── common-web          # [门户] Web 响应头增强 (WebTraceFilter)、全局异常处理、Jackson 定制
-└── simple                  # [演练] 业务实现、多层级异步调用演示、数据标准化验证
+│   ├── common-framework    # [引擎] 混合异步配置 (Semaphore VT)、Micrometer 装饰器、代理自愈
+│   └── common-web          # [门户] 跨服务 RestClient 配置、Web 拦截器、响应头增强
+└── simple                  # [演练] 业务实现、多层级并行异步调用 (Fan-out) 演示
 ```
 
 ## 🚀 核心特性 (Key Features)
 
-### 1. 进化版双模并发 (Evolutionary Dual-Mode Concurrency)
+### 1. 极致异步性能管控 (High-Performance Async Governance)
 
-系统根据任务性质（CPU/IO 密集型）自动选择最优线程模型，并通过 `MicrometerTracingDecorator` 保证链路不丢失。
+系统针对任务性质，通过自定义注解 `@PtAsync` 与 `@VtAsync` 驱动底层执行器：
+
+* **信号量驱动的 VT (Semaphore-based VT)**：在 `AsyncConfig` 中弃用重型线程池队列，采用 `SimpleAsyncTaskExecutor` 配合
+  `concurrencyLimit`。利用信号量机制直接控制虚拟线程并发数，**移除阻塞队列锁竞争**，实现零队列损耗的极致吞吐。
+* **代理顺序精准调优 (Proxy Order Tuning)**：严格定义 `@EnableAsync` (Order: Lowest-1) 与 `TraceAspect` (Order: Lowest)
+  的执行顺序。确保线程切换先于切面运行，完美解决子线程内部 Span 命名的失效问题。
 
 ### 2. 工业级全栈观测管道 (Resilient Observability Pipeline)
 
-系统构建了一套 **“应用端 -> Collector -> 存储端 -> UI端”** 的高可用观测流水线：
+* **并发链路修复 (Parallel View Fix)**：修正 `MicrometerTracingDecorator`。通过在装饰器中显式保留 `nextSpan()` 逻辑，确保
+  Zipkin 能够正确识别并行异步分支（Fan-out），生成精准的甘特图拓扑。
+* **性能增强型衔接日志**：引入 **惰性日志 (Lazy Logging)** 技术。仅在日志级别满足时才提取 `SpanID`
+  ，极大降低了高并发下线程切换点的字符串拼接与上下文提取开销。
+* **监控命名标准化**：
+* **Web 层**：利用 `WebSpanNameInterceptor` 直接重命名入口 Span，避免 AOP 导致的二次嵌套。
+* **业务层**：优化 `TraceAspect` 切面，实时捕获异步方法的 `ClassName.MethodName`。
+* **数据自愈 (Ingest Pipeline)**：Elasticsearch 层采用 Painless 脚本预处理结构化日志，解决 OTel SDK 在 Body
+  类型（String/Map）切换时的写入冲突。
 
-* **全异步上报**：基于 `Log4j2 + Disruptor` 驱动 `OTLP Appender`，确保在极端压力下，日志发送行为不阻塞虚拟线程，保障业务
-  QPS。
-* **数据自愈逻辑 (Ingest Pipeline)**：在 Elasticsearch 层级部署 **Painless 脚本** 处理器。针对 OTel SDK 产生的 `Body`
-  结构差异（String/Map 混杂），实现入库前的自动“包装与标准化”，彻底根治 `DocumentParsingException`。
-* **高性能索引设计**：
-    * **Data Stream 模式**：原生适配日志时间序列特征。
-    * **Flattened Mapping**：对 `body` 字段采用扁平化存储，兼顾任意 JSON 结构的存储灵活性与搜索效率，防止 Mapping 膨胀。
-    * **Keyword 精确索引**：TraceID 与 SpanID 采用 `keyword` 类型，实现秒级链路跳转定位。
-* **多维展示**：
-    * **Tracing**: 数据存入 ES，通过 Zipkin UI 查看拓扑图与耗时分析。
-    * **Logging**: 深度集成 Kibana，实现 TraceID 跨日志流检索，勾勒完整的请求生命周期快照。
+### 3. 分布式边界突破 (Cross-Service Boundary Propagation)
 
-### 3. AOP 代理自愈机制
-
-针对 Service 内部异步方法失效的经典痛点，采用 **“构造器注入必需品 + Setter 注入自身代理”** 的架构模式，配合 `@Lazy`
-完美解决循环依赖并激活异步 AOP 增强。
+* **原生观测适配**：针对 Spring Boot 4.0.2 深度定制 `RestClientConfig`。
+* **自动透传**：通过 `ObservationRegistry` 自动为 `RestClient` 注入拦截器。当发起外调请求时，自动注入 **W3C 标准
+  TraceContext**，确保链路在不同微服务间无缝延伸。
 
 ## 🛠️ 故障排查与调试工具 (Debugging Toolbox)
 
-为了保障 OTLP 协议在复杂网络环境下的透明度，项目集成了以下调试设施：
-
-* **GZIP 拦截探测器**：自研 Python `mock_es` 脚本，支持实时解压并打印 OTel Collector 发出的压缩 Bulk 流量，辅助精准定位
-  Payload 结构问题。
+* **AOP 代理自愈**：采用 **“构造器注入 + Setter 注入自身代理”** 模式，配合 `@Lazy` 解决循环依赖，确保 Service
+  内部调用依然能触发异步与链路增强。
+* **GZIP 流量探测**：自研 Python `mock_es` 脚本，支持实时解压并打印 OTel Collector 发出的 Bulk 流量，辅助定位 Payload 结构。
 
 ## 📝 待办事项 (Roadmap)
 
 - [x] 基础架构搭建 (JDK 25 + Spring Boot 4)
-- [x] **并发体系升级** (平台线程与虚拟线程分流)
-- [x] **标准化链路追踪** (Micrometer Tracing + OTLP)
-- [x] **日志全内容持久化** (Elasticsearch Ingest Pipeline 标准化)
-- [x] **Kibana 可视化检索** (完成汉化与索引模板定制)
-- [ ] **索引生命周期管理 (ILM)** (自动清理过期日志数据)
-- [ ] **Redis 缓存集成** (适配虚拟线程连接池)
-- [ ] **分布式监控指标** (接入 Prometheus/Grafana)
+- [x] **混合并发体系升级** (信号量限流模式 VT)
+- [x] **并行链路追踪修正** (Micrometer Tracing 拓扑修复)
+- [x] **跨服务边界突破** (RestClient/RestTemplate 自动透传)
+- [x] **可观测性命名治理** (Web 拦截器与 AOP 命名规范化)
+- [ ] **链路安全防御 (Trace Security)** (网关层 TraceID 清理与防御)
+- [ ] **业务上下文透传 (Baggage)** (租户/用户信息全链路透传)
+- [ ] **索引生命周期管理 (ILM)** (自动清理过期日志)
 
 ---
 
@@ -172,4 +171,5 @@ AI 进行代码分析 并更新当前文档：*
 ```
 
 ---
-Copyright © 2026 Thriving Softwood Team.
+Copyright © 2026 Thriving Softwood Team.  
+*Last Updated: 2026.01.29 - 柳燊(ThrivingSoftwood)*
