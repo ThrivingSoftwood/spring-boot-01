@@ -29,7 +29,7 @@ public enum ThreadNamePrefixEnum {
                 break;
             case "p":
             case "v":
-                threadMark = ASYNC_NAME_PREFIX + HYPHEN + mark;
+                threadMark = mark + HYPHEN + ASYNC_NAME_PREFIX;
                 break;
             default:
                 throw new UnsupportedOperationException("ThreadNamePrefixEnum 的错误初始化:参数 mark 值非法:" + mark);

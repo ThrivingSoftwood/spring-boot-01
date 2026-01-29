@@ -10,7 +10,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <!-- 开发环境控制台可以开启行号，因为不需要抗高并发 -->
             <PatternLayout
-                    pattern="%d{HH:mm:ss.SSS} [%t] [%X{traceId}][%X{spanId}] %-5level %logger{36}:%L - %msg%n%throwable"/>
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{traceId}][%X{spanId}] %-5level %logger{36}:%L - %msg%n%throwable"/>
         </Console>
 
         <!-- 文件：使用 JSON 格式，给机器(ELK)看 -->
