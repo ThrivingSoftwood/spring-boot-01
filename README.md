@@ -77,14 +77,20 @@ spring-boot-01
 
 ## 📝 待办事项 (Roadmap)
 
+**DONE**
+
 - [x] 基础架构搭建 (JDK 25 + Spring Boot 4)
 - [x] **混合并发体系升级** (信号量限流模式 VT)
 - [x] **并行链路追踪修正** (Micrometer Tracing 拓扑修复)
 - [x] **跨服务边界突破** (RestClient/RestTemplate 自动透传)
 - [x] **可观测性命名治理** (Web 拦截器与 AOP 命名规范化)
+
+**TODO**
+
 - [ ] **链路安全防御 (Trace Security)** (网关层 TraceID 清理与防御)
 - [ ] **业务上下文透传 (Baggage)** (租户/用户信息全链路透传)
 - [ ] **索引生命周期管理 (ILM)** (自动清理过期日志)
+- [ ] **虚拟线程底层优化** (在 Micrometer 升级后修改并发任务底层容器,从 ThreadLocal 切换到 ScopeValue)
 
 ---
 
