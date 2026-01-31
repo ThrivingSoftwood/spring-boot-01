@@ -56,7 +56,7 @@
 
     <modules>
         <module>common</module>
-        <module>simple</module>
+        <module>sample</module>
     </modules>
 
     <!--依赖管理 (BOM模式) begin-->

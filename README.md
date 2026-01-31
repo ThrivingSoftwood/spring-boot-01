@@ -37,7 +37,7 @@ spring-boot-01
 │   ├── common-observability# [之眼] OTel SDK 配置、Log4j2 OTLP 桥接、ES Ingest Pipeline 治理
 │   ├── common-framework    # [引擎] 混合异步配置 (Semaphore VT)、Micrometer 装饰器、代理自愈
 │   └── common-web          # [门户] 跨服务 RestClient 配置、Web 拦截器、响应头增强
-└── simple                  # [演练] 业务实现、多层级并行异步调用 (Fan-out) 演示
+└── sample                  # [演练] 业务实现、多层级并行异步调用 (Fan-out) 演示
 ```
 
 ## 🚀 核心特性 (Key Features)
