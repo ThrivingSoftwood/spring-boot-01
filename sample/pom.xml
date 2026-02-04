@@ -45,7 +45,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>spring-boot-01-sample</finalName>
+        <finalName>${project.artifactId}-sample</finalName>
     </build>
 
 </project>
