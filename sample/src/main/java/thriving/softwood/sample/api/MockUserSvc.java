@@ -5,12 +5,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.Resource;
 import thriving.softwood.sample.pojo.entity.User;
 
 @Service
 public class MockUserSvc implements MockUserApi {
+
+    private static final Logger logger = LoggerFactory.getLogger(MockUserSvc.class);
+
+    @Resource
+    MessageSource messageSource;
+
     Map<Integer, User> users = new HashMap<>() {
         @Serial
         private static final long serialVersionUID = 1L;
@@ -26,6 +37,11 @@ public class MockUserSvc implements MockUserApi {
 
     @Override
     public User getUserById(int id) {
+        // 如果想要在微服务架构下跨 session 设置 Locale,可以在自定义 WebMvcConfigurer 中注册、使用自定义的 CookieLocaleResolver
+        // 对象覆盖默认 LocaleResolver,然后在 addInterceptors 中注册 LocaleChangeInterceptor 对象
+
+        // 此处只演示国际化信息获取
+        logger.info(messageSource.getMessage("query.success", null, LocaleContextHolder.getLocale()));
         return users.get(id);
     }
 

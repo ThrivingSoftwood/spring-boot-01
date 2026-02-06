@@ -1,8 +1,18 @@
+# 查看配置类加载详情
+debug: true
+
 spring:
   application:
     name: sample
+  messages:
+    basename: i18n.sample
   profiles:
     active: dev
+  web:
+    # 默认就是 accept-header
+    locale-resolver: accept_header
+    # 当 locale-resolver: fixed 被配置时下方 locale 设置才生效; en_US 是 locale 的默认值,Accept-Language 为空时才生效
+    locale: en_US
 #    active: prod
 #  main:
 #    laz y-initialization: true
@@ -47,7 +57,6 @@ management:
           endpoint: "http://localhost:4318/v1/logs"
 
 
-# 查看配置类加载详情 debug: true
 
 ## 演示配置文件参数值如何注入到 bean 中
 #sample:
