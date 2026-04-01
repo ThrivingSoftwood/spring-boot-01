@@ -1,6 +1,8 @@
 package thriving.softwood.common.database.consts;
 
 public class BaseConst {
+
+    public static final String BASE_PACKAGE_NAME = "thriving.softwood.sample.infrastructure.db";
     /**
      * 数据表映射类所在上层包名
      */

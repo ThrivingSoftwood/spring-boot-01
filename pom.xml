@@ -38,6 +38,7 @@
         <otel.log4j.appender.version>2.24.0-alpha</otel.log4j.appender.version>
         <bouncycastle.version>1.83</bouncycastle.version>
         <jasypt.version>4.0.4</jasypt.version>
+        <velocity.version>2.4.1</velocity.version>
     </properties>
 
     <!--Step 01 : 添加 spring-boot 父项目 begin-->

@@ -3,9 +3,9 @@ package ${package.ServiceImpl};
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 <#if generateService>
-import ${package.Service}.${table.serviceName};
+    import ${package.Service}.${table.serviceName};
 </#if>
-import meta.thriving.softwood.integrated.mybatis.service.impl.ServiceImpl;
+import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
 import org.springframework.stereotype.Service;
 import com.baomidou.dynamic.datasource.annotation.DS;
 

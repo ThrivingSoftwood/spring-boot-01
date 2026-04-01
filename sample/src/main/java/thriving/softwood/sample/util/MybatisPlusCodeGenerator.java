@@ -24,13 +24,13 @@ public class MybatisPlusCodeGenerator {
         @Serial
         private static final long serialVersionUID = 1L;
         {
-            put("mac-master", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/splash-inkflow",
-                "postgres", decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
-            put("mac-novel", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/weaving-stars", "postgres",
+            put("master", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/splash-inkflow", "postgres",
                 decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
-            put("mac-material", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/source-material",
-                "postgres", decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
-            put("mac-embedding", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/embedding-libraries",
+            put("novel", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/weaving-stars", "postgres",
+                decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
+            put("material", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/source-material", "postgres",
+                decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
+            put("embedding", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/embedding-libraries",
                 "postgres", decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
 
         }
@@ -49,16 +49,15 @@ public class MybatisPlusCodeGenerator {
     }
 
     private static void generateCode(String dsName, String[] tables) {
-        String basePackage = "thriving.softwood.sample.infrastructure.db";
         String actualDsName = dsName;
 
         FastAutoGenerator.create(DS_BUILDER_MAP.get(dsName)).globalConfig(builder -> {
             builder.author("meta-thriving").disableOpenDir()
-                .outputDir(System.getProperty("user.dir") + "/crud/src/main/java");
+                .outputDir(System.getProperty("user.dir") + "/sample/src/main/java");
         }).packageConfig(builder -> {
-            builder.parent(basePackage).moduleName(actualDsName).entity(ENTITY_PKG_NAME).mapper(MAPPER_PKG_NAME)
+            builder.parent(BASE_PACKAGE_NAME).moduleName(actualDsName).entity(ENTITY_PKG_NAME).mapper(MAPPER_PKG_NAME)
                 .controller(CONTROLLER_PKG_NAME).serviceImpl(REPO_PKG_NAME)
-                .pathInfo(Collections.singletonMap(OutputFile.xml, getXmlPath(actualDsName)));
+                .pathInfo(Collections.singletonMap(OutputFile.xml, getXmlPath(BASE_PACKAGE_NAME, actualDsName)));
         }).strategyConfig(builder -> {
             builder.addInclude(Arrays.asList(tables)).addTablePrefix(TABLE_PREFIXES).controllerBuilder().disable()
                 .entityBuilder().formatFileName("%s").enableSerialAnnotation().naming(NamingStrategy.underline_to_camel)
@@ -73,15 +72,16 @@ public class MybatisPlusCodeGenerator {
             Map<String, Object> customMap = new HashMap<>();
             // 此处为使用 @DS 注解切换数据源的配置, dsName 要按照配置文件内容来
             customMap.put("dsName", dsName);
-            customMap.put("svcBeanName", basePackage);
+            customMap.put("svcBeanName", BASE_PACKAGE_NAME);
             builder.customMap(customMap);
         }).templateEngine(new FreemarkerTemplateEngine()).execute();
 
         System.out.println("代码生成完成！");
     }
 
-    private static String getXmlPath(String actualDsName) {
-        return System.getProperty("user.dir") + "/crud/src/main/resources/mapper/" + actualDsName;
+    private static String getXmlPath(String basePackage, String actualDsName) {
+        return System.getProperty("user.dir") + "/sample/src/main/java/" + basePackage.replace(".", "/") + "/"
+            + actualDsName + "/" + MAPPER_PKG_NAME;
     }
 
     private static String decrypt(String ciphertext) {
