@@ -20,6 +20,11 @@
             <groupId>thriving.softwood.common</groupId> <!-- 注意这里是 common -->
             <artifactId>common-web</artifactId>
         </dependency>
+        <!-- ✨ 引入刚建好的数据库底座 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-database</artifactId>
+        </dependency>
         <!--00.项目内依赖 end-->
 
         <!--01.日志实现依赖 begin-->
@@ -34,6 +39,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
+        </dependency>
+        <!-- ✨ 显式指定具体使用的数据库驱动 -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
         </dependency>
         <!--02.开发辅助依赖 end-->
     </dependencies>

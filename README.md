@@ -7,8 +7,8 @@
 *标准化全栈可观测性 (Observability)** 体系。
 
 ![Java](https://img.shields.io/badge/Java-25-orange)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.2-green)
-![Hutool](https://img.shields.io/badge/Hutool-v7-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.5-green)
+![Hutool](https://img.shields.io/badge/Hutool-v7-blue)sudo su - postgres
 ![OpenTelemetry](https://img.shields.io/badge/OTel-Standard-blueviolet)
 ![Zipkin](https://img.shields.io/badge/Zipkin-Persistence-orange)
 ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.19.10-blue)
@@ -22,7 +22,7 @@ Micrometer Tracing 标准，旨在解决分布式系统在引入虚拟线程后�
 核心亮点：
 
 * **精细化双模并发**：原生支持平台线程（PT）与虚拟线程（VT）的物理隔离。**VT 采用信号量限流模式**，追求零队列损耗。
-* **全链路边界突破**：适配 Spring Boot 4.0.2，实现 `RestClient/RestTemplate` 自动注入 W3C `traceparent`，打通微服务间信任链。
+* **全链路边界突破**：适配 Spring Boot 4.0.5，实现 `RestClient/RestTemplate` 自动注入 W3C `traceparent`，打通微服务间信任链。
 * **语义化命名治理**：通过拦截器与 AOP 精准控制 Span 命名，实现 **“类名.方法名”** 的标准化拓扑呈现。
 * **极致性能观测**：自研 `MicrometerTracingDecorator`，通过 **惰性日志 (Lazy Logging)** 与 **并行链路修正**，兼顾低开销与高透明度。
 
@@ -65,7 +65,7 @@ spring-boot-01
 
 ### 3. 分布式边界突破 (Cross-Service Boundary Propagation)
 
-* **原生观测适配**：针对 Spring Boot 4.0.2 深度定制 `RestClientConfig`。
+* **原生观测适配**：针对 Spring Boot 4.0.5 深度定制 `RestClientConfig`。
 * **自动透传**：通过 `ObservationRegistry` 自动为 `RestClient` 注入拦截器。当发起外调请求时，自动注入 **W3C 标准
   TraceContext**，确保链路在不同微服务间无缝延伸。
 
@@ -120,7 +120,10 @@ AI 进行代码分析 并更新当前文档：*
 2. bash 命令
 
 ```bash
-    
+    # pgsql 相关
+    sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data start
+    sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data stop
+    sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data restart
     # 先列出所有变更文件，然后用grep过滤掉不想看的文件
     git diff HEAD --name-only | \
     grep -v 'package-lock.json' | \
@@ -148,6 +151,16 @@ AI 进行代码分析 并更新当前文档：*
        echo "\n\`\`\`xml"
        cat "$file"
        echo "\n\`\`\`"
+   done
+
+   # 输出所有 imports 文件内容
+   find . -type f -name "*.imports" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+       echo "\n\n"
+       echo "File: $file"
+       echo "\`\`\`"
+       cat "$file"
+       echo "\n\`\`\`"
+       echo ""
    done
    
    # 输出所有java 文件的内容(注意关键信息不要硬编码以及其他数据脱敏)

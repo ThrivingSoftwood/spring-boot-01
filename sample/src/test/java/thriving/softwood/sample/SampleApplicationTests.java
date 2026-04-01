@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.annotation.Resource;
-import thriving.softwood.sample.api.AncestorAsyncApi;
+import thriving.softwood.sample.biz.api.AncestorAsyncApi;
 
 @SpringBootTest
 class SampleApplicationTests {

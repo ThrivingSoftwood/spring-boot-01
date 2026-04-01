@@ -32,7 +32,7 @@ public class SampleApplication {
          *     logger.error("加载失败!", e);
          * }
          *
-         * 是配置生效
+         * 使配置生效
          *
          * app.setDefaultProperties(props);
          * @formatter:on

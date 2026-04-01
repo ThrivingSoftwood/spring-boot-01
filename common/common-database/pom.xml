@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.3-SNAPSHOT</version>
+    </parent>
+    <groupId>thriving.softwood.common</groupId>
+    <artifactId>common-database</artifactId>
+    <name>common-database</name>
+    <description>common-database</description>
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+    <dependencies>
+        <!--01. 依赖内部框架获取基础环境 (包含 SpringBoot 基础能力) begin-->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-framework</artifactId>
+        </dependency>
+        <!--01. 内部依赖 end-->
+
+        <!--02. ORM 与多数据源核心 begin-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot4-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis-spring</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+        </dependency>
+        <!-- 德鲁伊 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+        </dependency>
+        <!--02. ORM 与多数据源核心 end-->
+
+        <!--03. 数据库驱动 (可选依赖) begin-->
+        <!-- 💡 设为 optional: 让上层业务模块自己决定用 MySQL 还是 PostgreSQL -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.connector.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.connector.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <!--03. 数据库驱动 (可选依赖) end-->
+    </dependencies>
+
+    <build>
+    </build>
+
+</project>

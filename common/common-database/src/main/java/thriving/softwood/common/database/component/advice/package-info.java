@@ -1,0 +1,5 @@
+/**
+ * 建议类
+ */
+
+package thriving.softwood.common.database.component.advice;
