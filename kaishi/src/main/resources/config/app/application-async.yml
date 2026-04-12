@@ -1,0 +1,18 @@
+spring:
+  threads:
+    virtual:
+      # 🚀 开启官方全局虚拟线程支持
+      # 开启后，Tomcat 和所有 TaskExecutor 默认都会使用虚拟线程
+      enabled: true
+
+async:
+  # 你原本自定义的参数可以保留，用于你自己特殊的逻辑控制
+  vt:
+    thread-name-prefix: vt-exec-
+    concurrency-limit: 300
+  pt:
+    core-pool-size: 10
+    max-pool-size: 20
+    queue-capacity: 500
+    thread-name-prefix: pt-exec
+    rejected-exec-handler-type: AbortPolicy

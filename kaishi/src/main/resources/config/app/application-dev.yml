@@ -1,0 +1,10 @@
+server:
+  port: 6160
+  servlet:
+    context-path: /dev
+
+logging:
+  config: classpath:config/logging/log4j2-dev.xml
+  level:
+    thriving:
+      softwood: trace
