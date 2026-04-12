@@ -1,2 +1,2 @@
 org.springframework.context.ApplicationContextInitializer=\
-thriving.softwood.common.framework.component.postprocessor.Sm4EncryptionInitializer
+thriving.softwood.common.framework.component.postprocessor.SecurityInitializer

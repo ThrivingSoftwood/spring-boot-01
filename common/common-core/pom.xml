@@ -5,7 +5,7 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.3</version>
     </parent>
     <groupId>thriving.softwood.common</groupId>
     <artifactId>common-core</artifactId>
@@ -49,6 +49,16 @@
         <dependency>
             <groupId>cn.hutool.v7</groupId>
             <artifactId>hutool-crypto</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool.v7</groupId>
+            <artifactId>hutool-json</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool.v7</groupId>
+            <artifactId>hutool-http</artifactId>
             <version>${hutool.version}</version>
         </dependency>
         <!-- 国密底层实现引擎 -->

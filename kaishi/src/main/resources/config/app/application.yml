@@ -1,0 +1,22 @@
+# 查看配置类加载详情
+#debug: true
+
+spring:
+  application:
+    name: kaishi
+  messages:
+    basename: i18n.kaishi
+  profiles:
+    active: dev
+  web:
+    locale-resolver: accept_header
+    locale: en_US
+
+  # 🔥 核心魔法：按模块组装所有拆分出来的配置文件
+  config:
+    import:
+      - classpath:/config/app/application-db.yml
+      - classpath:/config/app/application-mybatis.yml
+      - classpath:/config/app/application-async.yml
+      - classpath:/config/app/application-observability.yml
+      - classpath:/config/app/application-security.yml

@@ -1,0 +1,13 @@
+mybatis-plus:
+  mapper-locations: classpath*:/thriving/softwood/**/mapper/**/*.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    # 默认开启日志打印（方便开发），将在 prod.yml 中被关闭
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

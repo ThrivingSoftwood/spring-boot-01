@@ -1,0 +1,23 @@
+package thriving.softwood.kaishi.biz.api.purchase;
+
+import java.util.List;
+
+import thriving.softwood.kaishi.biz.pojo.dto.PurchaseOrderTraceDTO;
+import thriving.softwood.kaishi.biz.pojo.record.FinishPurchaseReq;
+import thriving.softwood.kaishi.biz.pojo.vo.DlyBuyVO;
+import thriving.softwood.kaishi.biz.pojo.vo.PurchaseTraceVO;
+
+/**
+ * @author ThrivingSoftwood
+ */
+public interface PurchaseOrderTraceApi {
+    default List<DlyBuyVO> listTraceInfo(PurchaseOrderTraceDTO dto) {
+        return List.of();
+    }
+
+    default List<PurchaseTraceVO> listTraceDetail(PurchaseOrderTraceDTO dto) {
+        return List.of();
+    }
+
+    default void manualFinishPurchase(FinishPurchaseReq dto) {}
+}

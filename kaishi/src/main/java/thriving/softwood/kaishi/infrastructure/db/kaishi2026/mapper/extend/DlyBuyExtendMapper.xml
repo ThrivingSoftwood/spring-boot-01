@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间 = 对应扩展Mapper接口全类名 -->
+<mapper namespace="thriving.softwood.kaishi.infrastructure.db.kaishi2026.mapper.extend.DlyBuyExtendMapper">
+
+    <!-- 采购单查询结果映射：数据库字段 → DTO属性 -->
+    <resultMap id="DlyBuyResultMap" type="thriving.softwood.kaishi.biz.pojo.dto.DlyBuyDTO">
+        <!-- 主键/普通字段映射：column=数据库字段名，property=DTO驼峰属性名 -->
+        <result column="vchcode" property="vchCode"/>
+        <result column="dlyorder" property="dlyOrder"/>
+        <result column="date" property="date"/>
+        <result column="btypeid" property="btypeId"/>
+        <result column="ptypeid" property="ptypeId"/>
+        <result column="unit" property="unit"/>
+        <!-- 别名字段：数据库查询用了 as buy_qty，这里严格对应 -->
+        <result column="buy_qty" property="buyQty"/>
+        <!-- 别名字段：数据库查询用了 as stocked_qty，这里严格对应 -->
+        <result column="stocked_qty" property="stockedQty"/>
+        <result column="price" property="price"/>
+        <result column="discounttotal" property="discountTotal"/>
+        <result column="comment" property="comment"/>
+        <result column="redold" property="redOld"/>
+        <result column="redword" property="redWord"/>
+        <result column="etypeid" property="etypeId"/>
+        <result column="blockno" property="blockNo"/>
+    </resultMap>
+
+    <sql id="Trace_Info_Column_List">
+        a.vchcode,
+        a.dlyorder,
+        a.date,
+        a.btypeid,
+        a.ptypeid,
+        a.unit,
+        a.qty as buy_qty,
+        a.price,
+        a.discounttotal,
+        a.comment,
+        a.redold,
+        a.redword,
+        a.etypeid,
+        a.blockno,
+        isnull(sum(b.qty), 0) as stocked_qty
+    </sql>
+
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.extend.PurchaseTraceOrder">
+        <!-- ========================== A表：dlybuy 严格对标示例列名 + 前缀a_ ========================== -->
+        <result column="a_Vchcode" property="aVchcode"/>
+        <result column="a_atypeid" property="aAtypeid"/>
+        <result column="a_btypeid" property="aBtypeid"/>
+        <result column="a_etypeid" property="aEtypeid"/>
+        <result column="a_ktypeid" property="aKtypeid"/>
+        <result column="a_PtypeId" property="aPtypeId"/>
+        <result column="a_Qty" property="aQty"/>
+        <result column="a_discount" property="aDiscount"/>
+        <result column="a_DiscountPrice" property="aDiscountPrice"/>
+        <result column="a_costtotal" property="aCosttotal"/>
+        <result column="a_costprice" property="aCostprice"/>
+        <result column="a_Blockno" property="aBlockno"/>
+        <result column="a_price" property="aPrice"/>
+        <result column="a_total" property="aTotal"/>
+        <result column="a_Prodate" property="aProdate"/>
+        <result column="a_TaxPrice" property="aTaxPrice"/>
+        <result column="a_TaxTotal" property="aTaxtotal"/>
+        <result column="a_comment" property="aComment"/>
+        <result column="a_date" property="aDate"/>
+        <result column="a_usedtype" property="aUsedtype"/>
+        <result column="a_period" property="aPeriod"/>
+        <result column="a_tax_total" property="aTaxTotal"/>
+        <result column="a_tax" property="aTax"/>
+        <result column="a_discounttotal" property="aDiscounttotal"/>
+        <result column="a_Vchtype" property="aVchtype"/>
+        <result column="a_redword" property="aRedword"/>
+        <result column="a_dlyorder" property="aDlyorder"/>
+        <result column="a_unit" property="aUnit"/>
+        <result column="a_PDETAIL" property="aPdetail"/>
+        <result column="a_SourceDlyOrder" property="aSourceDlyOrder"/>
+        <result column="a_Toqty" property="aToqty"/>
+        <result column="a_RedOld" property="aRedOld"/>
+        <result column="a_UserDefined01" property="aUserDefined01"/>
+        <result column="a_UserDefined02" property="aUserDefined02"/>
+        <result column="a_WLDZ" property="aWldz"/>
+        <result column="a_QtyOther" property="aQtyOther"/>
+        <result column="a_FreeDom01" property="aFreeDom01"/>
+        <result column="a_FreeDom02" property="aFreeDom02"/>
+        <result column="a_FreeDom03" property="aFreeDom03"/>
+        <result column="a_FreeDom04" property="aFreeDom04"/>
+        <result column="a_FreeDom05" property="aFreeDom05"/>
+        <result column="a_FreeDom06" property="aFreeDom06"/>
+        <result column="a_FreeDom07" property="aFreeDom07"/>
+        <result column="a_FreeDom08" property="aFreeDom08"/>
+        <result column="a_FreeDom09" property="aFreeDom09"/>
+        <result column="a_FreeDom10" property="aFreeDom10"/>
+        <result column="a_ToOutQty" property="aToOutQty"/>
+        <result column="a_InNumber" property="aInNumber"/>
+        <result column="a_InVchCode" property="aInVchCode"/>
+        <result column="a_InVchType" property="aInVchType"/>
+        <result column="a_InDlyorder" property="aInDlyorder"/>
+        <result column="a_SourceVchcode" property="aSourceVchcode"/>
+        <result column="a_SourceVchtype" property="aSourceVchtype"/>
+        <result column="a_RowNo" property="aRowNo"/>
+        <result column="a_ProjectID" property="aProjectID"/>
+        <result column="a_Appoint" property="aAppoint"/>
+        <result column="a_Draft" property="aDraft"/>
+        <result column="a_FeeTotal" property="aFeeTotal"/>
+        <result column="a_CalcCostOrder" property="aCalcCostOrder"/>
+        <result column="a_FreeDom11" property="aFreeDom11"/>
+        <result column="a_FreeDom12" property="aFreeDom12"/>
+        <result column="a_FreeDom13" property="aFreeDom13"/>
+        <result column="a_FreeDom14" property="aFreeDom14"/>
+        <result column="a_FreeDom15" property="aFreeDom15"/>
+        <result column="a_FreeDom16" property="aFreeDom16"/>
+        <result column="a_FreeDomDateDif" property="aFreeDomDateDif"/>
+        <result column="a_Custom3" property="aCustom3"/>
+        <result column="a_Custom4" property="aCustom4"/>
+        <result column="a_SourceVchtype2" property="aSourceVchtype2"/>
+        <result column="a_SourceVchcode2" property="aSourceVchcode2"/>
+        <result column="a_SourceDlyOrder2" property="aSourceDlyOrder2"/>
+        <result column="a_SettleBtypeId" property="aSettleBtypeId"/>
+        <result column="a_BtypeOtherCode" property="aBtypeOtherCode"/>
+        <result column="a_DetailSign" property="aDetailSign"/>
+        <result column="a_ProduceDate" property="aProduceDate"/>
+        <result column="a_IniInStockToQty" property="aIniInStockToQty"/>
+        <result column="a_IniInStockBackQty" property="aIniInStockBackQty"/>
+        <result column="a_InStockToQty" property="aInStockToQty"/>
+        <result column="a_InStockBackQty" property="aInStockBackQty"/>
+        <result column="a_InstockBackSign" property="aInstockBackSign"/>
+        <result column="a_IniInstockToQtyOther" property="aIniInstockToQtyOther"/>
+        <result column="a_mtypeid" property="aMtypeid"/>
+        <result column="a_IniToFactQty" property="aIniToFactQty"/>
+        <result column="a_ParVchtype" property="aParVchtype"/>
+        <result column="a_BtypeOtherName" property="aBtypeOtherName"/>
+        <result column="a_BtypeOtherStandardType" property="aBtypeOtherStandardType"/>
+        <result column="a_AuditToQty" property="aAuditToQty"/>
+        <result column="a_AuditInstockToQty" property="aAuditInstockToQty"/>
+        <result column="a_ReturnReason" property="aReturnReason"/>
+
+        <!-- ========================== B表：dlystock 列名+前缀b_ 映射VO ========================== -->
+        <result column="b_Vchcode" property="bVchcode"/>
+        <result column="b_btypeid" property="bBtypeid"/>
+        <result column="b_etypeid" property="bEtypeid"/>
+        <result column="b_ktypeid" property="bKtypeid"/>
+        <result column="b_PtypeId" property="bPtypeId"/>
+        <result column="b_Qty" property="bQty"/>
+        <result column="b_Blockno" property="bBlockno"/>
+        <result column="b_Prodate" property="bProdate"/>
+        <result column="b_comment" property="bComment"/>
+        <result column="b_date" property="bDate"/>
+        <result column="b_usedtype" property="bUsedtype"/>
+        <result column="b_period" property="bPeriod"/>
+        <result column="b_Vchtype" property="bVchtype"/>
+        <result column="b_dlyorder" property="bDlyorder"/>
+        <result column="b_unit" property="bUnit"/>
+        <result column="b_SourceDlyOrder" property="bSourceDlyOrder"/>
+        <result column="b_ktypeid2" property="bKtypeid2"/>
+        <result column="b_SourceVchType" property="bSourceVchType"/>
+        <result column="b_UserDefined01" property="bUserDefined01"/>
+        <result column="b_UserDefined02" property="bUserDefined02"/>
+        <result column="b_FreeDom01" property="bFreeDom01"/>
+        <result column="b_FreeDom02" property="bFreeDom02"/>
+        <result column="b_FreeDom03" property="bFreeDom03"/>
+        <result column="b_FreeDom04" property="bFreeDom04"/>
+        <result column="b_FreeDom05" property="bFreeDom05"/>
+        <result column="b_FreeDom06" property="bFreeDom06"/>
+        <result column="b_FreeDom07" property="bFreeDom07"/>
+        <result column="b_FreeDom08" property="bFreeDom08"/>
+        <result column="b_FreeDom09" property="bFreeDom09"/>
+        <result column="b_FreeDom10" property="bFreeDom10"/>
+        <result column="b_SourceVchcode" property="bSourceVchcode"/>
+        <result column="b_RowNo" property="bRowNo"/>
+        <result column="b_Position" property="bPosition"/>
+        <result column="b_Position2" property="bPosition2"/>
+        <result column="b_Draft" property="bDraft"/>
+        <result column="b_FreeDom11" property="bFreeDom11"/>
+        <result column="b_FreeDom12" property="bFreeDom12"/>
+        <result column="b_FreeDom13" property="bFreeDom13"/>
+        <result column="b_FreeDom14" property="bFreeDom14"/>
+        <result column="b_FreeDom15" property="bFreeDom15"/>
+        <result column="b_FreeDom16" property="bFreeDom16"/>
+        <result column="b_FreeDomDateDif" property="bFreeDomDateDif"/>
+        <result column="b_QtyOther" property="bQtyOther"/>
+        <result column="b_Custom3" property="bCustom3"/>
+        <result column="b_Custom4" property="bCustom4"/>
+        <result column="b_BtypeOtherCode" property="bBtypeOtherCode"/>
+        <result column="b_ProduceDate" property="bProduceDate"/>
+        <result column="b_mtypeid" property="bMtypeid"/>
+        <result column="b_ParVchtype" property="bParVchtype"/>
+        <result column="b_BtypeOtherName" property="bBtypeOtherName"/>
+        <result column="b_BtypeOtherStandardType" property="bBtypeOtherStandardType"/>
+    </resultMap>
+
+    <sql id="Trace_Detail_Column_list">
+        a.Vchcode as a_Vchcode,
+        a.atypeid as a_atypeid,
+        a.btypeid as a_btypeid,
+        a.etypeid as a_etypeid,
+        a.ktypeid as a_ktypeid,
+        a.PtypeId as a_PtypeId,
+        a.Qty as a_Qty,
+        a.discount as a_discount,
+        a.DiscountPrice as a_DiscountPrice,
+        a.costtotal as a_costtotal,
+        a.costprice as a_costprice,
+        a.Blockno as a_Blockno,
+        a.price as a_price,
+        a.total as a_total,
+        a.Prodate as a_Prodate,
+        a.TaxPrice as a_TaxPrice,
+        a.TaxTotal as a_TaxTotal,
+        a.comment as a_comment,
+        a.date as a_date,
+        a.usedtype as a_usedtype,
+        a.period as a_period,
+        a.tax_total as a_tax_total,
+        a.tax as a_tax,
+        a.discounttotal as a_discounttotal,
+        a.Vchtype as a_Vchtype,
+        a.redword as a_redword,
+        a.dlyorder as a_dlyorder,
+        a.unit as a_unit,
+        a.PDETAIL as a_PDETAIL,
+        a.SourceDlyOrder as a_SourceDlyOrder,
+        a.Toqty as a_Toqty,
+        a.RedOld as a_RedOld,
+        a.QtyOther as a_QtyOther,
+        a.SourceVchcode as a_SourceVchcode,
+        a.SourceVchtype as a_SourceVchtype,
+        a.RowNo as a_RowNo,
+        a.ProjectID as a_ProjectID,
+        a.Appoint as a_Appoint,
+        a.Draft as a_Draft,
+        a.FeeTotal as a_FeeTotal,
+        a.SettleBtypeId as a_SettleBtypeId,
+        a.DetailSign as a_DetailSign,
+        a.mtypeid as a_mtypeid,
+        a.ParVchtype as a_ParVchtype,
+        a.AuditToQty as a_AuditToQty,
+        a.ReturnReason as a_ReturnReason,
+        -- 目前不知道具体含义和作用的字段
+        a.UserDefined01 as a_UserDefined01,
+        a.UserDefined02 as a_UserDefined02,
+        a.WLDZ as a_WLDZ,
+        a.ToOutQty as a_ToOutQty,
+        a.InNumber as a_InNumber,
+        a.InVchCode as a_InVchCode,
+        a.InVchType as a_InVchType,
+        a.InDlyorder as a_InDlyorder,
+        a.CalcCostOrder as a_CalcCostOrder,
+        a.FreeDom01 as a_FreeDom01,
+        a.FreeDom02 as a_FreeDom02,
+        a.FreeDom03 as a_FreeDom03,
+        a.FreeDom04 as a_FreeDom04,
+        a.FreeDom05 as a_FreeDom05,
+        a.FreeDom06 as a_FreeDom06,
+        a.FreeDom07 as a_FreeDom07,
+        a.FreeDom08 as a_FreeDom08,
+        a.FreeDom09 as a_FreeDom09,
+        a.FreeDom10 as a_FreeDom10,
+        a.FreeDom11 as a_FreeDom11,
+        a.FreeDom12 as a_FreeDom12,
+        a.FreeDom13 as a_FreeDom13,
+        a.FreeDom14 as a_FreeDom14,
+        a.FreeDom15 as a_FreeDom15,
+        a.FreeDom16 as a_FreeDom16,
+        a.FreeDomDateDif as a_FreeDomDateDif,
+        a.Custom3 as a_Custom3,
+        a.Custom4 as a_Custom4,
+        a.SourceVchtype2 as a_SourceVchtype2,
+        a.SourceVchcode2 as a_SourceVchcode2,
+        a.SourceDlyOrder2 as a_SourceDlyOrder2,
+        a.BtypeOtherCode as a_BtypeOtherCode,
+        a.ProduceDate as a_ProduceDate,
+        a.IniInStockToQty as a_IniInStockToQty,
+        a.IniInStockBackQty as a_IniInStockBackQty,
+        a.InStockToQty as a_InStockToQty,
+        a.InStockBackQty as a_InStockBackQty,
+        a.InstockBackSign as a_InstockBackSign,
+        a.IniInstockToQtyOther as a_IniInstockToQtyOther,
+        a.IniToFactQty as a_IniToFactQty,
+        a.BtypeOtherName as a_BtypeOtherName,
+        a.BtypeOtherStandardType as a_BtypeOtherStandardType,
+        a.AuditInstockToQty as a_AuditInstockToQty,
+        -- dlystock 表字段
+        b.Vchcode as b_Vchcode,
+        b.btypeid as b_btypeid,
+        b.etypeid as b_etypeid,
+        b.ktypeid as b_ktypeid,
+        b.PtypeId as b_PtypeId,
+        b.Qty as b_Qty,
+        b.Blockno as b_Blockno,
+        b.Prodate as b_Prodate,
+        b.comment as b_comment,
+        b.date as b_date,
+        b.usedtype as b_usedtype,
+        b.period as b_period,
+        b.Vchtype as b_Vchtype,
+        b.dlyorder as b_dlyorder,
+        b.unit as b_unit,
+        b.SourceDlyOrder as b_SourceDlyOrder,
+        b.ktypeid2 as b_ktypeid2,
+        b.SourceVchType as b_SourceVchType,
+        b.UserDefined01 as b_UserDefined01,
+        b.UserDefined02 as b_UserDefined02,
+        b.FreeDom01 as b_FreeDom01,
+        b.FreeDom02 as b_FreeDom02,
+        b.FreeDom03 as b_FreeDom03,
+        b.FreeDom04 as b_FreeDom04,
+        b.FreeDom05 as b_FreeDom05,
+        b.FreeDom06 as b_FreeDom06,
+        b.FreeDom07 as b_FreeDom07,
+        b.FreeDom08 as b_FreeDom08,
+        b.FreeDom09 as b_FreeDom09,
+        b.FreeDom10 as b_FreeDom10,
+        b.SourceVchcode as b_SourceVchcode,
+        b.RowNo as b_RowNo,
+        b.Position as b_Position,
+        b.Position2 as b_Position2,
+        b.Draft as b_Draft,
+        b.FreeDom11 as b_FreeDom11,
+        b.FreeDom12 as b_FreeDom12,
+        b.FreeDom13 as b_FreeDom13,
+        b.FreeDom14 as b_FreeDom14,
+        b.FreeDom15 as b_FreeDom15,
+        b.FreeDom16 as b_FreeDom16,
+        b.FreeDomDateDif as b_FreeDomDateDif,
+        b.QtyOther as b_QtyOther,
+        b.Custom3 as b_Custom3,
+        b.Custom4 as b_Custom4,
+        b.BtypeOtherCode as b_BtypeOtherCode,
+        b.ProduceDate as b_ProduceDate,
+        b.mtypeid as b_mtypeid,
+        b.ParVchtype as b_ParVchtype,
+        b.BtypeOtherName as b_BtypeOtherName,
+        b.BtypeOtherStandardType as b_BtypeOtherStandardType
+    </sql>
+
+    <sql id="Criteria_Where_Clause">
+        <if test="vchcode != null">AND a.vchcode = #{vchcode}</if>
+        <if test="atypeid != null and atypeid != ''">AND a.atypeid = #{atypeid}</if>
+        <if test="btypeid != null and btypeid != ''">AND a.btypeid = #{btypeid}</if>
+        <if test="etypeid != null and etypeid != ''">AND a.etypeid = #{etypeid}</if>
+        <if test="ktypeid != null and ktypeid != ''">AND a.ktypeid = #{ktypeid}</if>
+        <if test="ptypeId != null and ptypeId != ''">AND a.ptypeid = #{ptypeId}</if>
+        <if test="blockno != null and blockno != ''">AND a.blockno = #{blockno}</if>
+        <if test="minProdate != null and minProdate != ''">AND a.prodate &gt;= #{minProdate}</if>
+        <if test="maxProdate != null and maxProdate != ''">AND a.prodate &lt;= #{maxProdate}</if>
+        <if test="comment != null and comment != ''">AND a.comment = #{comment}</if>
+        <if test="minDate != null and minDate != ''">AND a.date &gt;= #{minDate}</if>
+        <if test="maxDate != null and maxDate != ''">AND a.date &lt;= #{maxDate}</if>
+        <if test="usedtype != null and usedtype != ''">AND a.usedtype = #{usedtype}</if>
+        <if test="period != null">AND a.period = #{period}</if>
+        <if test="minPeriod != null">AND a.period &gt;= #{minPeriod}</if>
+        <if test="maxPeriod != null">AND a.period &lt;= #{maxPeriod}</if>
+        <if test="dlyorder != null">AND a.dlyorder = #{dlyorder}</if>
+        <if test="sourceDlyOrder != null">AND a.sourceDlyOrder = #{sourceDlyOrder}</if>
+        <if test="sourceVchcode != null">AND a.source_vchcode = #{sourceVchcode}</if>
+        <if test="sourceVchtype != null">AND a.source_vchtype = #{sourceVchtype}</if>
+        <if test="projectId != null and projectId != ''">AND a.ProjectID = #{projectId}</if>
+        <if test="draft != null">AND a.draft = #{draft}</if>
+        <if test="settleBtypeId != null and settleBtypeId != ''">AND a.SettleBtypeId = #{settleBtypeId}</if>
+        <if test="mtypeid != null and mtypeid != ''">AND a.mtypeid = #{mtypeid}</if>
+        <if test="parVchtype != null">AND a.ParVchtype = #{parVchtype}</if>
+    </sql>
+
+    <sql id="Trace_Core_Payload">
+        <!-- 分支 1：正常计算的部分 -->
+        SELECT
+        a.vchcode, a.dlyorder, a.date, a.btypeid, a.ptypeid, a.unit,
+        a.qty as buy_qty, a.price, a.discounttotal, a.comment,
+        a.redold, a.redword, a.etypeid, a.blockno,
+        calc.stocked_qty
+        FROM [凯诗防护2026].dbo.dlybuy AS a
+        CROSS APPLY (
+        SELECT isnull(sum(b.qty), 0) as stocked_qty
+        FROM [凯诗防护2026].dbo.dlystock AS b
+        WHERE a.vchcode = b.sourcevchcode
+        AND a.vchtype = b.sourcevchtype
+        AND a.dlyorder = b.sourcedlyorder
+        ) AS calc
+        <where>
+            a.vchtype = 34
+            <!-- 重点优化：始终排除掉手动结清的数据，为使用 UNION ALL 做准备 -->
+            AND NOT EXISTS (
+            SELECT 1 FROM [kaishi-plus].dbo.purchase_manual_finish AS c
+            WHERE a.dlyorder = c.dly_order AND a.vchcode = c.vch_code AND a.vchtype = c.vch_type
+            )
+            <choose>
+                <when test="queryPurchased">AND a.qty = calc.stocked_qty</when>
+                <otherwise>AND a.qty &lt;&gt; calc.stocked_qty</otherwise>
+            </choose>
+            <include refid="Criteria_Where_Clause"/>
+        </where>
+
+        <!-- 分支 2：手动结清的部分 (仅在查询已完成时合并) -->
+        <if test="queryPurchased">
+            UNION all
+            SELECT
+            a.vchcode, a.dlyorder, a.date, a.btypeid, a.ptypeid, a.unit,
+            a.qty as buy_qty, a.price, a.discounttotal, concat(a.comment, b.ext_info) as comment,
+            a.redold, a.redword, a.etypeid, a.blockno,
+            a.qty as stocked_qty <!-- 手动完成的，视为入库量等于采购量 -->
+            FROM [kaishi-plus].dbo.purchase_manual_finish AS b
+            INNER JOIN [凯诗防护2026].dbo.DlyBuy AS a
+            ON a.dlyorder = b.dly_order AND a.Vchcode = b.vch_code AND a.Vchtype = b.vch_type
+            <where>
+                a.vchtype = 34
+                <include refid="Criteria_Where_Clause"/>
+            </where>
+        </if>
+    </sql>
+
+    <!-- 计数查询 -->
+    <select id="countTraceInfo" resultType="java.lang.Long">
+        SELECT count(1) as total
+        FROM (
+        <include refid="Trace_Core_Payload"/>
+        ) AS temp
+    </select>
+
+    <!-- 分页列表查询 -->
+    <select id="listTraceInfo" resultMap="DlyBuyResultMap">
+        SELECT * FROM (
+        <include refid="Trace_Core_Payload"/>
+        ) AS a
+        <choose>
+            <!-- 如果 DTO 传了自定义排序则使用自定义 -->
+            <when test="orderBySql != null and orderBySql != ''">
+                ORDER BY ${orderBySql}
+            </when>
+            <!-- 否则使用您原始要求的排序条件 -->
+            <otherwise>
+                ORDER BY a.date desc, a.vchcode asc, a.dlyorder asc
+            </otherwise>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <!-- ===================== 1. 查询采购单号列表 ===================== -->
+    <select id="listTraceDetail" parameterType="thriving.softwood.kaishi.biz.pojo.dto.PurchaseOrderTraceDTO"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Trace_Detail_Column_list"/>
+        from dlybuy as a
+        left join Dlystock as b
+        on a.Vchcode = b.SourceVchcode
+        and a.Vchtype = b.SourceVchType
+        and a.dlyorder = b.SourceDlyOrder
+        <where>
+            a.vchtype = 34
+            <if test="vchcode != null">
+                and a.vchcode = #{vchcode}
+            </if>
+            <if test="dlyorder != null">
+                and a.dlyorder = #{dlyorder}
+            </if>
+        </where>
+        order by ${orderBySql}
+        OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY
+    </select>
+</mapper>

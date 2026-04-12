@@ -5,7 +5,7 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.3</version>
     </parent>
     <groupId>thriving.softwood.common</groupId>
     <artifactId>common-framework</artifactId>
@@ -20,6 +20,12 @@
         <dependency>
             <groupId>thriving.softwood.common</groupId>
             <artifactId>common-observability</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>error_prone_annotations</artifactId>
+                    <groupId>com.google.errorprone</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--01.内部依赖 end-->
 
@@ -44,5 +50,16 @@
             <artifactId>mapstruct</artifactId>
         </dependency>
         <!--02.Spring 核心依赖 end-->
+        <!--03.内存缓存依赖-->
+        <!-- Spring Cache 抽象层 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <!-- Caffeine 底层实现 -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -5,7 +5,7 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.3</version>
     </parent>
     <groupId>thriving.softwood.common</groupId>
     <artifactId>common-database</artifactId>
@@ -77,6 +77,11 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.connector.version}</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${mssql.jdbc.version}</version>
         </dependency>
         <!--03. 数据库驱动 (可选依赖) end-->
     </dependencies>

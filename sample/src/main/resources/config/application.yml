@@ -1,4 +1,5 @@
 spring:
   config:
     import:
+      # 引导进入 app 目录下的主控配置
       - classpath:/config/app/application.yml

@@ -1,11 +1,11 @@
 # 查看配置类加载详情
-debug: true
+#debug: true
 
 spring:
   application:
-    name: sample
+    name: kaishi
   messages:
-    basename: i18n.sample
+    basename: i18n.kaishi
   profiles:
     active: dev
   web:
@@ -13,71 +13,15 @@ spring:
     locale-resolver: accept_header
     # 当 locale-resolver: fixed 被配置时下方 locale 设置才生效; en_US 是 locale 的默认值,Accept-Language 为空时才生效
     locale: en_US
-#    active: prod
-#  main:
-#    laz y-initialization: true
+  #    active: prod
+  #  main:
+  #    laz y-initialization: true
 
-management:
-  # 开启 Actuator 端点（可选，方便调试）
-  endpoints:
-    web:
-      exposure:
-        include: "health,info,prometheus,metrics"
-
-  # 开启观测性
-  observations:
-    annotations:
-      enabled: true
-
-  # ⚡ 链路追踪核心配置
-  tracing:
-    sampling:
-      # ⚠️ 关键：采样率 1.0 表示 100% 记录。
-      # 生产环境通常设为 0.1 或更低，开发环境务必设为 1.0，否则看不到 TraceID！
-      probability: 1.0
-    # 自动将 TraceID/SpanID 注入到 MDC 中
-    baggage:
-      correlation:
-        enabled: true
-        # 如果你需要自定义字段在链路传递，加在这里
-        fields: "traceId,spanId"
-    export:
-      enabled: true
-
-  # 🚀 配置 OTLP 导出逻辑
-  opentelemetry:
-    tracing:
-      export:
-        otlp:
-          endpoint: "http://localhost:4318/v1/traces"
-    # 🚀 必须新增：显式指定日志导出地址
-    logging:
-      export:
-        otlp:
-          endpoint: "http://localhost:4318/v1/logs"
-
-
-
-## 演示配置文件参数值如何注入到 bean 中
-#sample:
-#  # 重复调用并不会使用重复的值,相当于调用两次 random 方法;random 样例如下
-#  #  my:
-#  #    secret: "${random.value}"
-#  #    number: "${random.int}"
-#  #    bignumber: "${random.long}"
-#  #    uuid: "${random.uuid}"
-#  #    number-less-than-ten: "${random.int(10)}"
-#  #    number-in-range: "${random.int[1024,65536]}"
-#  id: ${random.int}
-#  name: ${random.name}
-#  hobbies:
-#    - 唱
-#    - 跳
-#    - rap
-#    - 篮球
-#  pets: [ 猫,狗 ]
-#  ageWithEvent:
-#    5: 意外导致被切完饺子馅的菜刀砍到右手背留 10 厘米疤痕
-#    13: 被大客车撞飞掉半颗门牙
-#  ageWithGirl: { 16: 她一, 27: 她二 }
-#  testNotNull: 记性太好也不好,总有东西忘不掉
+  # 🔥 核心魔法：按模块组装所有拆分出来的配置文件
+  config:
+    import:
+      - application-db.yml
+      - application-mybatis.yml
+      - application-async.yml
+      - application-observability.yml
+      - application-security.yml

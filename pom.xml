@@ -25,6 +25,7 @@
         <lombok.version>1.18.42</lombok.version>
         <mysql.connector.version>9.6.0</mysql.connector.version>
         <postgresql.connector.version>42.7.10</postgresql.connector.version>
+        <mssql.jdbc.version>13.4.0.jre11</mssql.jdbc.version>
         <disruptor.version>4.0.0</disruptor.version>
         <pagehelper.version>6.1.1</pagehelper.version>
         <aspectjweaver.version>1.9.25.1</aspectjweaver.version>
@@ -51,13 +52,14 @@
 
     <groupId>thriving.softwood</groupId>
     <artifactId>spring-boot-01</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>common</module>
         <module>sample</module>
         <module>algorithm</module>
+        <module>kaishi</module>
     </modules>
 
     <!--依赖管理 (BOM模式) begin-->

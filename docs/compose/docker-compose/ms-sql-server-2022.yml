@@ -1,0 +1,31 @@
+name: mssql-dev-env
+
+services:
+  sqlserver:
+    # 🎯 镜像版本：这里我为你配置了极其稳定的 2022 最新版。
+    # 如果你想体验最新版，可直接将 2022-latest 改为 2025-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    
+    # 🚨 极其关键的 Mac 专属护身符：强制指定 x86 架构，唤醒 Rosetta 2 翻译层
+    # 否则 docker compose 可能会因为找不到原生 ARM 镜像而直接报错
+    platform: linux/amd64
+    
+    container_name: mssql_dev_container
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Wancc16#
+      # 🚀 专家级配置：声明使用 Developer (开发者) 版本
+      # 它是免费的，但拥有与企业版 100% 相同的全部高级功能，且永不过期
+      - MSSQL_PID=Developer
+    volumes:
+      # 💾 数据持久化挂载：这是成熟方案的灵魂！
+      # 将容器内部的数据目录挂载到 Docker 管理的安全数据卷中。
+      # 这样即使你在 GUI 界面里误删了容器，下次重启时数据依然完好无损。
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped # 开机自启，直到你手动停止它
+
+# 声明上面用到的本地数据卷
+volumes:
+  sqlserver_data:

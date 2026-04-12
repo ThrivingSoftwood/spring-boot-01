@@ -5,7 +5,7 @@
       "format": "yyyy-MM-dd HH:mm:ss.SSS"
     }
   },
-  "serviceName": "${spring:spring.application.name}",
+  "serviceName": "${service.name}",
   "level": {
     "$resolver": "level",
     "field": "name"

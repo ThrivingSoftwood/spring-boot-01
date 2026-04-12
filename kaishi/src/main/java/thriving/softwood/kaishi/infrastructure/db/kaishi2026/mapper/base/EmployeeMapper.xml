@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.kaishi.infrastructure.db.kaishi2026.mapper.base.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.Employee">
+        <result column="typeId" property="typeId"/>
+        <result column="Parid" property="parid"/>
+        <result column="leveal" property="leveal"/>
+        <result column="soncount" property="soncount"/>
+        <result column="sonnum" property="sonnum"/>
+        <result column="FullName" property="fullName"/>
+        <result column="Name" property="name"/>
+        <result column="UserCode" property="userCode"/>
+        <result column="Department" property="department"/>
+        <result column="Tel" property="tel"/>
+        <result column="Address" property="address"/>
+        <result column="Comment" property="comment"/>
+        <result column="deleted" property="deleted"/>
+        <result column="Namepy" property="namepy"/>
+        <result column="Rec" property="rec"/>
+        <result column="ParRec" property="parRec"/>
+        <result column="Pay" property="pay"/>
+        <result column="Incumbency" property="incumbency"/>
+        <result column="birthday" property="birthday"/>
+        <result column="OrderNo" property="orderNo"/>
+        <result column="creditupperlimit" property="creditupperlimit"/>
+        <result column="yshouupperlimit" property="yshouupperlimit"/>
+        <result column="ProduceType" property="produceType"/>
+        <result column="Account" property="account"/>
+        <result column="clerk" property="clerk"/>
+        <result column="OnDutyDate" property="onDutyDate"/>
+        <result column="Sex" property="sex"/>
+        <result column="UpdateTag" property="updateTag"/>
+        <result column="Education" property="education"/>
+        <result column="ID" property="id"/>
+        <result column="Birthplace" property="birthplace"/>
+        <result column="CreateDate" property="createDate"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        typeId, Parid, leveal, soncount, sonnum, FullName, Name, UserCode, Department, Tel, Address, Comment
+        , deleted, Namepy, Rec, ParRec, Pay, Incumbency, birthday, OrderNo, creditupperlimit, yshouupperlimit, ProduceType, Account, clerk, OnDutyDate, Sex, UpdateTag, Education, ID, Birthplace, CreateDate
+    </sql>
+
+</mapper>

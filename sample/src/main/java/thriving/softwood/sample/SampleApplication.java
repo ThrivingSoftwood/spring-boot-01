@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author ThrivingSoftwood
  * @apiNote 演示外部属性加载
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"thriving.softwood"})
 @MapperScan("thriving.softwood.**.infrastructure.db.**.mapper")
 public class SampleApplication {
 

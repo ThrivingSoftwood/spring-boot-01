@@ -124,6 +124,7 @@ AI 进行代码分析 并更新当前文档：*
     sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data start
     sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data stop
     sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data restart
+    
     # 先列出所有变更文件，然后用grep过滤掉不想看的文件
     git diff HEAD --name-only | \
     grep -v 'package-lock.json' | \
@@ -146,7 +147,7 @@ AI 进行代码分析 并更新当前文档：*
    done
 
    # 输出所有 pom.xml 外的配置文件内容(注意数据脱敏)
-   find . -type f \( -name "*.xml" -o -name "*.yml" -o -name "*.properties" \) ! -name "pom.xml" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+   find . -type f \( -name "*.xml" -o -name "*.yml" -o -name "*.properties" \) ! -name "pom.xml" ! -name "*Mapper.xml" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
        echo "File: $file"
        echo "\n\`\`\`xml"
        cat "$file"
@@ -171,6 +172,24 @@ AI 进行代码分析 并更新当前文档：*
        cat "$file"
        echo "\n\`\`\`"
        echo ""
+   done
+   
+   # 输出所有 mapper.xml 文件的内容(注意关键信息不要硬编码以及其他数据脱敏)
+   find . -type f -name "*Mapper.xml" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+       echo "\n\n"
+       echo "File: $file"
+       echo "\`\`\`java"
+       cat "$file"
+       echo "\n\`\`\`"
+       echo ""
+   done
+   
+   # 输出所有 yml 配置文件内容
+   find . -type f \( -name "*.yml" -o -name "*.properties" \) ! -name "pom.xml" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+       echo "File: $file"
+       echo "\n\`\`\`yml"
+       cat "$file"
+       echo "\n\`\`\`"
    done
    
    # 从 docker 中获取 docker-compose.yml

@@ -4,20 +4,34 @@ server:
     context-path: /prod
 
 logging:
-  # log4j2-dev.xml 配置文件提供骨架
-  config: classpath:config/logging/log4j2-prod.xml
-  # application.yml 进行精细控制
+  config: classpath:config/logging/log4j2-prod-common.xml
   level:
     thriving:
-      softwood: trace
+      softwood: info # 生产环境建议提升日志级别为 info 甚至 warn
 
 async:
   vt:
-    thread-name-prefix: vt-exec-
+    # 覆盖通用配置，按你原来的要求，生产环境给 3000
     concurrency-limit: 3000
-  pt:
-    core-pool-size: 10
-    max-pool-size: 20
-    queue-capacity: 500
-    thread-name-prefix: pt-exec
-    rejected-exec-handler-type: AbortPolicy
+
+# ================= 🚀 生产环境保护性覆盖 =================
+mybatis-plus:
+  configuration:
+    # 生产环境强行关闭控制台 SQL 打印，防刷屏导致 CPU 100%
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+management:
+  tracing:
+    sampling:
+      # 生产环境降低采样率到 10% (0.1)，防止产生天量 Trace 压垮存储
+      probability: 0.1
+
+spring:
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          # 在真实的生产环境中，把正式库的 IP 地址填在这里，覆盖掉 dev 的 localhost
+          url: jdbc:sqlserver://localhost:1433;DatabaseName=kaishi-plus;encrypt=false;trustServerCertificate=true;
+        kaishi-2026:
+          url: jdbc:sqlserver://localhost:1433;DatabaseName=凯诗防护2026;encrypt=false;trustServerCertificate=true;

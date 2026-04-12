@@ -19,10 +19,15 @@ import cn.hutool.v7.crypto.symmetric.SM4;
 public class Sm4Util {
     private static final Logger logger = LoggerFactory.getLogger(Sm4Util.class);
 
-    private static SM4 SM4_ENCRYPTOR = null;
+    private static SM4 LOCAL_SM4 = null;
+    private static SM4 WEB_SM4 = null;
 
-    public static void init(String key, String iv) {
-        SM4_ENCRYPTOR = new SM4(Mode.CBC, Padding.PKCS5Padding, Hex.decode(key), Hex.decode(iv));
+    public static void initLocal(String key, String iv) {
+        LOCAL_SM4 = new SM4(Mode.CBC, Padding.PKCS5Padding, Hex.decode(key), Hex.decode(iv));
+    }
+
+    public static void initWeb(String key, String iv) {
+        WEB_SM4 = new SM4(Mode.CBC, Padding.PKCS5Padding, Hex.decode(key), Hex.decode(iv));
     }
 
     /**
@@ -34,11 +39,20 @@ public class Sm4Util {
         return Hex.encodeStr(keyBytes);
     }
 
-    public static String encrypt(String plainText) {
-        return SM4_ENCRYPTOR.encryptHex(plainText, StandardCharsets.UTF_8);
+    public static String encLocal(String plainText) {
+        return LOCAL_SM4.encryptHex(plainText, StandardCharsets.UTF_8);
     }
 
-    public static String decrypt(String cipherText) {
-        return SM4_ENCRYPTOR.decryptStr(cipherText, StandardCharsets.UTF_8);
+    public static String decLocal(String cipherText) {
+        return LOCAL_SM4.decryptStr(cipherText, StandardCharsets.UTF_8);
     }
+
+    public static String encWeb(String plainText) {
+        return WEB_SM4.encryptHex(plainText, StandardCharsets.UTF_8);
+    }
+
+    public static String decWeb(String cipherText) {
+        return WEB_SM4.decryptStr(cipherText, StandardCharsets.UTF_8);
+    }
+
 }

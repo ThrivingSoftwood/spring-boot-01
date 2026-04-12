@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    CodeOmni 优化版 Log4j2 生产配置
+    优化维度：高吞吐量 I/O、磁盘保护策略、全异步适配
+-->
+<Configuration status="WARN" monitorInterval="30" packages="io.opentelemetry.instrumentation.log4j.appender.v2_17">
+
+    <Properties>
+        <Property name="APP_NAME">${spring:spring.application.name:-springboot-app}</Property>
+        <Property name="LOG_HOME">${sys:log.home:-logs/${APP_NAME}}</Property>
+        <Property name="FILE_NAME">app</Property>
+
+        <!-- 🎨 格式保持不变 (严格遵循用户要求) -->
+        <Property name="CONSOLE_PATTERN">%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{dim} %highlight{%-5level}{FATAL=red bright,
+            ERROR=red, WARN=yellow bold, INFO=green, DEBUG=cyan bold, TRACE=blue}
+            %style{[%X{traceId}][%X{spanId}]}{cyan} %style{${sys:PID}}{magenta} %style{---}{dim}
+            %style{%-40.40c{1.}}{cyan} : %msg%n%style{%throwable}{red}
+        </Property>
+
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceId}][%X{spanId}] ${sys:PID} ---
+            %-40.40c{1.} : %msg%n
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 💡 生产环境建议 Console 仅保留 INFO 及以上级别，减少控制台 I/O -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${CONSOLE_PATTERN}" disableAnsi="false" noConsoleNoAnsi="false"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+
+        <!-- Info 文件：采用异步随机读写流 -->
+        <RollingRandomAccessFile name="InfoFile"
+                                 fileName="${LOG_HOME}/${FILE_NAME}-info.log"
+                                 filePattern="${LOG_HOME}/${FILE_NAME}-info-%d{yyyy-MM-dd}-%i.log.gz">
+            <!-- ⚡ 生产级性能校准：256KB 缓冲区，减少磁盘寻道时间 -->
+            <immediateFlush>false</immediateFlush>
+            <bufferSize>262144</bufferSize>
+
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+
+            <Policies>
+                <!-- 🕛 modulate=true 确保在整点切分日志 -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1 GB"/>
+            </Policies>
+
+            <!-- 🗑️ 磁盘保护：不仅按天清理，还增加文件总数限制 -->
+            <DefaultRolloverStrategy max="30">
+                <Delete basePath="${LOG_HOME}/" maxDepth="1">
+                    <IfFileName glob="${FILE_NAME}-info-*.log.gz"/>
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- Error 文件 -->
+        <RollingRandomAccessFile name="ErrorFile"
+                                 fileName="${LOG_HOME}/${FILE_NAME}-error.log"
+                                 filePattern="${LOG_HOME}/${FILE_NAME}-error-%d{yyyy-MM-dd}-%i.log.gz">
+            <immediateFlush>true</immediateFlush> <!-- ⚠️ ERROR 日志建议设为 true，防止崩溃时关键错误丢失 -->
+            <bufferSize>16384</bufferSize>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="512 MB"/>
+            </Policies>
+
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${LOG_HOME}/" maxDepth="1">
+                    <IfFileName glob="${FILE_NAME}-error-*.log.gz"/>
+                    <IfLastModified age="60d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- 🚀 OTLP 导出器：级别校准 -->
+        <OpenTelemetry name="OTEL">
+            <PatternLayout pattern="%m"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+        </OpenTelemetry>
+    </Appenders>
+
+    <Loggers>
+        <!-- 核心框架日志级别控制 -->
+        <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.apache.http" level="INFO"/>
+        <Logger name="org.mybatis" level="WARN"/> <!-- 生产环境建议提升 mybatis 级别，DEBUG 会产生大量磁盘 IO -->
+
+        <!-- 业务包 Logger：additivity="false" 防止日志在 Root 重复输出 -->
+        <Logger name="thriving.softwood.mapper" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="InfoFile"/>
+        </Logger>
+
+        <!--
+            ⚡ includeLocation="false" 是生产环境最重要的性能开关。
+            在异步模式下，开启位置信息会导致吞吐量下降 10 倍以上。
+        -->
+        <Root level="INFO" includeLocation="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="ErrorFile"/>
+            <AppenderRef ref="OTEL"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

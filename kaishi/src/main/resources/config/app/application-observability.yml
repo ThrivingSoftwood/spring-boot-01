@@ -1,0 +1,27 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus,metrics"
+  observations:
+    annotations:
+      enabled: true
+  tracing:
+    sampling:
+      # 默认设为 1.0 供开发调试，prod 环境按需覆盖降低
+      probability: 1.0
+    baggage:
+      correlation:
+        enabled: true
+        fields: "traceId,spanId"
+    export:
+      enabled: true
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/traces"
+    logging:
+      export:
+        otlp:
+          endpoint: "http://localhost:4318/v1/logs"
