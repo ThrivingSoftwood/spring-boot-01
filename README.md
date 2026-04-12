@@ -8,7 +8,7 @@
 
 ![Java](https://img.shields.io/badge/Java-25-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.5-green)
-![Hutool](https://img.shields.io/badge/Hutool-v7-blue)sudo su - postgres
+![Hutool](https://img.shields.io/badge/Hutool-v7-blue)
 ![OpenTelemetry](https://img.shields.io/badge/OTel-Standard-blueviolet)
 ![Zipkin](https://img.shields.io/badge/Zipkin-Persistence-orange)
 ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.19.10-blue)
@@ -23,7 +23,8 @@ Micrometer Tracing 标准，旨在解决分布式系统在引入虚拟线程后�
 
 * **精细化双模并发**：原生支持平台线程（PT）与虚拟线程（VT）的物理隔离。**VT 采用信号量限流模式**，追求零队列损耗。
 * **全链路边界突破**：适配 Spring Boot 4.0.5，实现 `RestClient/RestTemplate` 自动注入 W3C `traceparent`，打通微服务间信任链。
-* **语义化命名治理**：通过拦截器与 AOP 精准控制 Span 命名，实现 **“类名.方法名”** 的标准化拓扑呈现。
+* **国密与立体安全**：集成 SM4 国密传输、BCrypt 存储与 RS256 签名的 JWT 认证机制，保障数据全生命周期安全。
+* **极速本地缓存架构**：基于 `ApplicationRunner` 与 `Caffeine` 实现核心业务字典的零延迟全量预热。
 * **极致性能观测**：自研 `MicrometerTracingDecorator`，通过 **惰性日志 (Lazy Logging)** 与 **并行链路修正**，兼顾低开销与高透明度。
 
 ## 🏗 模块架构 (Module Structure)
@@ -33,11 +34,14 @@ Micrometer Tracing 标准，旨在解决分布式系统在引入虚拟线程后�
 ```text
 spring-boot-01
 ├── common                  # 公共父模块 (BOM & Dependency Management)
-│   ├── common-core         # [基石] 纯净工具类 (Hutool/Guava)、通用常量、枚举
+│   ├── common-core         # [基石] 纯净工具类(Hutool/Guava)、SM4/JWT 核心引擎、全局 Result
+│   ├── common-database     # [存储] MyBatis-Plus 增强、多数据源(DS)路由、自动填充处理器
 │   ├── common-observability# [之眼] OTel SDK 配置、Log4j2 OTLP 桥接、ES Ingest Pipeline 治理
-│   ├── common-framework    # [引擎] 混合异步配置 (Semaphore VT)、Micrometer 装饰器、代理自愈
-│   └── common-web          # [门户] 跨服务 RestClient 配置、Web 拦截器、响应头增强
-└── sample                  # [演练] 业务实现、多层级并行异步调用 (Fan-out) 演示
+│   ├── common-framework    # [引擎] 混合异步配置(Semaphore VT)、AOP 日志拦截、代理自愈
+│   └── common-web          # [门户] 全局异常捕获、JWT 拦截与上下文管理、Web 链路增强
+├── algorithm               # [算法] 核心算法练习与性能压测模块
+├── sample                  # [演练] 多层级并行异步调用 (Fan-out) 及 Trace 链路追踪演示
+└── business-app            # [业务] 核心业务应用落地层 (剥离具体业务标识的纯净微服务实现)
 ```
 
 ## 🚀 核心特性 (Key Features)
@@ -55,24 +59,34 @@ spring-boot-01
 
 * **并发链路修复 (Parallel View Fix)**：修正 `MicrometerTracingDecorator`。通过在装饰器中显式保留 `nextSpan()` 逻辑，确保
   Zipkin 能够正确识别并行异步分支（Fan-out），生成精准的甘特图拓扑。
-* **性能增强型衔接日志**：引入 **惰性日志 (Lazy Logging)** 技术。仅在日志级别满足时才提取 `SpanID`
-  ，极大降低了高并发下线程切换点的字符串拼接与上下文提取开销。
+* **全异步日志引擎 (RingBuffer Logging)**：抛弃传统 Logback，基于 LMAX Disruptor 实现 Log4j2 全异步日志，大幅降低高并发下的磁盘
+  I/O 阻塞。
 * **监控命名标准化**：
-* **Web 层**：利用 `WebSpanNameInterceptor` 直接重命名入口 Span，避免 AOP 导致的二次嵌套。
-* **业务层**：优化 `TraceAspect` 切面，实时捕获异步方法的 `ClassName.MethodName`。
-* **数据自愈 (Ingest Pipeline)**：Elasticsearch 层采用 Painless 脚本预处理结构化日志，解决 OTel SDK 在 Body
-  类型（String/Map）切换时的写入冲突。
+    * **Web 层**：利用 `WebSpanNameInterceptor` 直接重命名入口 Span (如 `Controller.Method`)。
+    * **业务层**：优化 `TraceAspect` 与 `ServiceLoggingAspect` 切面，实时捕获异步方法与业务层的入参/耗时，实现精细化拓扑呈现。
 
-### 3. 分布式边界突破 (Cross-Service Boundary Propagation)
+### 3. 多层级立体安全防御 (Multi-layer Security)
 
-* **原生观测适配**：针对 Spring Boot 4.0.5 深度定制 `RestClientConfig`。
-* **自动透传**：通过 `ObservationRegistry` 自动为 `RestClient` 注入拦截器。当发起外调请求时，自动注入 **W3C 标准
-  TraceContext**，确保链路在不同微服务间无缝延伸。
+* **混合密码学策略 (Hybrid Cryptography)**：
+    * **传输层**：基于 `Jasypt` 和定制的 `Sm4Util`，采用**国密 SM4 (CBC/PKCS5Padding)** 算法处理前后端的高敏感数据传输。
+    * **存储层**：采用 `BCrypt` 算法进行密码单向哈希，内置盐值防御彩虹表攻击。
+    * **认证层**：基于 Hutool v7 构建 `JwtUtil`，采用非对称加密 `RS256` 签发 Token。
+* **防内存泄漏与串权 (Context Isolation)**：`JwtInterceptor` 提取 Token 载荷存入基于 `ThreadLocal` 的 `UserContext`，并在
+  `afterCompletion` 阶段执行严格的 `clear()` 动作，彻底杜绝 Tomcat 线程复用导致的越权漏洞。
+
+### 4. 高性能数据访问与缓存 (Data Access & Caching)
+
+* **零延迟字典树预热 (Zero-Latency Dictionary)**：系统通过 `DictionaryPreloadRunner` 钩子，在应用启动瞬间将高频访问的业务字典数据全量灌入
+  **Caffeine L1 Cache**，配合 `@Cacheable` 实现纳秒级转译。
+* **动态数据源与防爆破**：集成 `Dynamic Datasource` 轻松跨越主从或异构数据库；注入 MyBatis-Plus
+  `BlockAttackInnerInterceptor` 拦截无条件的全表更新/删除，守住生产环境最后一道防线。
+* **SQL 级智能防护**：提供 `SqlSecurityUtil` 以强正则模式拦截动态 `ORDER BY` 参数，彻底免疫 SQL 排序注入。
 
 ## 🛠️ 故障排查与调试工具 (Debugging Toolbox)
 
 * **AOP 代理自愈**：采用 **“构造器注入 + Setter 注入自身代理”** 模式，配合 `@Lazy` 解决循环依赖，确保 Service
   内部调用依然能触发异步与链路增强。
+* **MyBatis-Plus AST 生成器**：定制化 `FastAutoGenerator` 引擎，一键生成基于 `AncestorDbEntity` 的规范化 CRUD 骨架。
 * **GZIP 流量探测**：自研 Python `mock_es` 脚本，支持实时解压并打印 OTel Collector 发出的 Bulk 流量，辅助定位 Payload 结构。
 
 ## 📝 待办事项 (Roadmap)
@@ -84,6 +98,7 @@ spring-boot-01
 - [x] **并行链路追踪修正** (Micrometer Tracing 拓扑修复)
 - [x] **跨服务边界突破** (RestClient/RestTemplate 自动透传)
 - [x] **可观测性命名治理** (Web 拦截器与 AOP 命名规范化)
+- [x] **安全与缓存底座** (SM4/RS256 混合加密与 Caffeine 预热机制)
 
 **TODO**
 
@@ -97,7 +112,7 @@ spring-boot-01
 ### 🤝 维护说明 (For AI Assistant)
 
 *由于本人经常有开发起来昏天暗地,等到反应过来时修改内容过多导致无法将所有修改点一一列出的毛病,特此提供如下内容协助自己使用
-AI 进行代码分析 并更新当前文档：*
+AI 进行代码分析并更新当前文档：*
 
 1. 提示词
 
@@ -120,6 +135,13 @@ AI 进行代码分析 并更新当前文档：*
 2. bash 命令
 
 ```bash
+    # 升级漏洞 begin
+    # 查找版本控制
+    mvn dependency:tree -Dverbose -Dincludes=groupId:artifactId
+    # 查看最终生效的 pom
+    mvn help:effective-pom -Doutput=effective.xml
+    # 升级漏洞 end
+    
     # pgsql 相关
     sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data start
     sudo -u postgres /Library/PostgreSQL/17/bin/pg_ctl -D /Library/PostgreSQL/17/data stop
