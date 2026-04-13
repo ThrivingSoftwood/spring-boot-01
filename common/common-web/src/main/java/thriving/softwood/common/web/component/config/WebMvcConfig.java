@@ -48,20 +48,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // 对所有路径应用 CORS 配置
+        // 对所有路径应用 CORS 配置
+        registry.addMapping("/**")
             // 允许来自你 Vue 前端的源 (!!! 非常重要 !!!)
             // 1. 开发环境: 通常是 http://localhost:xxxx 或 http://127.0.0.1:xxxx
             // 2. 部署环境: 可能是你的 Windows 11 机器的 IP 地址或域名
             // 例如: "http://192.168.1.100:5173" (假设 Vue 运行在 5173 端口)
-            // 或者使用 allowedOriginPatterns 支持更灵活的模式
-            .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173", "http://192.168.1.4:5173",
-                "http://192.168.1.8:5173", "http://192.168.1.6:5173"
-            // 如果部署后有固定域名/IP，也加上
-            )
             // 或者使用 allowedOriginPatterns (更灵活, 支持通配符)
-            .allowedOriginPatterns("http://localhost:*", "http://192.168.1.*:5173")
-
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD") // 允许的 HTTP 方法
+            .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*", "http://192.*:*", "http://10.*:*",
+                "http://172.*:*", "http://*:*")
+            // 允许的 HTTP 方法
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
             // 允许所有请求头
             .allowedHeaders("*")
             // 是否允许发送 Cookie
