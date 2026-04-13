@@ -6,12 +6,26 @@
 > 基于 **JDK 25** + **Spring Boot 4.0** 的高性能微服务脚手架，原生集成 **虚拟线程 (Virtual Threads)** 与 *
 *标准化全栈可观测性 (Observability)** 体系。
 
-![Java](https://img.shields.io/badge/Java-25-orange)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.5-green)
-![Hutool](https://img.shields.io/badge/Hutool-v7-blue)sudo su - postgres
-![OpenTelemetry](https://img.shields.io/badge/OTel-Standard-blueviolet)
-![Zipkin](https://img.shields.io/badge/Zipkin-Persistence-orange)
-![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.19.10-blue)
+<!-- 核心引擎 -->
+![Java 25](https://img.shields.io/badge/JDK-25-orange?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot 4.0.5](https://img.shields.io/badge/Spring_Boot-4.0.5-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![MyBatis Plus](https://img.shields.io/badge/MyBatis--Plus-3.5.16-blue?style=flat-square)
+![Hutool v7](https://img.shields.io/badge/Hutool-v7-0052CC?style=flat-square)
+
+<!-- 可观测性与日志 -->
+![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-Latest-0052CC?style=flat-square&logo=opentelemetry&logoColor=white)
+![Zipkin](https://img.shields.io/badge/Zipkin-Distributed_Tracing-orange?style=flat-square&logo=zipkin&logoColor=white)
+![Log4j2](https://img.shields.io/badge/Log4j2-Async_Logging-D22128?style=flat-square&logo=apache&logoColor=white)
+![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.19.10-005571?style=flat-square&logo=elasticsearch&logoColor=white)
+
+<!-- 安全与并发 -->
+![JWT](https://img.shields.io/badge/JWT-RS256-black?style=flat-square&logo=json-web-tokens&logoColor=white)
+![Virtual Threads](https://img.shields.io/badge/JDK-Virtual_Threads-red?style=flat-square)
+
+![SQL Server](https://img.shields.io/badge/MSSQL-2022-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-8.4.0-FF4438?style=flat-square&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Infrastructure-2496ED?style=flat-square&logo=docker&logoColor=white)
 
 ## 📖 项目简介 (Introduction)
 

@@ -22,7 +22,7 @@ public class KaishiKeyGenerator {
         String privateKeyBase64 = rsa.getPrivateKeyBase64();
         String publicKeyBase64 = rsa.getPublicKeyBase64();
         String encryptedDbPassword = Sm4Util.encLocal(dbPassword);
-        String bcryptedUserPassword = BCrypt.hashpw(encryptedDbPassword, BCrypt.gensalt());
+        String bcryptedUserPassword = BCrypt.hashpw(userPassword, BCrypt.gensalt());
         IO.println("userPassword: " + userPassword);
         IO.println("dbPassword: " + dbPassword);
         IO.println("privateKeyBase64: " + privateKeyBase64);
