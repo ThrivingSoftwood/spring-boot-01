@@ -4,7 +4,7 @@ import java.util.List;
 
 import thriving.softwood.kaishi.biz.pojo.vo.SysPermissionVO;
 
-public interface SysPermissionApi {
+public interface PermissionApi {
 
     /**
      * 📘 核心方法：获取整棵权限树

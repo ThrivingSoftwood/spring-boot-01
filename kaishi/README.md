@@ -137,7 +137,7 @@
 
 #### 2.1 获取采购追踪列表 (List Info)
 
-* **接口路径:** `/kaishi/trace/purchase/list/info`
+* **接口路径:** `/kaishi/purchase/trace/list/info`
 
 * **请求方式:** `POST`
 
@@ -188,7 +188,7 @@
 
 #### 2.2 获取采购入库详情对撞记录 (Detail List)
 
-* **接口路径:** `/kaishi/trace/purchase/list/detail`
+* **接口路径:** `/kaishi/purchase/trace/list/detail`
 
 * **请求方式:** `POST`
 
@@ -225,7 +225,7 @@
 
 #### 2.3 手动置为完成 (Manual Finish)
 
-* **接口路径:** `/kaishi/trace/purchase/manual/finish`
+* **接口路径:** `/kaishi/purchase/trace/manual/finish`
 
 * **请求方式:** `POST`
 

@@ -26,4 +26,8 @@ public class SysUserRepo extends AncestorServiceImpl<SysUserMapper, SysUser> {
         return getOne(queryWrapper);
     }
 
+    public Long countUsers(Long deptId) {
+        return lambdaQuery().eq(SysUser::getDeptId, deptId).eq(SysUser::getDeleted, 0).count();
+    }
+
 }

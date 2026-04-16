@@ -45,8 +45,8 @@ public class KaishiMybatisPlusCodeGenerator {
 
     public static void main(String[] args) {
         // generateCode("kaishi-2026", KAISHI_2026_TABLE_NAMES);
-        // generateCode("ksplus", KAISHI_PLUS_TABLE_NAMES);
-        generateCode("master", THRIVING_SOFTWOOD_AUTH_TABLE_NAMES);
+        generateCode("ksplus", new String[] {"department_association_info", "employee_association_info"});
+        // generateCode("master", THRIVING_SOFTWOOD_AUTH_TABLE_NAMES);
     }
 
     private static void generateCode(String dsName, String[] tables) {

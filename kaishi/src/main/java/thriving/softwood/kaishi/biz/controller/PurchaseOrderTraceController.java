@@ -20,7 +20,7 @@ import thriving.softwood.kaishi.biz.pojo.vo.PurchaseTraceVO;
  * @author ThrivingSoftwood
  */
 @RestController
-@RequestMapping("/kaishi/trace/purchase")
+@RequestMapping("/kaishi/purchase/trace")
 public class PurchaseOrderTraceController {
     private final PurchaseOrderTraceApi api;
 

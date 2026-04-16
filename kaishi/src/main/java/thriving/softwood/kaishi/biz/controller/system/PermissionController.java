@@ -5,19 +5,19 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 import thriving.softwood.common.core.result.Result;
-import thriving.softwood.kaishi.biz.api.system.SysPermissionApi;
+import thriving.softwood.kaishi.biz.api.system.PermissionApi;
 import thriving.softwood.kaishi.biz.pojo.vo.SysPermissionVO;
 import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysPermission;
 import thriving.softwood.kaishi.infrastructure.db.master.repo.SysPermissionRepo;
 
 @RestController
 @RequestMapping("/kaishi/system/permission")
-public class SysPermissionController {
+public class PermissionController {
 
-    private final SysPermissionApi sysPermissionApi;
+    private final PermissionApi sysPermissionApi;
     private final SysPermissionRepo permissionRepo;
 
-    public SysPermissionController(SysPermissionApi sysPermissionApi, SysPermissionRepo permissionRepo) {
+    public PermissionController(PermissionApi sysPermissionApi, SysPermissionRepo permissionRepo) {
         this.sysPermissionApi = sysPermissionApi;
         this.permissionRepo = permissionRepo;
     }

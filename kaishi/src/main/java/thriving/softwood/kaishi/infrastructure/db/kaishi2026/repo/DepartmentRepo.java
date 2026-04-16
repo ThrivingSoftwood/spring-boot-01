@@ -46,4 +46,19 @@ public class DepartmentRepo extends AncestorServiceImpl<DepartmentMapper, Depart
         return getOne(wrapper).getFullName();
     }
 
+    public List<Department> listAll() {
+        return lambdaQuery().eq(Department::getDeleted, false).orderByAsc(Department::getParid, Department::getTypeid)
+            .list();
+    }
+
+    /**
+     * 根据 TypeId 获取部门信息
+     *
+     * @return
+     */
+    public Department getByTypeId(String typeid) {
+        LambdaQueryWrapper<Department> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Department::getTypeid, typeid);
+        return getOne(wrapper);
+    }
 }

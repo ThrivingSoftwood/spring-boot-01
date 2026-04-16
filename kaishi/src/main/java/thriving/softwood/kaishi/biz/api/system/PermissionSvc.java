@@ -13,7 +13,7 @@ import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysPermissi
 import thriving.softwood.kaishi.infrastructure.db.master.repo.*;
 
 @Service
-public class SysPermissionSvc implements SysPermissionApi {
+public class PermissionSvc implements PermissionApi {
 
     private final SysPermissionRepo sysPermissionRepo;
     private final SysUserRepo sysUserRepo;
@@ -22,7 +22,7 @@ public class SysPermissionSvc implements SysPermissionApi {
     private final SysRolePermissionRepo sysRolePermissionRepo;
 
     @Autowired
-    public SysPermissionSvc(SysPermissionRepo sysPermissionRepo, SysUserRepo sysUserRepo, SysRoleRepo sysRoleRepo,
+    public PermissionSvc(SysPermissionRepo sysPermissionRepo, SysUserRepo sysUserRepo, SysRoleRepo sysRoleRepo,
         SysUserRoleRepo sysUserRoleRepo, SysRolePermissionRepo sysRolePermissionRepo) {
         this.sysPermissionRepo = sysPermissionRepo;
         this.sysUserRepo = sysUserRepo;

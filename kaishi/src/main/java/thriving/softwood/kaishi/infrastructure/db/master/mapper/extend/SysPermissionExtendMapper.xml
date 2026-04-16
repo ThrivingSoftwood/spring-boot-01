@@ -13,19 +13,30 @@
         select
         <include
                 refid="thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysPermissionMapper.Base_Column_List"/>
-        from (
-        select distinct sp.*
-        from sys_user as su,
-        sys_user_role as sur,
-        sys_role as sr,
-        sys_role_permission as srp,
-        sys_permission as sp
-        where su.login_account = #{loginAccount}
-        and su.id = sur.user_id
-        and sur.role_id = sr.id
-        and sr.id = srp.role_id
-        and srp.permission_id = sp.id
-        and sp.permission_type &lt; 3
+        from (SELECT sp.*
+        FROM sys_permission sp
+        WHERE sp.permission_type &lt; 3
+        AND (
+        -- 逻辑 A：当前用户是否拥有超级管理员角色
+        EXISTS (
+        SELECT 1
+        FROM sys_user su
+        JOIN sys_user_role sur ON su.id = sur.user_id
+        JOIN sys_role sr ON sur.role_id = sr.id
+        WHERE su.login_account = #{loginAccount}
+        AND sr.role_code = 'SUPER_ADMIN'
+        )
+        OR
+        -- 逻辑 B：如果不是超管，检查当前权限是否在用户的角色关联中
+        EXISTS (
+        SELECT 1
+        FROM sys_user su
+        JOIN sys_user_role sur ON su.id = sur.user_id
+        JOIN sys_role_permission srp ON sur.role_id = srp.role_id
+        WHERE su.login_account = #{loginAccount}
+        AND srp.permission_id = sp.id
+        )
+        )
         ) as sp
         order by sp.parent_id, sp.sort_order
     </select>

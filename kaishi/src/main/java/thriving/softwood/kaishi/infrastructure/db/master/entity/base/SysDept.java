@@ -1,15 +1,21 @@
 package thriving.softwood.kaishi.infrastructure.db.master.entity.base;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static thriving.softwood.common.core.constant.PunctuationConstant.COMMA;
+import static thriving.softwood.kaishi.biz.constant.BaseConst.ROOT_DEPARTMENT_ID_STR;
+import static thriving.softwood.kaishi.biz.constant.BaseConst.ROOT_PARENT_DEPT_ID_LONG;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.Department;
 
 /**
  * <p>
@@ -26,6 +32,19 @@ public class SysDept implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
+    public SysDept(SysDept parentDept, Department department) {
+        this.parentId = ROOT_PARENT_DEPT_ID_LONG;
+        this.ancestors = ROOT_DEPARTMENT_ID_STR;
+        if (null != parentDept) {
+            this.parentId = parentDept.getId();
+            this.ancestors = parentDept.getAncestors() + COMMA + parentDept.getId();
+        }
+        this.deptName = department.getFullName();
+        this.sortOrder = Integer.valueOf(department.getTypeid());
+        this.status = (byte)1;
+        this.deleted = 0;
+    }
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

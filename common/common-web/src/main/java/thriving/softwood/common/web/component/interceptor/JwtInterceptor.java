@@ -13,6 +13,8 @@ import thriving.softwood.common.framework.context.UserContext;
 
 public class JwtInterceptor implements HandlerInterceptor {
 
+    private static final String SUPER_ADMIN_ROLE = "SUPER_ADMIN";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String authHeader = request.getHeader("Authorization");
@@ -26,8 +28,10 @@ public class JwtInterceptor implements HandlerInterceptor {
         // 提取信息并存入 ThreadLocal
         Long userId = ConvertUtil.toLong(payload.getClaim("userId"));
         String loginAccount = payload.getClaim("loginAccount").toString();
+        // todo: 改造后这里再获取 roleCode 进行实际的判断 Boolean godMode = SUPER_ADMIN_ROLE.equals(roleCode);
+        Boolean godMode = true;
 
-        UserContext.set(userId, loginAccount);
+        UserContext.set(userId, loginAccount, godMode);
         // 放行
         return true;
     }

@@ -20,6 +20,7 @@ public class SysPermissionVO {
     private String component;
     private String icon;
     private Integer sortOrder;
+    private String extInfo;
 
     // 🌟 核心：子节点集合，用于前端 Element Plus 的树形表格渲染
     private List<SysPermissionVO> children = new ArrayList<>();
@@ -35,5 +36,6 @@ public class SysPermissionVO {
         component = entity.getComponent();
         icon = entity.getIcon();
         sortOrder = entity.getSortOrder();
+        extInfo = entity.getExtInfo();
     }
 }

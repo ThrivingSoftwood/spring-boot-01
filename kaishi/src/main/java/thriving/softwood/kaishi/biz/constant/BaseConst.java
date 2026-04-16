@@ -15,4 +15,10 @@ public class BaseConst {
     public static final String STATUS_TAG_SUCCESS = "success";
     public static final String STATUS_TAG_DANGER = "danger";
     public static final String STATUS_TAG_WARNING = "warning";
+
+    /**
+     * 部门相关
+     */
+    public static final String ROOT_DEPARTMENT_ID_STR = "0";
+    public static final Long ROOT_PARENT_DEPT_ID_LONG = 0L;
 }
