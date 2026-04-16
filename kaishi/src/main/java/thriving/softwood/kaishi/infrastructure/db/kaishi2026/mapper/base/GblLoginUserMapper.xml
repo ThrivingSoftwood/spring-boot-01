@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.kaishi.infrastructure.db.kaishi2026.mapper.base.GblLoginUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.GblLoginUser">
+        <result column="etypeid" property="etypeid"/>
+        <result column="password" property="password"/>
+        <result column="sysid" property="sysid"/>
+        <result column="limit" property="limit"/>
+        <result column="ismanager" property="ismanager"/>
+        <result column="Pass_Code" property="passCode"/>
+        <result column="Pass_Level" property="passLevel"/>
+        <result column="Pass_Have" property="passHave"/>
+        <result column="SendID" property="sendID"/>
+        <result column="ClientId" property="clientId"/>
+        <result column="UserCode" property="userCode"/>
+        <result column="FullName" property="fullName"/>
+        <result column="IsSpecial" property="isSpecial"/>
+        <result column="DtypeId" property="dtypeId"/>
+        <result column="Rec" property="rec"/>
+        <result column="IsPhone" property="isPhone"/>
+        <result column="UseErp" property="useErp"/>
+        <result column="UseFactory" property="useFactory"/>
+        <result column="LastChangePass" property="lastChangePass"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        etypeid, password, sysid, limit, ismanager, Pass_Code, Pass_Level, Pass_Have, SendID, ClientId, UserCode,
+        FullName, IsSpecial, DtypeId, Rec, IsPhone, UseErp, UseFactory, LastChangePass
+    </sql>
+
+</mapper>
