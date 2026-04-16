@@ -1,7 +1,6 @@
 package thriving.softwood.kaishi.biz.api.login;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import cn.hutool.v7.core.date.DateUtil;
 import cn.hutool.v7.crypto.digest.BCrypt;
@@ -10,7 +9,7 @@ import thriving.softwood.common.core.util.Sm4Util;
 import thriving.softwood.kaishi.biz.pojo.record.LoginReq;
 import thriving.softwood.kaishi.biz.pojo.record.LoginResp;
 import thriving.softwood.kaishi.biz.pojo.record.PasswordReq;
-import thriving.softwood.kaishi.infrastructure.db.master.entity.SysUser;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUser;
 import thriving.softwood.kaishi.infrastructure.db.master.repo.SysUserRepo;
 
 @Service
@@ -23,7 +22,6 @@ public class AuthSvc implements AuthApi {
     }
 
     @Override
-    @Transactional
     public LoginResp login(LoginReq req) {
         // 1. 约束检查：只允许固定账户
         if (!"kaishi".equals(req.loginAccount())) {

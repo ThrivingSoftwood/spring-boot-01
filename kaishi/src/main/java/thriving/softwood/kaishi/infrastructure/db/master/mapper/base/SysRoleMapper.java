@@ -2,7 +2,7 @@ package thriving.softwood.kaishi.infrastructure.db.master.mapper.base;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUser;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysRole;
 
 /**
 * <p>
@@ -13,6 +13,6 @@ import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUser;
 * @since 2026-04-15
 */
 @DS("master")
-public interface SysUserMapper extends BaseMapper<SysUser> {
+public interface SysRoleMapper extends BaseMapper<SysRole> {
 }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.kaishi.infrastructure.db.master.mapper.extend.SysPermissionExtendMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parent_id, permission_name, permission_code, permission_type, path, component, icon, sort_order, ext_info,
+        deleted, last_modifier, create_time, update_time
+    </sql>
+
+    <select id="listMenuPermissionsByAccount"
+            resultMap="thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysPermissionMapper.BaseResultMap">
+        select
+        <include
+                refid="thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysPermissionMapper.Base_Column_List"/>
+        from (
+        select distinct sp.*
+        from sys_user as su,
+        sys_user_role as sur,
+        sys_role as sr,
+        sys_role_permission as srp,
+        sys_permission as sp
+        where su.login_account = #{loginAccount}
+        and su.id = sur.user_id
+        and sur.role_id = sr.id
+        and sr.id = srp.role_id
+        and srp.permission_id = sp.id
+        and sp.permission_type &lt; 3
+        ) as sp
+        order by sp.parent_id, sp.sort_order
+    </select>
+
+</mapper>

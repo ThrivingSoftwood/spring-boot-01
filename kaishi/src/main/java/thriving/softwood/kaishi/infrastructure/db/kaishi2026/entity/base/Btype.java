@@ -9,9 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import thriving.softwood.common.database.ancestor.AncestorDbEntity;
 
 /**
  * <p>
@@ -23,9 +21,8 @@ import thriving.softwood.common.database.ancestor.AncestorDbEntity;
  */
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @TableName("Btype")
-public class Btype extends AncestorDbEntity implements Serializable {
+public class Btype implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

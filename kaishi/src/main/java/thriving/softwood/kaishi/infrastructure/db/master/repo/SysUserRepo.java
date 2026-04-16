@@ -6,7 +6,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
 import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
-import thriving.softwood.kaishi.infrastructure.db.master.entity.SysUser;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUser;
 import thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysUserMapper;
 
 /**
@@ -15,7 +15,7 @@ import thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysUserMapp
  * </p>
  *
  * @author meta-thriving
- * @since 2026-04-08
+ * @since 2026-04-15
  */
 @DS("master")
 @Service
@@ -25,4 +25,5 @@ public class SysUserRepo extends AncestorServiceImpl<SysUserMapper, SysUser> {
         queryWrapper.eq(SysUser::getLoginAccount, loginAccount);
         return getOne(queryWrapper);
     }
+
 }

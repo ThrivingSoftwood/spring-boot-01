@@ -21,8 +21,8 @@ import thriving.softwood.kaishi.biz.pojo.vo.DlyBuyVO;
 import thriving.softwood.kaishi.biz.pojo.vo.PurchaseTraceVO;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.extend.PurchaseTraceOrder;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.DlyBuyRepo;
-import thriving.softwood.kaishi.infrastructure.db.master.entity.PurchaseManualFinish;
-import thriving.softwood.kaishi.infrastructure.db.master.repo.PurchaseManualFinishRepo;
+import thriving.softwood.kaishi.infrastructure.db.ksplus.entity.base.PurchaseManualFinish;
+import thriving.softwood.kaishi.infrastructure.db.ksplus.repo.PurchaseManualFinishRepo;
 
 /**
  * @author ThrivingSoftwood

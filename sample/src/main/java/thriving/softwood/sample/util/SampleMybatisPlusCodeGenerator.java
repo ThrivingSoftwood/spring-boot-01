@@ -26,7 +26,7 @@ public class SampleMybatisPlusCodeGenerator {
         @Serial
         private static final long serialVersionUID = 1L;
         {
-            put("master", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/splash-inkflow", "postgres",
+            put("ksplus", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/splash-inkflow", "postgres",
                 decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
             put("novel", new DataSourceConfig.Builder("jdbc:postgresql://localhost:5432/weaving-stars", "postgres",
                 decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
@@ -45,10 +45,10 @@ public class SampleMybatisPlusCodeGenerator {
     private static final String[] TABLE_PREFIXES = {"sys_", "base_", "t_"};
 
     public static void main(String[] args) {
-        // generateCode("master", MASTER_TABLE_NAMES);
+        // generateCode("ksplus", MASTER_TABLE_NAMES);
         // generateCode("novel", NOVEL_TABLE_NAMES);
         // generateCode("material", MATERIAL_TABLE_NAMES);
-        // generateCode("master", MASTER_TABLE_NAMES);
+        // generateCode("ksplus", MASTER_TABLE_NAMES);
         // generateCode("mac-novel", MAC_NOVEL_TABLE_NAMES);
         // generateCode("material", MATERIAL_TABLE_NAMES);
         // generateCode("mac-embedding", MAC_EMBEDDING_TABLE_NAMES);

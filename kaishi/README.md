@@ -25,7 +25,7 @@
 * `common-observability`: 基于 OTLP 的遥测基建。
 * `common-web`: Web MVC 配置、CORS、全局异常拦截器、Token 拦截器。
 * `kaishi`: 核心业务模块。
-* **数据库与 ORM:** **MyBatis-Plus 3.5.16** + **Dynamic Datasource**。同时连接 `master` (系统库) 和 `kaishi-2026` (
+* **数据库与 ORM:** **MyBatis-Plus 3.5.16** + **Dynamic Datasource**。同时连接 `ksplus` (系统库) 和 `kaishi-2026` (
   业务库，SQL Server)。
 * **密码学与安全 (Cryptography):**
 * **传输层:** 国密 **SM4** (CBC/PKCS5Padding) 用于前后端密码的密文传输。

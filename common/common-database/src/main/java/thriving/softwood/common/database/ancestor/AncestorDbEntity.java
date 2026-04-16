@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.*;
 
 /**
- * 📘 通用实体基类 业务实体只需继承此类，即可自动获得时间戳与逻辑删除管理。
+ * 📘 通用实体基类,只做预留字段的展示,不被其他任何数据库实体类继承
  */
 public abstract class AncestorDbEntity implements Serializable {
 

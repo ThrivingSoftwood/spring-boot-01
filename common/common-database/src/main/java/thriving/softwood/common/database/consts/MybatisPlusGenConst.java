@@ -8,7 +8,7 @@ public class MybatisPlusGenConst {
     /**
      * 数据表映射类所在上层包名
      */
-    public static final String ENTITY_PKG_NAME = "entity";
+    public static final String ENTITY_PKG_NAME = "entity.base";
     /**
      * mapper 类所在上层包名
      */
@@ -38,6 +38,9 @@ public class MybatisPlusGenConst {
         {"Btype", "Department", "DlyBuy", "Dlyndx", "Dlystock", "Employee", "Mtype", "ptype", "Stock", "T_GBL_Vchtype"};
 
     public static final String[] KAISHI_PLUS_TABLE_NAMES = {"sys_user", "purchase_manual_finish"};
+
+    public static final String[] THRIVING_SOFTWOOD_AUTH_TABLE_NAMES = {"sys_dept", "sys_user", "sys_role",
+        "sys_permission", "sys_data_rule", "sys_user_role", "sys_role_permission", "sys_role_data_rule"};
 
     /**
      * splash-inkflow 表名集合

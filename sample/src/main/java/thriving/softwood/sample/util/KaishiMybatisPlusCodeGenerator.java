@@ -26,7 +26,11 @@ public class KaishiMybatisPlusCodeGenerator {
         @Serial
         private static final long serialVersionUID = 1L;
         {
-            put("master", new DataSourceConfig.Builder(
+            put("master",
+                new DataSourceConfig.Builder(
+                    "jdbc:sqlserver://localhost:1433;DatabaseName=ts_auth;encrypt=false;trustServerCertificate=true;",
+                    "sa", decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
+            put("ksplus", new DataSourceConfig.Builder(
                 "jdbc:sqlserver://localhost:1433;DatabaseName=kaishi-plus;encrypt=false;trustServerCertificate=true;",
                 "sa", decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
             put("kaishi-2026",
@@ -41,7 +45,8 @@ public class KaishiMybatisPlusCodeGenerator {
 
     public static void main(String[] args) {
         // generateCode("kaishi-2026", KAISHI_2026_TABLE_NAMES);
-        generateCode("master", KAISHI_PLUS_TABLE_NAMES);
+        // generateCode("ksplus", KAISHI_PLUS_TABLE_NAMES);
+        generateCode("master", THRIVING_SOFTWOOD_AUTH_TABLE_NAMES);
     }
 
     private static void generateCode(String dsName, String[] tables) {
