@@ -19,5 +19,7 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.mapper.base.GblLogi
 @DS("kaishi-2026")
 @Service
 public class GblLoginUserRepo extends AncestorServiceImpl<GblLoginUserMapper, GblLoginUser> {
-
+    public GblLoginUser getByUserCode(String userCode) {
+        return lambdaQuery().eq(GblLoginUser::getUserCode, userCode).one();
+    }
 }

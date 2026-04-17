@@ -1,15 +1,17 @@
 package thriving.softwood.kaishi.infrastructure.db.master.entity.base;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.Employee;
 
 /**
  * <p>
@@ -26,6 +28,8 @@ public class SysUser implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
+    public SysUser(Employee employee) {}
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

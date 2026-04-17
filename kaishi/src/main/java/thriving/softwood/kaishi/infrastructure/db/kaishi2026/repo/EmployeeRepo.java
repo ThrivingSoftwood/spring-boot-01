@@ -46,4 +46,12 @@ public class EmployeeRepo extends AncestorServiceImpl<EmployeeMapper, Employee> 
         return getOne(wrapper).getFullName();
     }
 
+    public List<Employee> listAll() {
+        return lambdaQuery().eq(Employee::getDeleted, false).isNotNull(Employee::getUserCode).list();
+    }
+
+    public List<Employee> listByTypeIds(List<String> fullnameList) {
+        return lambdaQuery().in(Employee::getTypeId, fullnameList).list();
+    }
+
 }

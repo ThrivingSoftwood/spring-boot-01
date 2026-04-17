@@ -23,10 +23,6 @@ public class AuthSvc implements AuthApi {
 
     @Override
     public LoginResp login(LoginReq req) {
-        // 1. 约束检查：只允许固定账户
-        if (!"kaishi".equals(req.loginAccount())) {
-            throw new RuntimeException("非法访问：系统仅允许授权账户登录");
-        }
 
         // 2. SM4 解密前端传来的密文 (CBC/PKCS5Padding)
         String plainPassword;

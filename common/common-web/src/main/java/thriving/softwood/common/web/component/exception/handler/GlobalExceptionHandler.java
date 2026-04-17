@@ -1,5 +1,6 @@
 package thriving.softwood.common.web.component.exception.handler;
 
+import static thriving.softwood.common.core.enums.RespCodeEnum.FORBIDDEN;
 import static thriving.softwood.common.core.enums.RespCodeEnum.INTERNAL_SERVER_ERROR;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import jakarta.servlet.http.HttpServletRequest;
 import thriving.softwood.common.core.enums.RespCodeEnum;
 import thriving.softwood.common.core.exception.AuthException;
+import thriving.softwood.common.core.exception.DetailException;
 import thriving.softwood.common.core.exception.TokenException;
 import thriving.softwood.common.core.result.Result;
 
@@ -35,6 +37,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthException.class)
     public Result<String> handleLoginException(TokenException e, HttpServletRequest request) {
         return Result.error(INTERNAL_SERVER_ERROR.code(), e.getMessage());
+    }
+
+    /**
+     * 专门捕获 TokenException，将其转换为 HTTP 401 返回
+     */
+    @ExceptionHandler(DetailException.class)
+    public Result<String> handleDetailException(DetailException e, HttpServletRequest request) {
+        // 返回 HTTP 状态码 403
+        return Result.error(FORBIDDEN.code(), e.getMessage());
     }
 
     /**

@@ -14,39 +14,39 @@ import thriving.softwood.kaishi.infrastructure.db.master.repo.SysPermissionRepo;
 @RequestMapping("/kaishi/system/permission")
 public class PermissionController {
 
-    private final PermissionApi sysPermissionApi;
+    private final PermissionApi permissionApi;
     private final SysPermissionRepo permissionRepo;
 
-    public PermissionController(PermissionApi sysPermissionApi, SysPermissionRepo permissionRepo) {
-        this.sysPermissionApi = sysPermissionApi;
+    public PermissionController(PermissionApi permissionApi, SysPermissionRepo permissionRepo) {
+        this.permissionApi = permissionApi;
         this.permissionRepo = permissionRepo;
     }
 
     @GetMapping("/tree")
     public Result<List<SysPermissionVO>> getTree() {
-        return Result.success(sysPermissionApi.treeAllPermissions());
+        return Result.success(permissionApi.treeAllPermissions());
     }
 
     @RequestMapping("/getMenuPermissions/{loginAccount}")
     public Result<List<SysPermissionVO>> treeMenuPermissions(@PathVariable String loginAccount) {
-        return Result.success(sysPermissionApi.treeMenuPermissions(loginAccount));
+        return Result.success(permissionApi.treeMenuPermissions(loginAccount));
     }
 
     @PostMapping("/save")
     public Result<Void> save(@RequestBody SysPermission entity) {
-        permissionRepo.save(entity);
+        permissionApi.add(entity);
         return Result.success();
     }
 
     @PutMapping("/update")
     public Result<Void> update(@RequestBody SysPermission entity) {
-        permissionRepo.updateById(entity);
+        permissionApi.update(entity);
         return Result.success();
     }
 
     @DeleteMapping("/delete/{id}")
     public Result<Void> delete(@PathVariable Long id) {
-        sysPermissionApi.deletePermission(id);
+        permissionApi.deletePermission(id);
         return Result.success();
     }
 }

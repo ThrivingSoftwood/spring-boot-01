@@ -11,6 +11,8 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
+
 import cn.hutool.v7.core.comparator.CompareUtil;
 import cn.hutool.v7.core.util.ObjUtil;
 import thriving.softwood.kaishi.biz.pojo.record.DepartmentReq;
@@ -121,6 +123,7 @@ public class DepartmentSvc implements DepartmentApi {
     }
 
     @Override
+    @DSTransactional
     public void syncDepartments(List<String> typeIds) {
         // 1. 初始化全量 Map 仅一次，避免递归重复拉取
         Map<String, DepartmentAssociationInfo> associations = loadAssociations();
@@ -186,6 +189,7 @@ public class DepartmentSvc implements DepartmentApi {
     }
 
     @Override
+    @DSTransactional
     public void update(DepartmentReq departmentReq) {
         SysDept department = sysDeptRepo.getById(departmentReq.id());
         if (ObjUtil.notEquals(department.getSortOrder(), departmentReq.sortOrder())) {
@@ -198,6 +202,7 @@ public class DepartmentSvc implements DepartmentApi {
     }
 
     @Override
+    @DSTransactional
     public String delete(DepartmentReq departmentReq) {
         if (sysDeptRepo.countSubDept(departmentReq.id()) > 0) {
             throw new RuntimeException("该部门存在未删除的下属部门,请检查!");

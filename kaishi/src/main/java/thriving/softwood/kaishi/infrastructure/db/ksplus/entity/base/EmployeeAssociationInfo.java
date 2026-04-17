@@ -1,15 +1,16 @@
 package thriving.softwood.kaishi.infrastructure.db.ksplus.entity.base;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -30,6 +31,7 @@ public class EmployeeAssociationInfo implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /** 注意,这个列不是从 T_GBL_LOGINUSER 表来的数据 */
     @TableField("login_account")
     private String loginAccount;
 

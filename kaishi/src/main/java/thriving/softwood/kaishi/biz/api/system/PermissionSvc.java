@@ -82,4 +82,13 @@ public class PermissionSvc implements PermissionApi {
     }
 
     // (新增和修改的方法直接调用 permissionRepo.save / updateById 即可，略)
+    @Override
+    public void add(SysPermission sysPermission) {
+        sysPermissionRepo.save(sysPermission);
+    }
+
+    @Override
+    public void update(SysPermission sysPermission) {
+        sysPermissionRepo.updateById(sysPermission);
+    }
 }

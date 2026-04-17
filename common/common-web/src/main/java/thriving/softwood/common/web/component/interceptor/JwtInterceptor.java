@@ -13,8 +13,6 @@ import thriving.softwood.common.framework.context.UserContext;
 
 public class JwtInterceptor implements HandlerInterceptor {
 
-    private static final String SUPER_ADMIN_ROLE = "SUPER_ADMIN";
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String authHeader = request.getHeader("Authorization");

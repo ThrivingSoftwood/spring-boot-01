@@ -1,5 +1,7 @@
 package thriving.softwood.kaishi.infrastructure.db.master.repo;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -30,4 +32,12 @@ public class SysUserRepo extends AncestorServiceImpl<SysUserMapper, SysUser> {
         return lambdaQuery().eq(SysUser::getDeptId, deptId).eq(SysUser::getDeleted, 0).count();
     }
 
+    public List<SysUser> listAll() {
+        return lambdaQuery().eq(SysUser::getDeleted, 0).ne(SysUser::getLoginAccount, "kaishi")
+            .orderByAsc(SysUser::getId).list();
+    }
+
+    public void logicDelete(Long id) {
+        lambdaUpdate().eq(SysUser::getId, id).set(SysUser::getDeleted, 1).update();
+    }
 }
