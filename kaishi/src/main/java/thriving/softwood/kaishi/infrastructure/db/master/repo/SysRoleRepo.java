@@ -33,4 +33,7 @@ public class SysRoleRepo extends AncestorServiceImpl<SysRoleMapper, SysRole> {
         return lambdaQuery().eq(SysRole::getRoleCode, roleCode).count();
     }
 
+    public void logicDeleteById(Long id) {
+        lambdaUpdate().eq(SysRole::getId, id).update();
+    }
 }

@@ -78,7 +78,7 @@ public class PermissionSvc implements PermissionApi {
         if (childCount > 0) {
             throw new RuntimeException("该节点下包含子节点，禁止直接删除！");
         }
-        sysPermissionRepo.removeById(id);
+        sysPermissionRepo.logicDeleteById(id);
     }
 
     // (新增和修改的方法直接调用 permissionRepo.save / updateById 即可，略)

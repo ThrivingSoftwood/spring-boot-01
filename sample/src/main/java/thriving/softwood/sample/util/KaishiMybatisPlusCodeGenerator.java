@@ -71,7 +71,11 @@ public class KaishiMybatisPlusCodeGenerator {
                 .superServiceImplClass(AncestorServiceImpl.class).formatServiceImplFileName("%sRepo")
                 .serviceImplTemplate("/templates/freemarker/serviceImpl.java").enableFileOverride().mapperBuilder()
                 .mapperTemplate("/templates/freemarker/mapper.java").formatXmlFileName("%sMapper")
-                .formatMapperFileName("%sMapper").enableBaseResultMap().enableBaseColumnList().enableFileOverride();
+                .formatMapperFileName("%sMapper").enableBaseResultMap().enableBaseColumnList().enableFileOverride()
+            // 当只需要重新生成 Mapper 和 Entity 时放开注释 begin
+            // .serviceBuilder().disableServiceImpl()
+            // 当只需要重新生成 Mapper 和 Entity 时放开注释 end
+            ;
         }).injectionConfig(builder -> {
             Map<String, Object> customMap = new HashMap<>();
             // 此处为使用 @DS 注解切换数据源的配置, dsName 要按照配置文件内容来

@@ -10,7 +10,7 @@ import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUser;
     * </p>
 *
 * @author meta-thriving
-* @since 2026-04-15
+* @since 2026-04-17
 */
 @DS("master")
 public interface SysUserMapper extends BaseMapper<SysUser> {

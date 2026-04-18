@@ -32,4 +32,13 @@ public class SysRolePermissionRepo extends AncestorServiceImpl<SysRolePermission
             .map(SysRolePermission::getPermissionId).collect(Collectors.toList());
     }
 
+    public void addAll(List<SysRolePermission> list) {
+        for (SysRolePermission sysRolePermission : list) {
+            save(sysRolePermission);
+        }
+    }
+
+    public void logicDeleteByRoleId(Long roleId) {
+        lambdaUpdate().eq(SysRolePermission::getRoleId, roleId).remove();
+    }
 }

@@ -32,4 +32,13 @@ public class SysRoleDataRuleRepo extends AncestorServiceImpl<SysRoleDataRuleMapp
             .collect(Collectors.toList());
     }
 
+    public void addAll(List<SysRoleDataRule> list) {
+        for (SysRoleDataRule sysRoleDataRule : list) {
+            save(sysRoleDataRule);
+        }
+    }
+
+    public void logicDeleteByRoleId(Long roleId) {
+        lambdaUpdate().eq(SysRoleDataRule::getRoleId, roleId).remove();
+    }
 }

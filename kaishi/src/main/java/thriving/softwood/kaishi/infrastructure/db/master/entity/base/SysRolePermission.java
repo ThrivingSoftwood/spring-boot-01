@@ -1,5 +1,6 @@
 package thriving.softwood.kaishi.infrastructure.db.master.entity.base;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author meta-thriving
- * @since 2026-04-15
+ * @since 2026-04-17
  */
 @Data
 @NoArgsConstructor
@@ -26,7 +27,10 @@ public class SysRolePermission implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @TableId("role_id")
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    @TableField("role_id")
     private Long roleId;
 
     @TableField("permission_id")

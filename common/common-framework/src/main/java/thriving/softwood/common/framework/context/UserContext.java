@@ -8,18 +8,18 @@ public class UserContext {
     public static void set(Long userId, String loginAccount, Boolean godMode) {
         USER_ID_THREAD_LOCAL.set(userId);
         ACCOUNT_THREAD_LOCAL.set(loginAccount);
-
+        GOD_MODE_THREAD_LOCAL.set(godMode);
     }
 
-    public static Long getUserId() {
+    public static Long userId() {
         return USER_ID_THREAD_LOCAL.get();
     }
 
-    public static String getLoginAccount() {
+    public static String loginAccount() {
         return ACCOUNT_THREAD_LOCAL.get();
     }
 
-    public static Boolean getGodMode() {
+    public static Boolean godMode() {
         return GOD_MODE_THREAD_LOCAL.get();
     }
 

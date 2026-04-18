@@ -41,4 +41,8 @@ public class SysPermissionRepo extends AncestorServiceImpl<SysPermissionMapper, 
     public List<SysPermission> listMenuPermissionsByAccount(String loginAccount) {
         return extendMapper.listMenuPermissionsByAccount(loginAccount);
     }
+
+    public void logicDeleteById(Long id) {
+        lambdaUpdate().eq(SysPermission::getId, id).set(SysPermission::getDeleted, 1).update();
+    }
 }

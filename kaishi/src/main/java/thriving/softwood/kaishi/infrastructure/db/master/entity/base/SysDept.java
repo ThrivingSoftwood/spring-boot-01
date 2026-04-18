@@ -12,7 +12,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.Department;
@@ -23,7 +22,7 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.Departm
  * </p>
  *
  * @author meta-thriving
- * @since 2026-04-15
+ * @since 2026-04-17
  */
 @Data
 @NoArgsConstructor
@@ -34,16 +33,16 @@ public class SysDept implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public SysDept(SysDept parentDept, Department department) {
-        this.parentId = ROOT_PARENT_DEPT_ID_LONG;
-        this.ancestors = ROOT_DEPARTMENT_ID_STR;
+        parentId = ROOT_PARENT_DEPT_ID_LONG;
+        ancestors = ROOT_DEPARTMENT_ID_STR;
         if (null != parentDept) {
-            this.parentId = parentDept.getId();
-            this.ancestors = parentDept.getAncestors() + COMMA + parentDept.getId();
+            parentId = parentDept.getId();
+            ancestors = parentDept.getAncestors() + COMMA + parentDept.getId();
         }
-        this.deptName = department.getFullName();
-        this.sortOrder = Integer.valueOf(department.getTypeid());
-        this.status = (byte)1;
-        this.deleted = 0;
+        deptName = department.getFullName();
+        sortOrder = Integer.valueOf(department.getTypeid());
+        status = (byte)1;
+        deleted = 0;
     }
 
     @TableId(value = "id", type = IdType.AUTO)

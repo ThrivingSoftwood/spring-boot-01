@@ -63,15 +63,15 @@ public class RoleSvc implements RoleApi {
     @Transactional
     public void deleteRole(Long id) {
         // 1. 逻辑删除角色
-        roleRepo.removeById(id);
+        roleRepo.logicDeleteById(id);
 
         // 2. 获取该角色下的所有用户，触发静默刷新
         bumpVersionByRoleId(id);
 
         // 3. 清理关联表 (物理删除关联数据，防止占用空间)
-        userRoleRepo.removeByRoleId(id);
-        rolePermRepo.removeByRoleId(id);
-        roleDataRuleRepo.removeByRoleId(id);
+        userRoleRepo.logicDeleteByRoleId(id);
+        rolePermRepo.logicDeleteByRoleId(id);
+        roleDataRuleRepo.logicDeleteByRoleId(id);
     }
 
     // ================= 查询分配信息 =================
@@ -101,7 +101,7 @@ public class RoleSvc implements RoleApi {
         }
 
         // 1. 清理旧关系
-        userRoleRepo.removeByRoleId(req.id());
+        userRoleRepo.logicDeleteByRoleId(req.id());
         // 2. 插入新关系
         if (req.userIds() != null && !req.userIds().isEmpty()) {
             List<SysUserRole> list = req.userIds().stream().map(uid -> {
@@ -110,7 +110,7 @@ public class RoleSvc implements RoleApi {
                 ur.setUserId(uid);
                 return ur;
             }).collect(Collectors.toList());
-            userRoleRepo.saveBatch(list);
+            userRoleRepo.addAll(list);
         }
         // 3. 刷新受影响用户
         bumpVersionByUserIds(affectedUserIds);
@@ -119,7 +119,7 @@ public class RoleSvc implements RoleApi {
     @Override
     @Transactional
     public void assignPermissions(RoleReq req) {
-        rolePermRepo.removeByRoleId(req.id());
+        rolePermRepo.logicDeleteByRoleId(req.id());
         if (req.permissionIds() != null && !req.permissionIds().isEmpty()) {
             List<SysRolePermission> list = req.permissionIds().stream().map(pid -> {
                 SysRolePermission rp = new SysRolePermission();
@@ -127,7 +127,7 @@ public class RoleSvc implements RoleApi {
                 rp.setPermissionId(pid);
                 return rp;
             }).collect(Collectors.toList());
-            rolePermRepo.saveBatch(list);
+            rolePermRepo.addAll(list);
         }
         // 角色权限变了，该角色下所有用户受影响
         bumpVersionByRoleId(req.id());
@@ -136,7 +136,7 @@ public class RoleSvc implements RoleApi {
     @Override
     @Transactional
     public void assignDataRules(RoleReq req) {
-        roleDataRuleRepo.removeByRoleId(req.id());
+        roleDataRuleRepo.logicDeleteByRoleId(req.id());
         if (req.dataRuleIds() != null && !req.dataRuleIds().isEmpty()) {
             List<SysRoleDataRule> list = req.dataRuleIds().stream().map(did -> {
                 SysRoleDataRule rr = new SysRoleDataRule();
@@ -144,7 +144,7 @@ public class RoleSvc implements RoleApi {
                 rr.setRuleId(did);
                 return rr;
             }).collect(Collectors.toList());
-            roleDataRuleRepo.saveBatch(list);
+            roleDataRuleRepo.addAll(list);
         }
         bumpVersionByRoleId(req.id());
     }

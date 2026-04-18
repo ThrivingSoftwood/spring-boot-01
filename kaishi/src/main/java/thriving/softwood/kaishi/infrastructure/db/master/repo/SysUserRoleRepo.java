@@ -23,12 +23,18 @@ import thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysUserRole
 @Service
 public class SysUserRoleRepo extends AncestorServiceImpl<SysUserRoleMapper, SysUserRole> {
 
-    public void removeByRoleId(Long roleId) {
-        lambdaUpdate().eq(SysUserRole::getRoleId, roleId).remove();
+    public void logicDeleteByRoleId(Long roleId) {
+        lambdaUpdate().eq(SysUserRole::getRoleId, roleId).set(SysUserRole::getDeleted, 1).update();
     }
 
     public List<Long> listAssignedUserIdsByRoleId(Long roleId) {
         return lambdaQuery().eq(SysUserRole::getRoleId, roleId).list().stream().map(SysUserRole::getUserId)
             .collect(Collectors.toList());
+    }
+
+    public void addAll(List<SysUserRole> sysUserRoles) {
+        for (SysUserRole sysUserRole : sysUserRoles) {
+            save(sysUserRole);
+        }
     }
 }
