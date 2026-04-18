@@ -30,6 +30,9 @@ public class KaishiCaffeineCacheConfig {
     public static final String RED_WORD_CACHE = "redWordCache";
     public static final String PDETAIL_CACHE = "pdetailCache";
 
+    // 🌟 新增：用户权限高速缓存 (用于无感刷新和拦截器极速校验)
+    public static final String USER_AUTH_INFO_CACHE = "userAuthInfoCache";
+
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
@@ -46,25 +49,20 @@ public class KaishiCaffeineCacheConfig {
         cacheManager.registerCustomCache(USEDTYPE_CACHE, caffeine(5, 5).build());
         cacheManager.registerCustomCache(RED_WORD_CACHE, caffeine(2, 2).build());
         cacheManager.registerCustomCache(PDETAIL_CACHE, caffeine(2, 2).build());
+
+        // 🌟 新增：权限缓存，初始 500，最大在线 5000，TTL 60 秒 (过期极快，保证权限变更的实时性)
+        cacheManager.registerCustomCache(USER_AUTH_INFO_CACHE, caffeine(500, 5000, 60, TimeUnit.SECONDS).build());
+
         return cacheManager;
     }
 
     private Caffeine<Object, Object> caffeine(int initialCapacity, int maximumSize) {
-        return Caffeine.newBuilder()
-            // 初始容量
-            .initialCapacity(initialCapacity)
-            // 最大容量，防止内存溢出（假设你们有 10 万个商品字典，限制只存最热的 10000 个）
-            .maximumSize(maximumSize);
+        return Caffeine.newBuilder().initialCapacity(initialCapacity).maximumSize(maximumSize);
     }
 
     private Caffeine<Object, Object> caffeine(int initialCapacity, int maximumSize, long expireAfterWrite,
         TimeUnit expireAfterWriteUnit) {
-        return Caffeine.newBuilder()
-            // 初始容量
-            .initialCapacity(initialCapacity)
-            // 最大容量，防止内存溢出（假设你们有 10 万个商品字典，限制只存最热的 10000 个）
-            .maximumSize(maximumSize)
-            // 写入后多长时间过期（字典数据变化不频繁，设为 12 小时）
+        return Caffeine.newBuilder().initialCapacity(initialCapacity).maximumSize(maximumSize)
             .expireAfterWrite(expireAfterWrite, expireAfterWriteUnit);
     }
 }

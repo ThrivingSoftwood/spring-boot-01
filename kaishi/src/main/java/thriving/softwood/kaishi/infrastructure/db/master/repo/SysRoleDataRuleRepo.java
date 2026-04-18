@@ -41,4 +41,15 @@ public class SysRoleDataRuleRepo extends AncestorServiceImpl<SysRoleDataRuleMapp
     public void logicDeleteByRoleId(Long roleId) {
         lambdaUpdate().eq(SysRoleDataRule::getRoleId, roleId).remove();
     }
+
+    public List<Long> listDataRuleIdsByRoleIds(List<Long> roleIds) {
+        return lambdaQuery().in(SysRoleDataRule::getRoleId, roleIds).list().stream().map(SysRoleDataRule::getRuleId)
+            .distinct().collect(Collectors.toList());
+    }
+
+    public List<Long> listRoleIdsByDataRuleId(Long dataRuleId) {
+        return lambdaQuery().eq(SysRoleDataRule::getRuleId, dataRuleId).eq(SysRoleDataRule::getDeleted, 0)
+            .orderByAsc(SysRoleDataRule::getRoleId).list().stream().map(SysRoleDataRule::getRoleId).distinct()
+            .collect(Collectors.toList());
+    }
 }

@@ -10,4 +10,5 @@ public interface AuthApi {
 
     void changePassword(PasswordReq req);
 
+    LoginResp refreshPermission();
 }

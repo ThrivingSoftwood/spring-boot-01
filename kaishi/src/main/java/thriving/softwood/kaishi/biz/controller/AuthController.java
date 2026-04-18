@@ -49,4 +49,9 @@ public class AuthController {
             return Result.error(INTERNAL_SERVER_ERROR.code(), e.getLocalizedMessage());
         }
     }
+
+    @RequestMapping("/refreshPerm")
+    public Result<LoginResp> refreshPerm() {
+        return Result.success(authApi.refreshPermission());
+    }
 }

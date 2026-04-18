@@ -1,4 +1,6 @@
 package thriving.softwood.kaishi.biz.pojo.record;
 
-public record LoginResp(String token, String username) {
+import java.util.Set;
+
+public record LoginResp(String token, String username, Set<String> permissions) {
 }

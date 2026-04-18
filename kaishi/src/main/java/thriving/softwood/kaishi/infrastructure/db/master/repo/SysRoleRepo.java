@@ -3,6 +3,7 @@ package thriving.softwood.kaishi.infrastructure.db.master.repo;
 import static thriving.softwood.kaishi.biz.constant.BaseConst.SUPER_ADMIN_ROLE;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,10 @@ public class SysRoleRepo extends AncestorServiceImpl<SysRoleMapper, SysRole> {
 
     public void logicDeleteById(Long id) {
         lambdaUpdate().eq(SysRole::getId, id).update();
+    }
+
+    public String getSummaryInfo(List<Long> roleIds) {
+        return listByIds(roleIds).stream().map(role -> role.getRoleName() + ":" + role.getRoleCode())
+            .collect(Collectors.joining("\n"));
     }
 }

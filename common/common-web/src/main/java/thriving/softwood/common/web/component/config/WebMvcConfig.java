@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import io.micrometer.tracing.Tracer;
 import jakarta.annotation.Resource;
-import thriving.softwood.common.web.component.interceptor.JwtInterceptor;
 import thriving.softwood.common.web.component.interceptor.WebSpanNameInterceptor;
 
 /**
@@ -28,22 +27,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 建议顺序：靠前执行，确保后续的过滤器或切面能拿到已规范化的名称
         // 拦截所有路径
         registry.addInterceptor(new WebSpanNameInterceptor(tracer)).addPathPatterns("/**");
-        // 实例化并注册我们的 JWT 拦截器
-        registry.addInterceptor(new JwtInterceptor())
-            // 1. 指定需要拦截的 URL 模式 (拦截所有 /api/ 下的请求)
-            .addPathPatterns("/**")
-
-            // 2. 指定需要放行的 URL 模式 (白名单)
-            // 登录接口绝对不能拦截，否则陷入死循环
-            .excludePathPatterns("/**/auth/login",
-                // 预留的注册接口(如有)
-                "/api/auth/register",
-                // Spring Boot 默认的错误处理路径
-                "/error",
-                // 网站图标
-                "/favicon.ico",
-                // 如果后续接入 OpenAPI/Swagger 文档
-                "/swagger-ui/**", "/v3/api-docs/**");
     }
 
     @Override

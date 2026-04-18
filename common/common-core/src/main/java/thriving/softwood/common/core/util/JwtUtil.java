@@ -19,7 +19,6 @@ import thriving.softwood.common.core.exception.TokenException;
 @Component
 public class JwtUtil {
 
-    // 建议在 application.yml 中配置 Base64 编码的公私钥
     private String privateKeyBase64;
     private String publicKeyBase64;
     private static RSA rsa;
@@ -27,8 +26,6 @@ public class JwtUtil {
     private static JWTSigner publicKeySigner;
 
     public static void init(String privateKeyBase64, String publicKeyBase64) {
-        privateKeyBase64 = privateKeyBase64;
-        publicKeyBase64 = publicKeyBase64;
         // 从 Base64 还原密钥对
         rsa = new RSA(privateKeyBase64, publicKeyBase64);
         // Hutool v7 API: 创建非对称签名器
@@ -37,17 +34,18 @@ public class JwtUtil {
     }
 
     /**
-     * 签发 Token
+     * 🌟 核心升级：签发 Token 时必须带入权限版本号 permVersion
      */
-    public static String generateToken(Long userId, String loginAccount) {
+    public static String generateToken(Long userId, String loginAccount, String permVersion) {
         Long now = System.currentTimeMillis();
         // 过期时间：12小时,测试token 过期是否正常跳转到登录页时用 5 秒
         long expireTime = now + 1000 * 60 * 60 * 12;
         // long expireTime = now + 1000 * 5;
 
         // Hutool v7 API: MapUtil.ofKvs 构建载荷
-        Map<String, Object> payload = MapUtil.ofKvs(false, "userId", userId, "loginAccount", loginAccount,
-            JWTPayload.ISSUED_AT, now / 1000, JWTPayload.EXPIRES_AT, expireTime / 1000);
+        Map<String, Object> payload =
+            MapUtil.ofKvs(false, "userId", userId, "loginAccount", loginAccount, "permVersion", permVersion, // 👈 注入版本号
+                JWTPayload.ISSUED_AT, now / 1000, JWTPayload.EXPIRES_AT, expireTime / 1000);
 
         return JWTUtil.createToken(payload, privateKeySigner);
     }

@@ -37,4 +37,9 @@ public class SysUserRoleRepo extends AncestorServiceImpl<SysUserRoleMapper, SysU
             save(sysUserRole);
         }
     }
+
+    public List<Long> listRoleIdsByUserId(Long userId) {
+        return lambdaQuery().eq(SysUserRole::getUserId, userId).list().stream().map(SysUserRole::getRoleId)
+            .collect(Collectors.toList());
+    }
 }
