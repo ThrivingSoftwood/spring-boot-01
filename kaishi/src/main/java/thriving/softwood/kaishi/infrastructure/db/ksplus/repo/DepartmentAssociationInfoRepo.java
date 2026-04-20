@@ -23,11 +23,15 @@ import thriving.softwood.kaishi.infrastructure.db.ksplus.mapper.base.DepartmentA
 public class DepartmentAssociationInfoRepo
     extends AncestorServiceImpl<DepartmentAssociationInfoMapper, DepartmentAssociationInfo> {
     public List<DepartmentAssociationInfo> listAll() {
-        return lambdaQuery().eq(DepartmentAssociationInfo::getDeleted, 0).list();
+        return lambdaQuery().list();
     }
 
     public void logicDelete(Long authDepartmentId) {
         lambdaUpdate().eq(DepartmentAssociationInfo::getAuthDepartmentId, authDepartmentId)
             .eq(DepartmentAssociationInfo::getDeleted, 0).set(DepartmentAssociationInfo::getDeleted, 1).update();
+    }
+
+    public String getTypeIdByDeptId(Long deptId) {
+        return lambdaQuery().eq(DepartmentAssociationInfo::getAuthDepartmentId, deptId).one().getOriDepartmentTypeid();
     }
 }

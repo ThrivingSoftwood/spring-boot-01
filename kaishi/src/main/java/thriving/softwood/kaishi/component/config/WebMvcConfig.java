@@ -4,7 +4,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import io.micrometer.tracing.Tracer;
 import jakarta.annotation.Resource;
 import thriving.softwood.kaishi.biz.api.system.AuthCacheSvc;
 import thriving.softwood.kaishi.component.interceptor.JwtInterceptor;
@@ -17,9 +16,6 @@ import thriving.softwood.kaishi.component.interceptor.JwtInterceptor;
  */
 @AutoConfiguration
 public class WebMvcConfig implements WebMvcConfigurer {
-
-    @Resource
-    private Tracer tracer;
 
     @Resource
     private AuthCacheSvc authCacheSvc;

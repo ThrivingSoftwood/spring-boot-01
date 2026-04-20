@@ -22,7 +22,7 @@ import thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysDataRule
 @Service
 public class SysDataRuleRepo extends AncestorServiceImpl<SysDataRuleMapper, SysDataRule> {
     public List<SysDataRule> listAll() {
-        return lambdaQuery().eq(SysDataRule::getDeleted, 0).orderByAsc(SysDataRule::getId).list();
+        return lambdaQuery().orderByAsc(SysDataRule::getId).list();
     }
 
     public void logicDeleteById(Long id) {

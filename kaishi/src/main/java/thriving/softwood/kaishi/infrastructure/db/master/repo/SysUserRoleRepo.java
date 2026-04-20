@@ -27,6 +27,10 @@ public class SysUserRoleRepo extends AncestorServiceImpl<SysUserRoleMapper, SysU
         lambdaUpdate().eq(SysUserRole::getRoleId, roleId).set(SysUserRole::getDeleted, 1).update();
     }
 
+    public void logicDeleteByUserId(Long userId) {
+        lambdaUpdate().eq(SysUserRole::getUserId, userId).set(SysUserRole::getDeleted, 1).update();
+    }
+
     public List<Long> listAssignedUserIdsByRoleId(Long roleId) {
         return lambdaQuery().eq(SysUserRole::getRoleId, roleId).list().stream().map(SysUserRole::getUserId)
             .collect(Collectors.toList());

@@ -32,8 +32,10 @@ import thriving.softwood.kaishi.infrastructure.db.ksplus.repo.DepartmentAssociat
 import thriving.softwood.kaishi.infrastructure.db.ksplus.repo.EmployeeAssociationInfoRepo;
 import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysDept;
 import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUser;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUserRole;
 import thriving.softwood.kaishi.infrastructure.db.master.repo.SysDeptRepo;
 import thriving.softwood.kaishi.infrastructure.db.master.repo.SysUserRepo;
+import thriving.softwood.kaishi.infrastructure.db.master.repo.SysUserRoleRepo;
 
 @Service
 public class UserSvc implements UserApi {
@@ -42,13 +44,15 @@ public class UserSvc implements UserApi {
     private final SysUserRepo sysUserRepo;
     private final DepartmentRepo erpDeptRepo;
     private final EmployeeRepo erpEmployeeRepo;
+    private final SysUserRoleRepo sysUserRoleRepo;
     private final GblLoginUserRepo gblLoginUserRepo;
     private final EmployeeAssociationInfoRepo empAssocRepo;
     private final DepartmentAssociationInfoRepo deptAssocRepo;
 
     public UserSvc(SysDeptRepo sysDeptRepo, SysUserRepo sysUserRepo, DepartmentRepo erpDeptRepo,
         EmployeeRepo erpEmployeeRepo, EmployeeAssociationInfoRepo empAssocRepo,
-        DepartmentAssociationInfoRepo deptAssocRepo, GblLoginUserRepo gblLoginUserRepo) {
+        DepartmentAssociationInfoRepo deptAssocRepo, GblLoginUserRepo gblLoginUserRepo,
+        SysUserRoleRepo sysUserRoleRepo) {
         this.sysDeptRepo = sysDeptRepo;
         this.sysUserRepo = sysUserRepo;
         this.erpDeptRepo = erpDeptRepo;
@@ -56,6 +60,7 @@ public class UserSvc implements UserApi {
         this.empAssocRepo = empAssocRepo;
         this.deptAssocRepo = deptAssocRepo;
         this.gblLoginUserRepo = gblLoginUserRepo;
+        this.sysUserRoleRepo = sysUserRoleRepo;
     }
 
     // ==========================================
@@ -226,7 +231,6 @@ public class UserSvc implements UserApi {
         Map<String, Long> deptMapping = deptAssocRepo.listAll().stream().collect(Collectors
             .toMap(DepartmentAssociationInfo::getOriDepartmentTypeid, DepartmentAssociationInfo::getAuthDepartmentId));
 
-        // 默认密码: 123456 (假设前端不需要，后端直接生成)
         String plainPwd = Sm4Util.decWeb(req.newPasswordEnc());
         String initEncPwd = BCrypt.hashpw(Sm4Util.encLocal(plainPwd), BCrypt.gensalt());
         String currentVersion = DateUtil.format(new java.util.Date(), "yyyyMMddHHmmss");
@@ -334,7 +338,8 @@ public class UserSvc implements UserApi {
         // 2. 逻辑删除关联表
         empAssocRepo.logicDelete(user.getLoginAccount());
 
-        // todo (可选) 如果有 UserRole 表，也可以在这里一并清理关联，防止恢复时串权
+        // 3. 如果有 UserRole 表，也可以在这里一并清理关联，防止恢复时串权
+        sysUserRoleRepo.logicDeleteByUserId(user.getId());
     }
 
     // --- 内部辅助方法 ---
@@ -395,5 +400,42 @@ public class UserSvc implements UserApi {
         // 重新赋值过滤后的有效子节点
         node.setChildren(validChildren);
         return hasUser;
+    }
+
+    @Override
+    public List<Long> listAssignedRoleIdsByUserId(Long userId) {
+        // 🌟 直接从关联表查询该用户绑定的角色 ID 列表
+        return sysUserRoleRepo.listRoleIdsByUserId(userId);
+    }
+
+    @Override
+    @DSTransactional // 开启跨表事务
+    public void assignRoles(Long userId, List<Long> roleIds) {
+        // 1. 安全校验：禁止修改上帝账号 'kaishi' 的角色
+        SysUser user = sysUserRepo.getById(userId);
+        if ("kaishi".equals(user.getLoginAccount())) {
+            throw new DetailException("系统保护：禁止修改初始化管理员的角色！");
+        }
+
+        // 2. 物理清理旧关系
+        sysUserRoleRepo.logicDeleteByUserId(userId);
+
+        // 3. 批量插入新关系
+        if (roleIds != null && !roleIds.isEmpty()) {
+            List<SysUserRole> relations = roleIds.stream().map(rid -> {
+                SysUserRole ur = new SysUserRole();
+                ur.setUserId(userId);
+                ur.setRoleId(rid);
+                return ur;
+            }).collect(Collectors.toList());
+            sysUserRoleRepo.saveBatch(relations);
+        }
+
+        // 4. 🌟 核心防线：更新该用户的权限版本戳
+        // 这样当该用户下次发起请求时，JwtInterceptor 会发现版本号变了，
+        // 从而下发 X-Update-Perm 强制前端静默换取包含新角色权限的 Token。
+        String newVersion = DateUtil.format(new java.util.Date(), "yyyyMMddHHmmss");
+        user.setPermissionVersion(newVersion);
+        sysUserRepo.updateById(user);
     }
 }

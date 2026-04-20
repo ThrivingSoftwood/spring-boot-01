@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import thriving.softwood.kaishi.biz.pojo.dto.DlyndxDTO;
-import thriving.softwood.kaishi.infrastructure.cache.local.KaishiCaffeineCacheConfig;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.*;
 
 ;
@@ -51,49 +50,49 @@ public class DictionarySvc implements DictionaryApi {
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.BTYPE_CACHE, key = "#typeId")
+    @Cacheable(cacheNames = BTYPE_CACHE, key = "#typeId")
     public String getBtypeName(String typeId) {
         return btypeRepo.getFullNameByTypeid(typeId);
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.EMPLOYEE_CACHE, key = "#typeId")
+    @Cacheable(cacheNames = EMPLOYEE_CACHE, key = "#typeId")
     public String getEmployeeName(String typeId) {
         return employeeRepo.getFullNameByTypeid(typeId);
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.STOCK_CACHE, key = "#typeId")
+    @Cacheable(cacheNames = STOCK_CACHE, key = "#typeId")
     public String getStockName(String typeId) {
         return stockRepo.getFullNameByTypeid(typeId);
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.PTYPE_CACHE, key = "#typeId")
+    @Cacheable(cacheNames = PTYPE_CACHE, key = "#typeId")
     public String getPtypeName(String typeId) {
         return ptypeRepo.getFullNameByTypeid(typeId);
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.VCHTYPE_CACHE, key = "#vchtype")
+    @Cacheable(cacheNames = VCHTYPE_CACHE, key = "#vchtype")
     public String getVchName(Integer vchtype) {
         return gblVchtypeRepo.getFullNameByVchType(vchtype);
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.DEPARTMENT_CACHE, key = "#typeId")
+    @Cacheable(cacheNames = DEPARTMENT_CACHE, key = "#typeId")
     public String getDepartmentName(String typeId) {
         return departmentRepo.getFullNameByTypeid(typeId);
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.MTYPE_CACHE, key = "#typeId")
+    @Cacheable(cacheNames = MTYPE_CACHE, key = "#typeId")
     public String getMtypeName(String typeId) {
         return mtypeRepo.getFullNameByTypeid(typeId);
     }
 
     @Override
-    @Cacheable(cacheNames = KaishiCaffeineCacheConfig.DLYNDX_CACHE, key = "#vchcode")
+    @Cacheable(cacheNames = DLYNDX_CACHE, key = "#vchcode")
     public DlyndxDTO getDlyndxDTO(Long vchcode) {
         return dlyndxRepo.getDTOByVchcode(vchcode);
     }

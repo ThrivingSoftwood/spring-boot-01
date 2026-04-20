@@ -186,6 +186,16 @@ AI 进行代码分析并更新当前文档：*
        echo ""
    done
    
+   # 输出所有sql 文件的内容(注意关键信息不要硬编码以及其他数据脱敏)
+   find . -type f -name "*.sql" ! -name "package-info.java" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+       echo "\n\n"
+       echo "File: $file"
+       echo "\`\`\`java"
+       cat "$file"
+       echo "\n\`\`\`"
+       echo ""
+   done
+   
    # 输出所有java 文件的内容(注意关键信息不要硬编码以及其他数据脱敏)
    find . -type f -name "*.java" ! -name "package-info.java" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
        echo "\n\n"

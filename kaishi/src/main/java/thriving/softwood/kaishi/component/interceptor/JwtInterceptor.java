@@ -12,7 +12,6 @@ import thriving.softwood.common.core.util.JwtUtil;
 import thriving.softwood.kaishi.biz.api.system.AuthCacheSvc;
 import thriving.softwood.kaishi.biz.pojo.dto.UserAuthInfoDTO;
 import thriving.softwood.kaishi.context.UserContext;
-// 假设你有一个封装了 Caffeine 缓存的认证信息服务
 
 public class JwtInterceptor implements HandlerInterceptor {
 
@@ -47,6 +46,12 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new TokenException("账户不存在或已被禁用，请联系管理员");
         }
 
+        // 检查所属部门状态
+        if (!authInfo.getDepartmentActive() && !authInfo.getGodMode()) {
+            // 注意：上帝模式（kaishi 账号）通常跳过部门检查，防止系统死锁
+            throw new TokenException("所属部门已被禁用，请联系管理员");
+        }
+
         // 🌟 3. 无感刷新防线：版本比对
         // 如果后端管理员修改了权限，导致 authInfo 的版本号变了，通知前端静默刷新
         if (StrUtil.isNotBlank(authInfo.getPermissionVersion())
@@ -55,12 +60,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             response.setHeader("Access-Control-Expose-Headers", "X-Update-Perm");
         }
 
-        // 🌟 4. 上帝模式判定
-        boolean godMode = "kaishi".equals(loginAccount) || authInfo.getRoleCodes().contains("SUPER_ADMIN");
-
         // 🌟 5. 注入全量上下文，供 MyBatis-Plus 和 Jackson 拦截器使用
-        UserContext.set(userId, loginAccount, godMode, authInfo.getDeptId(), authInfo.getPermissions(),
-            authInfo.getDataRules());
+        UserContext.set(authInfo);
 
         return true;
     }

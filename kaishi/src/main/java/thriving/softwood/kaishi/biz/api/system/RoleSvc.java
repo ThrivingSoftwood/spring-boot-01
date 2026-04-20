@@ -41,9 +41,14 @@ public class RoleSvc implements RoleApi {
 
     @Override
     public void saveOrUpdateRole(RoleReq req) {
+        // 1. 获取旧数据用于对比状态
+        SysRole oldRole = null;
         if (null == req.id()) {
             validateNewRoleCode(req.roleCode());
+        } else {
+            oldRole = roleRepo.getById(req.id());
         }
+
         SysRole role = new SysRole();
         role.setId(req.id());
         role.setRoleCode(req.roleCode());
@@ -51,6 +56,11 @@ public class RoleSvc implements RoleApi {
         role.setSortOrder(req.sortOrder());
         role.setStatus(req.status() != null ? req.status() : 1);
         roleRepo.saveOrUpdate(role);
+
+        if (oldRole != null && (oldRole.getStatus() == 1 && role.getStatus() == 0)) {
+            // 碰撞该角色下所有用户的版本号，强制触发前端静默刷新
+            bumpVersionByRoleId(role.getId());
+        }
     }
 
     private void validateNewRoleCode(String roleCode) {

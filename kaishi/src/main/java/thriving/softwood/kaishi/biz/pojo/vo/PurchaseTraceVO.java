@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import thriving.softwood.common.core.annotation.FieldPerm;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.extend.PurchaseTraceOrder;
 
 /**
@@ -104,6 +105,7 @@ public class PurchaseTraceVO implements Serializable {
     private Long aDlyOrder;
 
     /** 供应商全称 */
+    @FieldPerm("purchase:btype:view")
     private String aBtypeidFullname;
 
     /** 存货/商品名称 */
@@ -116,9 +118,11 @@ public class PurchaseTraceVO implements Serializable {
     private BigDecimal aQty;
 
     /** 采购单价 (折前) */
+    @FieldPerm("purchase:price:view")
     private Double aPrice;
 
     /** 折后总金额 (实际应付) */
+    @FieldPerm("purchase:price:view")
     private BigDecimal aDiscounttotal;
 
     /** 采购备注 */

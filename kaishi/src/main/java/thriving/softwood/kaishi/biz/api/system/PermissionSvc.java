@@ -43,12 +43,38 @@ public class PermissionSvc implements PermissionApi {
         return getTreedVOs(allList).stream().filter(node -> node.getParentId() == 0L).collect(Collectors.toList());
     }
 
+    /**
+     * 核心递归判定：是否保留该节点
+     */
+    private boolean shouldKeep(SysPermissionVO node) {
+        // 如果是菜单(Type=2)，且能出现在这个 List 里，说明用户有权限，直接保留
+        if (node.getPermissionType() == 2) {
+            return true;
+        }
+
+        // 如果是目录(Type=1)
+        if (node.getPermissionType() == 1) {
+            // 递归检查子节点
+            List<SysPermissionVO> validChildren =
+                node.getChildren().stream().filter(this::shouldKeep).collect(Collectors.toList());
+
+            // 🌟 关键逻辑：更新子节点列表
+            node.setChildren(validChildren);
+
+            // 如果该目录下还有有效的子节点，则保留该目录；否则剪掉
+            return !validChildren.isEmpty();
+        }
+
+        return false;
+    }
+
     @Override
     public List<SysPermissionVO> treeMenuPermissions(String loginAccount) {
         List<SysPermission> permissions = sysPermissionRepo.listMenuPermissionsByAccount(loginAccount);
 
         // 5. 过滤出顶级节点 (parentId == 0)，它们内部已经包含了所有子孙节点
-        return getTreedVOs(permissions).stream().filter(node -> node.getParentId() == 0L).collect(Collectors.toList());
+        return getTreedVOs(permissions).stream().filter(node -> node.getParentId() == 0L).filter(this::shouldKeep)
+            .collect(Collectors.toList());
     }
 
     private static @NonNull List<SysPermissionVO> getTreedVOs(List<SysPermission> permissions) {
@@ -79,6 +105,7 @@ public class PermissionSvc implements PermissionApi {
             throw new RuntimeException("该节点下包含子节点，禁止直接删除！");
         }
         sysPermissionRepo.logicDeleteById(id);
+        sysRolePermissionRepo.logicDeleteByPermissionId(id);
     }
 
     // (新增和修改的方法直接调用 permissionRepo.save / updateById 即可，略)

@@ -16,6 +16,7 @@
         from (SELECT sp.*
         FROM sys_permission sp
         WHERE sp.permission_type &lt; 3
+        and sp.deleted = 0
         AND (
         -- 逻辑 A：当前用户是否拥有超级管理员角色
         EXISTS (
@@ -32,8 +33,11 @@
         SELECT 1
         FROM sys_user su
         JOIN sys_user_role sur ON su.id = sur.user_id
+        JOIN sys_role sr ON sur.role_id = sr.id
         JOIN sys_role_permission srp ON sur.role_id = srp.role_id
         WHERE su.login_account = #{loginAccount}
+        and srp.deleted = 0
+        and sr.status = 1
         AND srp.permission_id = sp.id
         )
         )

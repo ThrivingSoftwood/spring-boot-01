@@ -4,7 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = {"thriving.softwood"})
+@SpringBootApplication(scanBasePackages = {"thriving.softwood", "cn.hutool.v7.extra.spring"})
 @MapperScan("thriving.softwood.**.infrastructure.db.**.mapper")
 public class KaishiApplication {
 

@@ -23,9 +23,8 @@ public class BaseConst {
     public static final Long ROOT_PARENT_DEPT_ID_LONG = 0L;
 
     /**
-     * 超管账号
+     * 超管角色代码
      */
-    public static final String SUPER_ADMIN_LOGIN_ACCOUNT = "kaishi";
 
     public static final String SUPER_ADMIN_ROLE = "SUPER_ADMIN";
 

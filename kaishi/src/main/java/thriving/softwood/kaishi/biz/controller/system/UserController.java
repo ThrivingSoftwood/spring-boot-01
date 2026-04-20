@@ -49,9 +49,20 @@ public class UserController {
         return Result.success("密码重置成功");
     }
 
-    @DeleteMapping("/delete/{id}")
-    public Result<String> deleteUser(@PathVariable Long id) {
-        userApi.deleteUser(id);
-        return Result.success("用户移除成功");
+    /**
+     * 🌟 获取指定用户已拥有的角色 ID 列表
+     */
+    @GetMapping("/assigned-roles/{userId}")
+    public Result<List<Long>> listAssignedRoles(@PathVariable Long userId) {
+        return Result.success(userApi.listAssignedRoleIdsByUserId(userId));
+    }
+
+    /**
+     * 🌟 为用户分配角色 接收参数：{ "id": 1, "roleIds": [1, 2, 5] }
+     */
+    @PostMapping("/assign-roles")
+    public Result<String> assignRoles(@RequestBody UserReq req) {
+        userApi.assignRoles(req.id(), req.roleIds());
+        return Result.success("角色分配成功，权限已同步");
     }
 }

@@ -26,8 +26,7 @@ import thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysRoleMapp
 public class SysRoleRepo extends AncestorServiceImpl<SysRoleMapper, SysRole> {
 
     public List<SysRole> listAll() {
-        return lambdaQuery().eq(SysRole::getDeleted, 0).ne(SysRole::getRoleCode, SUPER_ADMIN_ROLE)
-            .orderByAsc(SysRole::getSortOrder).list();
+        return lambdaQuery().ne(SysRole::getRoleCode, SUPER_ADMIN_ROLE).orderByAsc(SysRole::getSortOrder).list();
     }
 
     public Long countRoleCode(String roleCode) {
@@ -41,5 +40,9 @@ public class SysRoleRepo extends AncestorServiceImpl<SysRoleMapper, SysRole> {
     public String getSummaryInfo(List<Long> roleIds) {
         return listByIds(roleIds).stream().map(role -> role.getRoleName() + ":" + role.getRoleCode())
             .collect(Collectors.joining("\n"));
+    }
+
+    public List<SysRole> listActiveRoleByIds(List<Long> roleIds) {
+        return lambdaQuery().in(SysRole::getId, roleIds).eq(SysRole::getStatus, 1).list();
     }
 }

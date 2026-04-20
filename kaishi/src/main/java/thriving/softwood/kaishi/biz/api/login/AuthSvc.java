@@ -1,7 +1,5 @@
 package thriving.softwood.kaishi.biz.api.login;
 
-import java.util.Set;
-
 import org.springframework.stereotype.Service;
 
 import cn.hutool.v7.core.date.DateUtil;
@@ -9,6 +7,7 @@ import cn.hutool.v7.crypto.digest.BCrypt;
 import thriving.softwood.common.core.util.JwtUtil;
 import thriving.softwood.common.core.util.Sm4Util;
 import thriving.softwood.kaishi.biz.api.system.AuthCacheSvc;
+import thriving.softwood.kaishi.biz.pojo.dto.UserAuthInfoDTO;
 import thriving.softwood.kaishi.biz.pojo.record.LoginReq;
 import thriving.softwood.kaishi.biz.pojo.record.LoginResp;
 import thriving.softwood.kaishi.biz.pojo.record.PasswordReq;
@@ -20,7 +19,8 @@ import thriving.softwood.kaishi.infrastructure.db.master.repo.SysUserRepo;
 public class AuthSvc implements AuthApi {
 
     private final SysUserRepo sysUserRepo;
-    private final AuthCacheSvc authCacheSvc; // 🌟 注入权限查询服务
+    // 🌟 注入权限查询服务
+    private final AuthCacheSvc authCacheSvc;
 
     public AuthSvc(SysUserRepo sysUserRepo, AuthCacheSvc authCacheSvc) {
         this.sysUserRepo = sysUserRepo;
@@ -44,6 +44,14 @@ public class AuthSvc implements AuthApi {
             throw new RuntimeException("账户不存在或已被禁用");
         }
 
+        // 🌟 5. 核心修复：引入部门活跃度检查（拒敌于国门之外）
+        // 我们直接调用之前写好的权限大脑，它内部已经包含了“上帝模式判定”和“部门状态判定”
+        UserAuthInfoDTO authInfo = authCacheSvc.getUserAuthInfo(user.getId());
+
+        if (!authInfo.getGodMode() && !authInfo.getDepartmentActive()) {
+            throw new RuntimeException("登录失败：您所属的部门目前处于禁用状态");
+        }
+
         // 4. BCrypt 校验哈希密文
         if (!BCrypt.checkpw(plainPassword, user.getPassword())) {
             throw new RuntimeException("账号或密码错误");
@@ -63,10 +71,9 @@ public class AuthSvc implements AuthApi {
         String token = JwtUtil.generateToken(user.getId(), user.getLoginAccount(), user.getPermissionVersion());
 
         // 🌟 2. 查出用户的权限标识列表 (如 ["purchase:trace:list", "purchase:price:view"])
-        Set<String> perms = authCacheSvc.getUserAuthInfo(user.getId()).getPermissions();
 
         // 🌟 3. 构造增强版的 LoginResp
-        return new LoginResp(token, user.getUsername(), perms);
+        return new LoginResp(token, user.getUsername(), authInfo.getPermissions(), authInfo.getRoleCodes());
     }
 
     @Override
@@ -111,12 +118,11 @@ public class AuthSvc implements AuthApi {
         Long userId = UserContext.userId();
         SysUser user = sysUserRepo.getById(userId);
 
-        // 1. 获取最新权限版本号和权限列表
-        Set<String> newPerms = authCacheSvc.getUserAuthInfo(userId).getPermissions();
+        UserAuthInfoDTO authInfo = authCacheSvc.getUserAuthInfo(userId);
 
         // 2. 签发全新 Token
         String newToken = JwtUtil.generateToken(userId, user.getLoginAccount(), user.getPermissionVersion());
 
-        return new LoginResp(newToken, user.getUsername(), newPerms);
+        return new LoginResp(newToken, user.getUsername(), authInfo.getPermissions(), authInfo.getRoleCodes());
     }
 }

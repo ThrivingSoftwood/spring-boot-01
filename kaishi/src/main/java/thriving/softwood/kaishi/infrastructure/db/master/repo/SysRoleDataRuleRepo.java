@@ -48,8 +48,7 @@ public class SysRoleDataRuleRepo extends AncestorServiceImpl<SysRoleDataRuleMapp
     }
 
     public List<Long> listRoleIdsByDataRuleId(Long dataRuleId) {
-        return lambdaQuery().eq(SysRoleDataRule::getRuleId, dataRuleId).eq(SysRoleDataRule::getDeleted, 0)
-            .orderByAsc(SysRoleDataRule::getRoleId).list().stream().map(SysRoleDataRule::getRoleId).distinct()
-            .collect(Collectors.toList());
+        return lambdaQuery().eq(SysRoleDataRule::getRuleId, dataRuleId).orderByAsc(SysRoleDataRule::getRoleId).list()
+            .stream().map(SysRoleDataRule::getRoleId).distinct().collect(Collectors.toList());
     }
 }

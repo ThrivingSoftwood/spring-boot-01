@@ -2,18 +2,25 @@ package thriving.softwood.kaishi.biz.api.system;
 
 import static thriving.softwood.kaishi.biz.constant.BaseConst.ROOT_DEPARTMENT_ID_STR;
 import static thriving.softwood.kaishi.biz.constant.BaseConst.ROOT_PARENT_DEPT_ID_LONG;
+import static thriving.softwood.kaishi.infrastructure.cache.local.KaishiCaffeineCacheConfig.USER_AUTH_INFO_CACHE;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 
 import cn.hutool.v7.core.comparator.CompareUtil;
+import cn.hutool.v7.core.date.DateUtil;
 import cn.hutool.v7.core.util.ObjUtil;
 import thriving.softwood.kaishi.biz.pojo.record.DepartmentReq;
 import thriving.softwood.kaishi.biz.pojo.vo.DepartmentVO;
@@ -23,11 +30,15 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.DepartmentRepo
 import thriving.softwood.kaishi.infrastructure.db.ksplus.entity.base.DepartmentAssociationInfo;
 import thriving.softwood.kaishi.infrastructure.db.ksplus.repo.DepartmentAssociationInfoRepo;
 import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysDept;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUser;
 import thriving.softwood.kaishi.infrastructure.db.master.repo.SysDeptRepo;
 import thriving.softwood.kaishi.infrastructure.db.master.repo.SysUserRepo;
 
 @Service
 public class DepartmentSvc implements DepartmentApi {
+
+    private static final Logger logger = LoggerFactory.getLogger(DepartmentSvc.class);
+    private final CacheManager cacheManager;
 
     SysDeptRepo sysDeptRepo;
     DepartmentRepo departmentRepo;
@@ -36,11 +47,12 @@ public class DepartmentSvc implements DepartmentApi {
 
     @Autowired
     public DepartmentSvc(SysDeptRepo sysDeptRepo, DepartmentRepo departmentRepo,
-        DepartmentAssociationInfoRepo associationRepo, SysUserRepo sysUserRepo) {
+        DepartmentAssociationInfoRepo associationRepo, SysUserRepo sysUserRepo, CaffeineCacheManager cacheManager) {
         this.sysDeptRepo = sysDeptRepo;
         this.departmentRepo = departmentRepo;
         this.associationRepo = associationRepo;
         this.sysUserRepo = sysUserRepo;
+        this.cacheManager = cacheManager;
     }
 
     @Override
@@ -95,15 +107,17 @@ public class DepartmentSvc implements DepartmentApi {
         // 🌟 核心逻辑：标记哪些节点需要显示 (自身未同步，或子孙中有未同步的)
         Set<String> keepIds = new HashSet<>();
         for (DepartmentVO vo : allNodesMap.values()) {
-            if (!vo.isSynced()) {
-                // 如果自己没同步，溯源向上，把所有祖先都标记为“需保留”
-                String currentId = vo.getTypeid();
-                while (currentId != null && !"0".equals(currentId) && !keepIds.contains(currentId)) {
-                    keepIds.add(currentId);
-                    DepartmentVO parent = allNodesMap.get(allNodesMap.get(currentId).getParid());
-                    currentId = (parent != null) ? parent.getTypeid() : null;
-                }
+            if (vo.isSynced()) {
+                continue;
             }
+            // 如果自己没同步，溯源向上，把所有祖先都标记为“需保留”
+            String currentId = vo.getTypeid();
+            while (currentId != null && !"0".equals(currentId) && !keepIds.contains(currentId)) {
+                keepIds.add(currentId);
+                DepartmentVO parent = allNodesMap.get(allNodesMap.get(currentId).getParid());
+                currentId = (parent != null) ? parent.getTypeid() : null;
+            }
+
         }
 
         // 4. 组装树结构
@@ -197,8 +211,90 @@ public class DepartmentSvc implements DepartmentApi {
             sysDeptRepo.updateById(department);
         }
         if (ObjUtil.notEquals(department.getStatus(), departmentReq.status())) {
-            // todo 递归处理子部门和相关人员权限版本,注意:无需处理其他部门的 sortOrder
+            changeStatusAndReloadPermission(departmentReq, department);
         }
+    }
+
+    private void changeStatusAndReloadPermission(DepartmentReq departmentReq, SysDept department) {
+        byte targetStatus = departmentReq.status();
+        Long deptId = department.getId();
+
+        // A. 定位所有受影响的部门：包括当前部门及其所有子孙部门
+        // 利用 SQL Server 的 LIKE 匹配 ancestors 字段，例如 ancestors 包含 ",5,"
+        List<SysDept> affectedDepartments = sysDeptRepo.listAffectedSubDepartmentsByDeptId(deptId);
+
+        if (affectedDepartments.isEmpty()) {
+            return;
+        }
+
+        List<Long> affectedDeptIds = affectedDepartments.stream().map(SysDept::getId).collect(Collectors.toList());
+
+        // B. 批量更新部门状态
+        sysDeptRepo.updateStatusByDeptIds(targetStatus, affectedDeptIds);
+
+        // B. 🌟 核心新增：自底向上传播状态
+        propagateStatusUpwards(department.getParentId(), targetStatus, affectedDeptIds);
+
+        // C. 🌟 权限版本碰撞：找出属于这些部门的所有用户
+        List<SysUser> affectedUsers = sysUserRepo.listByDeptIds(affectedDeptIds);
+        if (!affectedUsers.isEmpty()) {
+            bumpUserVersions(affectedUsers);
+        }
+        logger.info("部门 {} 状态变更为 {}，已强制刷新 {} 名用户的权限版本", department.getDeptName(), targetStatus, affectedUsers.size());
+    }
+
+    private void bumpUserVersions(List<SysUser> affectedUsers) {
+
+        // 生成全新的版本戳 (yyyyMMddHHmmss)
+        String newVersion = DateUtil.format(new Date(), "yyyyMMddHHmmss");
+        List<Long> userIds = affectedUsers.stream().map(SysUser::getId).toList();
+
+        // 批量更新用户的权限版本号
+        // 这会导致受影响的用户在下一次请求时，JwtInterceptor 捕获到版本不一致
+        sysUserRepo.updatePermissionVersionsByUserIds(newVersion, userIds);
+
+        // D. 物理清理本地 Caffeine 缓存
+        // 确保后端拦截器在 60s 内不必等待自然过期，而是瞬间感知部门状态变更
+        Cache userAuthInfoCache = cacheManager.getCache(USER_AUTH_INFO_CACHE);
+        if (userAuthInfoCache != null) {
+            userIds.forEach(userAuthInfoCache::evict);
+        }
+    }
+
+    /**
+     * 🚀 向上递归判定逻辑
+     *
+     * @param parentId 待判定的父部门ID
+     * @param targetStatus 目标状态
+     * @param allAffectedDeptIds 受影响集合
+     */
+    private void propagateStatusUpwards(Long parentId, byte targetStatus, List<Long> allAffectedDeptIds) {
+        // 1. 递归终止条件：到达根节点 (parentId=0)
+        if (parentId == null || parentId == 0) {
+            return;
+        }
+
+        // 2. 核心检查：该父部门下的所有子部门，是否都已经是目标状态？
+        // 这里利用 count 检查是否存在“非目标状态”的子部门
+        long nonTargetCount = sysDeptRepo.countDifferentStatusBrotherDeptCount(parentId, targetStatus);
+
+        if (nonTargetCount > 0) {
+            return;
+        }
+
+        // 3. 如果所有弟弟妹妹（子部门）都达标了
+        SysDept parent = sysDeptRepo.getById(parentId);
+        if (parent != null && parent.getStatus() != targetStatus) {
+            // 更新父部门状态
+            sysDeptRepo.updateStatusByDeptId(parentId, targetStatus);
+
+            allAffectedDeptIds.add(parentId);
+            logger.info("检测到子部门全员同步，父部门 {} 状态已联动修改为 {}", parent.getDeptName(), targetStatus);
+
+            // 🌟 递归向上：继续检查爷爷节点
+            propagateStatusUpwards(parent.getParentId(), targetStatus, allAffectedDeptIds);
+        }
+
     }
 
     @Override

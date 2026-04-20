@@ -380,7 +380,8 @@
         ) AS calc
         <where>
             a.vchtype = 34
-            <!-- 重点优化：始终排除掉手动结清的数据，为使用 UNION ALL 做准备 -->
+            <!-- 🌟 位置 1：主分支权限过滤 -->
+            /*_DATA_PERMISSION_*/
             AND NOT EXISTS (
             SELECT 1 FROM [kaishi-plus].dbo.purchase_manual_finish AS c
             WHERE a.dlyorder = c.dly_order AND a.vchcode = c.vch_code AND a.vchtype = c.vch_type
@@ -399,18 +400,20 @@
             a.vchcode, a.dlyorder, a.date, a.btypeid, a.ptypeid, a.unit,
             a.qty as buy_qty, a.price, a.discounttotal, concat(a.comment, b.ext_info) as comment,
             a.redold, a.redword, a.etypeid, a.blockno,
-            a.qty as stocked_qty <!-- 手动完成的，视为入库量等于采购量 -->
+            a.qty as stocked_qty
             FROM [kaishi-plus].dbo.purchase_manual_finish AS b
             INNER JOIN [凯诗防护2026].dbo.DlyBuy AS a
             ON a.dlyorder = b.dly_order AND a.Vchcode = b.vch_code AND a.Vchtype = b.vch_type
             <where>
                 a.vchtype = 34
+                <!-- 🌟 位置 2：Union 分支权限过滤 -->
+                /*_DATA_PERMISSION_*/
                 <include refid="Criteria_Where_Clause"/>
             </where>
         </if>
     </sql>
 
-    <!-- 计数查询 -->
+    <!-- 计数查询：会通过 PlaceholderPermissionInterceptor 替换占位符 -->
     <select id="countTraceInfo" resultType="java.lang.Long">
         SELECT count(1) as total
         FROM (
@@ -418,17 +421,15 @@
         ) AS temp
     </select>
 
-    <!-- 分页列表查询 -->
+    <!-- 分页列表查询：会通过 PlaceholderPermissionInterceptor 替换占位符 -->
     <select id="listTraceInfo" resultMap="DlyBuyResultMap">
         SELECT * FROM (
         <include refid="Trace_Core_Payload"/>
         ) AS a
         <choose>
-            <!-- 如果 DTO 传了自定义排序则使用自定义 -->
             <when test="orderBySql != null and orderBySql != ''">
                 ORDER BY ${orderBySql}
             </when>
-            <!-- 否则使用您原始要求的排序条件 -->
             <otherwise>
                 ORDER BY a.date desc, a.vchcode asc, a.dlyorder asc
             </otherwise>
@@ -436,7 +437,7 @@
         OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
     </select>
 
-    <!-- ===================== 1. 查询采购单号列表 ===================== -->
+    <!-- 详情查询 -->
     <select id="listTraceDetail" parameterType="thriving.softwood.kaishi.biz.pojo.dto.PurchaseOrderTraceDTO"
             resultMap="BaseResultMap">
         select
@@ -448,6 +449,8 @@
         and a.dlyorder = b.SourceDlyOrder
         <where>
             a.vchtype = 34
+            <!-- 🌟 位置 3：详情页面的权限隔离 -->
+            /*_DATA_PERMISSION_*/
             <if test="vchcode != null">
                 and a.vchcode = #{vchcode}
             </if>

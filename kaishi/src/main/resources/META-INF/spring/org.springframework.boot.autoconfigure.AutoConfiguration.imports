@@ -1,1 +1,3 @@
 thriving.softwood.kaishi.component.config.WebMvcConfig
+thriving.softwood.kaishi.component.advice.FieldPermResponseBodyAdvice
+thriving.softwood.kaishi.component.config.MybatisPlusConfig

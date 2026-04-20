@@ -46,4 +46,8 @@ public class SysRolePermissionRepo extends AncestorServiceImpl<SysRolePermission
         return lambdaQuery().in(SysRolePermission::getRoleId, roleIds).list().stream()
             .map(SysRolePermission::getPermissionId).distinct().collect(Collectors.toList());
     }
+
+    public void logicDeleteByPermissionId(Long permissionId) {
+        lambdaUpdate().eq(SysRolePermission::getPermissionId, permissionId).remove();
+    }
 }

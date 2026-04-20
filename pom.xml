@@ -18,7 +18,7 @@
         <junit.jupiter.version>6.1.0-M1</junit.jupiter.version>
         <hibernate-validator.version>9.0.0.Beta3</hibernate-validator.version>
         <fastjson.version>2.0.60</fastjson.version>
-        <jackson.version>3.1.1</jackson.version>
+        <jackson.version>3.1.2</jackson.version>
         <jackson-annotation.version>3.0-rc5</jackson-annotation.version>
         <mvn.compiler.plugin.version>3.14.1</mvn.compiler.plugin.version>
         <mvn.surefire.plugin.version>3.5.4</mvn.surefire.plugin.version>

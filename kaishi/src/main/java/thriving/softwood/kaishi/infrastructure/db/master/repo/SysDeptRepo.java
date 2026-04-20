@@ -2,6 +2,7 @@ package thriving.softwood.kaishi.infrastructure.db.master.repo;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -9,6 +10,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
 import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysDept;
 import thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysDeptMapper;
+import thriving.softwood.kaishi.infrastructure.db.master.mapper.extend.SysDeptExtendMapper;
 
 /**
  * <p>
@@ -22,15 +24,38 @@ import thriving.softwood.kaishi.infrastructure.db.master.mapper.base.SysDeptMapp
 @Service
 public class SysDeptRepo extends AncestorServiceImpl<SysDeptMapper, SysDept> {
 
+    private SysDeptExtendMapper extendMapper;
+
+    @Autowired
+    public SysDeptRepo(SysDeptExtendMapper extendMapper) {
+        this.extendMapper = extendMapper;
+    }
+
     public List<SysDept> listAll() {
-        return lambdaQuery().eq(SysDept::getDeleted, 0).orderByAsc(SysDept::getParentId, SysDept::getSortOrder).list();
+        return lambdaQuery().orderByAsc(SysDept::getParentId, SysDept::getSortOrder).list();
     }
 
     public Long countSubDept(Long id) {
-        return lambdaQuery().eq(SysDept::getParentId, id).eq(SysDept::getDeleted, 0).count();
+        return lambdaQuery().eq(SysDept::getParentId, id).count();
     }
 
     public Boolean logicDelete(Long id) {
         return lambdaUpdate().set(SysDept::getDeleted, 1).eq(SysDept::getId, id).update();
+    }
+
+    public List<SysDept> listAffectedSubDepartmentsByDeptId(Long deptId) {
+        return extendMapper.listDeptWithChildren(deptId);
+    }
+
+    public void updateStatusByDeptIds(byte targetStatus, List<Long> affectedDeptIds) {
+        lambdaUpdate().set(SysDept::getStatus, targetStatus).in(SysDept::getId, affectedDeptIds).update();
+    }
+
+    public long countDifferentStatusBrotherDeptCount(Long parentId, byte targetStatus) {
+        return lambdaQuery().eq(SysDept::getParentId, parentId).ne(SysDept::getStatus, targetStatus).count();
+    }
+
+    public void updateStatusByDeptId(Long parentId, byte targetStatus) {
+        lambdaUpdate().set(SysDept::getStatus, targetStatus).eq(SysDept::getId, parentId).update();
     }
 }

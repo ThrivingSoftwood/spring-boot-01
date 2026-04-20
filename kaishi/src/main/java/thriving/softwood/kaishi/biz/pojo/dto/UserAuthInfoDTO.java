@@ -20,6 +20,11 @@ public class UserAuthInfoDTO implements Serializable {
     private Long deptId;
     private Byte status;
     private String permissionVersion;
+    private String employeeTypeId;
+    private String departmentTypeId;
+    // 🌟 新增：部门活跃状态
+    private Boolean departmentActive;
+    private Boolean godMode;
 
     // RBAC: 当前用户拥有的所有角色编码
     private Set<String> roleCodes;

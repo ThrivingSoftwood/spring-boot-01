@@ -14,12 +14,11 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
-import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.GblVchtype;
-import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.MtypeRepo;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyndxDTO;
 import thriving.softwood.kaishi.infrastructure.cache.local.KaishiCaffeineCacheConfig;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.*;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.*;
+import thriving.softwood.kaishi.util.SecurityUtil;
 
 /**
  * 字典数据全量预热器
@@ -61,88 +60,92 @@ public class DictionaryPreloadRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         log.info("🚀 开始进行字典数据全量预热 (Cache Pre-loading)...");
-        long start = System.currentTimeMillis();
 
-        // 预热 btype、SettleBtypeId
-        Cache btypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.BTYPE_CACHE);
-        List<Btype> btypes = btypeRepo.ListAllTypeidAndFullname();
-        for (Btype btype : btypes) {
-            btypeCache.put(btype.getTypeId(), btype.getFullName());
-        }
+        // 🌟 使用工具类提权执行，这样内部所有的 Repo 查库 SQL 都会被拦截器直接放行
+        SecurityUtil.runAsSystem(() -> {
+            long start = System.currentTimeMillis();
 
-        // 预热 Employee
-        Cache employeeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.EMPLOYEE_CACHE);
-        List<Employee> employees = employeeRepo.ListAllTypeidAndFullname();
-        for (Employee obj : employees) {
-            employeeCache.put(obj.getTypeId(), obj.getFullName());
-        }
+            // 预热 btype、SettleBtypeId
+            Cache btypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.BTYPE_CACHE);
+            List<Btype> btypes = btypeRepo.ListAllTypeidAndFullname();
+            for (Btype btype : btypes) {
+                btypeCache.put(btype.getTypeId(), btype.getFullName());
+            }
 
-        // 预热 Stock 库存
-        Cache stockCache = cacheManager.getCache(KaishiCaffeineCacheConfig.STOCK_CACHE);
-        List<Stock> stocks = stockRepo.ListAllTypeidAndFullname();
-        for (Stock obj : stocks) {
-            stockCache.put(obj.getTypeId(), obj.getFullName());
-        }
+            // 预热 Employee
+            Cache employeeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.EMPLOYEE_CACHE);
+            List<Employee> employees = employeeRepo.ListAllTypeidAndFullname();
+            for (Employee obj : employees) {
+                employeeCache.put(obj.getTypeId(), obj.getFullName());
+            }
 
-        // 预热 ptype
-        Cache ptypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.PTYPE_CACHE);
-        List<Ptype> ptypes = ptypeRepo.ListAllTypeidAndFullname();
-        for (Ptype obj : ptypes) {
-            ptypeCache.put(obj.getTypeId(), obj.getFullName());
-        }
+            // 预热 Stock 库存
+            Cache stockCache = cacheManager.getCache(KaishiCaffeineCacheConfig.STOCK_CACHE);
+            List<Stock> stocks = stockRepo.ListAllTypeidAndFullname();
+            for (Stock obj : stocks) {
+                stockCache.put(obj.getTypeId(), obj.getFullName());
+            }
 
-        // 预热 vchtype 业务类型
-        Cache vchtypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.VCHTYPE_CACHE);
-        List<GblVchtype> vchtypes = gblVchtypeRepo.ListAllTypeidAndFullname();
-        for (GblVchtype obj : vchtypes) {
-            employeeCache.put(obj.getVchtype(), obj.getFullname());
-        }
+            // 预热 ptype
+            Cache ptypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.PTYPE_CACHE);
+            List<Ptype> ptypes = ptypeRepo.ListAllTypeidAndFullname();
+            for (Ptype obj : ptypes) {
+                ptypeCache.put(obj.getTypeId(), obj.getFullName());
+            }
 
-        // 预热 department 部门
-        Cache departmentCache = cacheManager.getCache(KaishiCaffeineCacheConfig.DEPARTMENT_CACHE);
-        List<Department> departments = departmentRepo.ListAllTypeidAndFullname();
-        for (Department obj : departments) {
-            departmentCache.put(obj.getTypeid(), obj.getFullName());
-        }
+            // 预热 vchtype 业务类型
+            Cache vchtypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.VCHTYPE_CACHE);
+            List<GblVchtype> vchtypes = gblVchtypeRepo.ListAllTypeidAndFullname();
+            for (GblVchtype obj : vchtypes) {
+                vchtypeCache.put(obj.getVchtype(), obj.getFullname());
+            }
 
-        // 预热 ptype 发票类型
-        Cache mtypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.MTYPE_CACHE);
-        List<Mtype> mtypes = mtypeRepo.ListAllTypeidAndFullname();
-        for (Mtype obj : mtypes) {
-            mtypeCache.put(obj.getTypeid(), obj.getFullName());
-        }
+            // 预热 department 部门
+            Cache departmentCache = cacheManager.getCache(KaishiCaffeineCacheConfig.DEPARTMENT_CACHE);
+            List<Department> departments = departmentRepo.ListAllTypeidAndFullname();
+            for (Department obj : departments) {
+                departmentCache.put(obj.getTypeid(), obj.getFullName());
+            }
 
-        // 预热 dlyndx 订单信息
-        Cache dlyndxCache = cacheManager.getCache(KaishiCaffeineCacheConfig.DLYNDX_CACHE);
-        List<Dlyndx> dlyndxes = dlyndxRepo.listAllByVchcode();
-        for (Dlyndx obj : dlyndxes) {
-            mtypeCache.put(obj.getVchcode(), new DlyndxDTO(obj));
-        }
-        // USEDTYPE_CACHE
-        // RED_WORD_CACHE
-        // PDETAIL_CACHE
+            // 预热 ptype 发票类型
+            Cache mtypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.MTYPE_CACHE);
+            List<Mtype> mtypes = mtypeRepo.ListAllTypeidAndFullname();
+            for (Mtype obj : mtypes) {
+                mtypeCache.put(obj.getTypeid(), obj.getFullName());
+            }
 
-        // 预热表格类型
-        Cache usedtypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.USEDTYPE_CACHE);
-        usedtypeCache.put("1", "主表格");
-        usedtypeCache.put("2", "钱流单等把表格外数据作为明细记录的表格");
-        usedtypeCache.put("5", "赠品");
-        usedtypeCache.put("6", "销售单抹零");
-        usedtypeCache.put("7", "'次表格'");
+            // 预热 dlyndx 订单信息
+            Cache dlyndxCache = cacheManager.getCache(KaishiCaffeineCacheConfig.DLYNDX_CACHE);
+            List<Dlyndx> dlyndxes = dlyndxRepo.listAllByVchcode();
+            for (Dlyndx obj : dlyndxes) {
+                dlyndxCache.put(obj.getVchcode(), new DlyndxDTO(obj));
+            }
+            // USEDTYPE_CACHE
+            // RED_WORD_CACHE
+            // PDETAIL_CACHE
 
-        // 红冲标记
-        Cache redWordCache = cacheManager.getCache(KaishiCaffeineCacheConfig.RED_WORD_CACHE);
-        redWordCache.put(UPPER_T, "是");
-        redWordCache.put(UPPER_F, "否");
+            // 预热表格类型
+            Cache usedtypeCache = cacheManager.getCache(KaishiCaffeineCacheConfig.USEDTYPE_CACHE);
+            usedtypeCache.put("1", "主表格");
+            usedtypeCache.put("2", "钱流单等把表格外数据作为明细记录的表格");
+            usedtypeCache.put("5", "赠品");
+            usedtypeCache.put("6", "销售单抹零");
+            usedtypeCache.put("7", "'次表格'");
 
-        // 库存类型
-        Cache pdetailCache = cacheManager.getCache(KaishiCaffeineCacheConfig.PDETAIL_CACHE);
-        pdetailCache.put(0, "实物库存");
-        pdetailCache.put(1, "账面库存");
+            // 红冲标记
+            Cache redWordCache = cacheManager.getCache(KaishiCaffeineCacheConfig.RED_WORD_CACHE);
+            redWordCache.put(UPPER_T, "是");
+            redWordCache.put(UPPER_F, "否");
 
-        // ... 继续预热其他字典 ...
+            // 库存类型
+            Cache pdetailCache = cacheManager.getCache(KaishiCaffeineCacheConfig.PDETAIL_CACHE);
+            pdetailCache.put(0, "实物库存");
+            pdetailCache.put(1, "账面库存");
 
-        long end = System.currentTimeMillis();
-        log.info("✅ 字典数据预热完成！耗时: {} ms，系统准备就绪，可以接收请求了。", (end - start));
+            // ... 继续预热其他字典 ...
+
+            long end = System.currentTimeMillis();
+            log.info("✅ 字典数据预热完成！耗时: {} ms，系统准备就绪，可以接收请求了。", (end - start));
+        });
     }
 }

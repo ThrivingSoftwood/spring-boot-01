@@ -23,4 +23,8 @@ public interface UserApi {
 
     /** 移除用户 (逻辑删除及解绑) */
     void deleteUser(Long id);
+
+    List<Long> listAssignedRoleIdsByUserId(Long userId);
+
+    void assignRoles(Long userId, List<Long> roleIds);
 }

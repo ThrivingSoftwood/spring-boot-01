@@ -61,6 +61,11 @@
             <artifactId>hutool-http</artifactId>
             <version>${hutool.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool.v7</groupId>
+            <artifactId>hutool-extra</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
         <!-- 国密底层实现引擎 -->
         <dependency>
             <groupId>org.bouncycastle</groupId>

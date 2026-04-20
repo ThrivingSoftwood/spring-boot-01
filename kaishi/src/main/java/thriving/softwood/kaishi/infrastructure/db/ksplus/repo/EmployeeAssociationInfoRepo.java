@@ -23,7 +23,7 @@ import thriving.softwood.kaishi.infrastructure.db.ksplus.mapper.base.EmployeeAss
 public class EmployeeAssociationInfoRepo
     extends AncestorServiceImpl<EmployeeAssociationInfoMapper, EmployeeAssociationInfo> {
     public List<EmployeeAssociationInfo> listAll() {
-        return lambdaQuery().eq(EmployeeAssociationInfo::getDeleted, 0).list();
+        return lambdaQuery().list();
     }
 
     public Long countByEmployeeTypeId(String employeeTypeId) {
@@ -33,5 +33,13 @@ public class EmployeeAssociationInfoRepo
     public void logicDelete(String loginAccount) {
         lambdaUpdate().eq(EmployeeAssociationInfo::getLoginAccount, loginAccount)
             .set(EmployeeAssociationInfo::getDeleted, 1).update();
+    }
+
+    public String getTypeIdByLoginAccount(String loginAccount) {
+        EmployeeAssociationInfo assoc = lambdaQuery().eq(EmployeeAssociationInfo::getLoginAccount, loginAccount).one();
+        if (null == assoc) {
+            return null;
+        }
+        return assoc.getEmployeeTypeid();
     }
 }

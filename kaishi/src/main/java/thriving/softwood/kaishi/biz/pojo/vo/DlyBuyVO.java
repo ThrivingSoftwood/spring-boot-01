@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import thriving.softwood.common.core.annotation.FieldPerm;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyBuyDTO;
 
 @Data
@@ -98,6 +99,7 @@ public class DlyBuyVO implements Serializable {
     /**
      * 业务类型ID
      */
+    @FieldPerm("purchase:btype:view")
     private String btypeFullname;
 
     /**
@@ -123,6 +125,7 @@ public class DlyBuyVO implements Serializable {
     /**
      * 单价
      */
+    @FieldPerm("purchase:price:view")
     private Double price;
 
     /**

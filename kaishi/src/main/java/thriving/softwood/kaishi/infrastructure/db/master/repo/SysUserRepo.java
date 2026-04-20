@@ -29,15 +29,22 @@ public class SysUserRepo extends AncestorServiceImpl<SysUserMapper, SysUser> {
     }
 
     public Long countUsers(Long deptId) {
-        return lambdaQuery().eq(SysUser::getDeptId, deptId).eq(SysUser::getDeleted, 0).count();
+        return lambdaQuery().eq(SysUser::getDeptId, deptId).count();
     }
 
     public List<SysUser> listAll() {
-        return lambdaQuery().eq(SysUser::getDeleted, 0).ne(SysUser::getLoginAccount, "kaishi")
-            .orderByAsc(SysUser::getId).list();
+        return lambdaQuery().ne(SysUser::getLoginAccount, "kaishi").orderByAsc(SysUser::getId).list();
     }
 
     public void logicDelete(Long id) {
         lambdaUpdate().eq(SysUser::getId, id).set(SysUser::getDeleted, 1).update();
+    }
+
+    public List<SysUser> listByDeptIds(List<Long> affectedDeptIds) {
+        return lambdaQuery().in(SysUser::getDeptId, affectedDeptIds).list();
+    }
+
+    public void updatePermissionVersionsByUserIds(String newVersion, List<Long> userIds) {
+        lambdaUpdate().set(SysUser::getPermissionVersion, newVersion).in(SysUser::getId, userIds).update();
     }
 }

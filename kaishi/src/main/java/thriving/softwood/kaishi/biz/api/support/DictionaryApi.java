@@ -3,6 +3,7 @@ package thriving.softwood.kaishi.biz.api.support;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyndxDTO;
 
 public interface DictionaryApi {
+
     String getBtypeName(String typeId);
 
     String getEmployeeName(String typeId);
