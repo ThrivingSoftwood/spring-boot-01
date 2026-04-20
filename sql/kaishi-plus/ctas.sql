@@ -1,4 +1,6 @@
-create database ts_auth;
+-- create database [kaishi-plus];
+
+use [kaishi-plus];
 
 drop table if exists [kaishi-plus].[dbo].[purchase_manual_finish];
 
