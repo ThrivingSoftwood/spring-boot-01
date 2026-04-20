@@ -101,6 +101,16 @@
                 <artifactId>common-database</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- 1. 内部模块版本统管 end -->
 
             <!-- 2. 第三方工具库版本管理 begin -->

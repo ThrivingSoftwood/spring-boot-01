@@ -17,23 +17,23 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 @EnableCaching // 🚀 极其关键：开启 Spring 缓存注解支持
 public class KaishiCaffeineCacheConfig {
 
+    public static final String KAISHI_CACHE_MANAGER = "kaishiCacheManager";
+
     // 定义字典缓存的名称常量，防止手写拼写错误
-    public static final String BTYPE_CACHE = "btypeCache";
-    public static final String EMPLOYEE_CACHE = "employeeCache";
-    public static final String STOCK_CACHE = "stockCache";
-    public static final String PTYPE_CACHE = "ptypeCache";
-    public static final String VCHTYPE_CACHE = "vchtypeCache";
-    public static final String DEPARTMENT_CACHE = "departmentCache";
-    public static final String MTYPE_CACHE = "mtypeCache";
-    public static final String DLYNDX_CACHE = "dlyndxCache";
-    public static final String USEDTYPE_CACHE = "usedtypeCache";
-    public static final String RED_WORD_CACHE = "redWordCache";
-    public static final String PDETAIL_CACHE = "pdetailCache";
+    public static final String KAISHI_CACHE_KEY = "kaishi:";
+    public static final String BTYPE_CACHE = KAISHI_CACHE_KEY + "btypeCache";
+    public static final String EMPLOYEE_CACHE = KAISHI_CACHE_KEY + "employeeCache";
+    public static final String STOCK_CACHE = KAISHI_CACHE_KEY + "stockCache";
+    public static final String PTYPE_CACHE = KAISHI_CACHE_KEY + "ptypeCache";
+    public static final String VCHTYPE_CACHE = KAISHI_CACHE_KEY + "vchtypeCache";
+    public static final String DEPARTMENT_CACHE = KAISHI_CACHE_KEY + "departmentCache";
+    public static final String MTYPE_CACHE = KAISHI_CACHE_KEY + "mtypeCache";
+    public static final String DLYNDX_CACHE = KAISHI_CACHE_KEY + "dlyndxCache";
+    public static final String USEDTYPE_CACHE = KAISHI_CACHE_KEY + "usedtypeCache";
+    public static final String RED_WORD_CACHE = KAISHI_CACHE_KEY + "redWordCache";
+    public static final String PDETAIL_CACHE = KAISHI_CACHE_KEY + "pdetailCache";
 
-    // 🌟 新增：用户权限高速缓存 (用于无感刷新和拦截器极速校验)
-    public static final String USER_AUTH_INFO_CACHE = "userAuthInfoCache";
-
-    @Bean
+    @Bean(name = KAISHI_CACHE_MANAGER)
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
 
@@ -49,9 +49,6 @@ public class KaishiCaffeineCacheConfig {
         cacheManager.registerCustomCache(USEDTYPE_CACHE, caffeine(5, 5).build());
         cacheManager.registerCustomCache(RED_WORD_CACHE, caffeine(2, 2).build());
         cacheManager.registerCustomCache(PDETAIL_CACHE, caffeine(2, 2).build());
-
-        // 🌟 新增：权限缓存，初始 500，最大在线 5000，TTL 60 秒 (过期极快，保证权限变更的实时性)
-        cacheManager.registerCustomCache(USER_AUTH_INFO_CACHE, caffeine(500, 5000, 60, TimeUnit.SECONDS).build());
 
         return cacheManager;
     }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.4-SNAPSHOT</version>
+    </parent>
+    <artifactId>common-security</artifactId>
+    <name>common-security</name>
+    <groupId>thriving.softwood.common</groupId>
+    <description>安全</description>
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+
+    <dependencies>
+        <!--00.项目内依赖 begin-->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId> <!-- 注意这里是 common -->
+            <artifactId>common-web</artifactId>
+        </dependency>
+        <!-- ✨ 引入刚建好的数据库底座 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-database</artifactId>
+        </dependency>
+        <!--00.项目内依赖 end-->
+
+        <!--01.日志实现依赖 begin-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-layout-template-json</artifactId>
+        </dependency>
+        <!--01.日志实现依赖 end-->
+
+        <!-- ✨ 显式指定具体使用的数据库驱动 -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <!--02.开发辅助依赖 end-->
+    </dependencies>
+
+    <build>
+    </build>
+
+</project>

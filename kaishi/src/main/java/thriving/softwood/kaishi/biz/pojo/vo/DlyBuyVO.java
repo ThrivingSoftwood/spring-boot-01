@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import thriving.softwood.common.core.annotation.FieldPerm;
+import thriving.softwood.common.security.annotation.FieldPerm;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyBuyDTO;
 
 @Data

@@ -18,7 +18,7 @@
         <!--00.项目内依赖 begin-->
         <dependency>
             <groupId>thriving.softwood.common</groupId> <!-- 注意这里是 common -->
-            <artifactId>common-web</artifactId>
+            <artifactId>common-auth</artifactId>
         </dependency>
         <!-- ✨ 引入刚建好的数据库底座 -->
         <dependency>

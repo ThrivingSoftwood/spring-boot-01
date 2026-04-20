@@ -10,10 +10,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
 import cn.hutool.v7.core.text.StrUtil;
 import cn.hutool.v7.core.util.ObjUtil;
+import thriving.softwood.common.auth.pojo.record.FinishPurchaseReq;
 import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyBuyDTO;
 import thriving.softwood.kaishi.biz.pojo.dto.PurchaseOrderTraceDTO;
-import thriving.softwood.kaishi.biz.pojo.record.FinishPurchaseReq;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.DlyBuy;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.extend.PurchaseTraceOrder;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.mapper.base.DlyBuyMapper;

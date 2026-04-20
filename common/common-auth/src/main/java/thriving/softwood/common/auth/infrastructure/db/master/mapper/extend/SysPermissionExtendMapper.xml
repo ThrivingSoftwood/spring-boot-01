@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.common.auth.infrastructure.db.master.mapper.extend.SysPermissionExtendMapper">
+
+    <select id="listMenuPermissionsByAccount"
+            resultMap="thriving.softwood.common.auth.infrastructure.db.master.mapper.base.SysPermissionMapper.BaseResultMap">
+        select
+        <include
+                refid="thriving.softwood.common.auth.infrastructure.db.master.mapper.base.SysPermissionMapper.Base_Column_List"/>
+        from (SELECT sp.*
+        FROM sys_permission sp
+        WHERE sp.permission_type &lt; 3
+        and sp.deleted = 0
+        AND (
+        -- 逻辑 A：当前用户是否拥有超级管理员角色
+        EXISTS (
+        SELECT 1
+        FROM sys_user su
+        JOIN sys_user_role sur ON su.id = sur.user_id
+        JOIN sys_role sr ON sur.role_id = sr.id
+        WHERE su.login_account = #{loginAccount}
+        AND sr.role_code = 'SUPER_ADMIN'
+        )
+        OR
+        -- 逻辑 B：如果不是超管，检查当前权限是否在用户的角色关联中
+        EXISTS (
+        SELECT 1
+        FROM sys_user su
+        JOIN sys_user_role sur ON su.id = sur.user_id
+        JOIN sys_role sr ON sur.role_id = sr.id
+        JOIN sys_role_permission srp ON sur.role_id = srp.role_id
+        WHERE su.login_account = #{loginAccount}
+        and srp.deleted = 0
+        and sr.status = 1
+        AND srp.permission_id = sp.id
+        )
+        )
+        ) as sp
+        order by sp.parent_id, sp.sort_order
+    </select>
+
+</mapper>

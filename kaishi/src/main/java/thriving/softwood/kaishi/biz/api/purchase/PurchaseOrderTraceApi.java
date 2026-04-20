@@ -2,8 +2,8 @@ package thriving.softwood.kaishi.biz.api.purchase;
 
 import java.util.List;
 
+import thriving.softwood.common.auth.pojo.record.FinishPurchaseReq;
 import thriving.softwood.kaishi.biz.pojo.dto.PurchaseOrderTraceDTO;
-import thriving.softwood.kaishi.biz.pojo.record.FinishPurchaseReq;
 import thriving.softwood.kaishi.biz.pojo.vo.DlyBuyVO;
 import thriving.softwood.kaishi.biz.pojo.vo.PurchaseTraceVO;
 

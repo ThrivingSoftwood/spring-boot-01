@@ -2,23 +2,24 @@ package thriving.softwood.kaishi.biz.runner;
 
 import static thriving.softwood.common.core.constant.LetterConstant.UPPER_F;
 import static thriving.softwood.common.core.constant.LetterConstant.UPPER_T;
+import static thriving.softwood.kaishi.infrastructure.cache.local.KaishiCaffeineCacheConfig.KAISHI_CACHE_MANAGER;
 
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
-
+import thriving.softwood.common.security.util.SecurityUtil;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyndxDTO;
 import thriving.softwood.kaishi.infrastructure.cache.local.KaishiCaffeineCacheConfig;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.*;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.*;
-import thriving.softwood.kaishi.util.SecurityUtil;
 
 /**
  * 字典数据全量预热器
@@ -43,9 +44,9 @@ public class DictionaryPreloadRunner implements ApplicationRunner {
     private final DlyndxRepo dlyndxRepo;
 
     @Autowired
-    public DictionaryPreloadRunner(CacheManager cacheManager, DepartmentRepo departmentRepo, BtypeRepo btypeRepo,
-        EmployeeRepo employeeRepo, MtypeRepo mtypeRepo, PtypeRepo ptypeRepo, StockRepo stockRepo,
-        GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo) {
+    public DictionaryPreloadRunner(@Qualifier(KAISHI_CACHE_MANAGER) CacheManager cacheManager,
+        DepartmentRepo departmentRepo, BtypeRepo btypeRepo, EmployeeRepo employeeRepo, MtypeRepo mtypeRepo,
+        PtypeRepo ptypeRepo, StockRepo stockRepo, GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo) {
         this.cacheManager = cacheManager;
         this.departmentRepo = departmentRepo;
         this.btypeRepo = btypeRepo;

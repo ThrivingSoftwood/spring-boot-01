@@ -1,0 +1,6 @@
+package thriving.softwood.common.auth.pojo.record;
+
+import java.util.Set;
+
+public record LoginResp(String token, String username, Set<String> permissions, Set<String> roleCodes) {
+}

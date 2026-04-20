@@ -4,6 +4,7 @@ import static thriving.softwood.common.core.constant.LetterConstant.UPPER_T;
 import static thriving.softwood.kaishi.infrastructure.cache.local.KaishiCaffeineCacheConfig.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,8 +33,8 @@ public class DictionarySvc implements DictionaryApi {
     private Cache redWordCache;
 
     @Autowired
-    public DictionarySvc(CacheManager cachemanager, DepartmentRepo departmentRepo, BtypeRepo btypeRepo,
-        EmployeeRepo employeeRepo, MtypeRepo mtypeRepo, PtypeRepo ptypeRepo, StockRepo stockRepo,
+    public DictionarySvc(@Qualifier(KAISHI_CACHE_MANAGER) CacheManager cachemanager, DepartmentRepo departmentRepo,
+        BtypeRepo btypeRepo, EmployeeRepo employeeRepo, MtypeRepo mtypeRepo, PtypeRepo ptypeRepo, StockRepo stockRepo,
         GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo) {
         cacheManager = cachemanager;
         this.departmentRepo = departmentRepo;
