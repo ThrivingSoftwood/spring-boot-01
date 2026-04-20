@@ -8,12 +8,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-
 import cn.hutool.v7.core.date.DateUtil;
 import thriving.softwood.common.core.exception.DetailException;
 import thriving.softwood.kaishi.biz.pojo.record.RoleReq;
-import thriving.softwood.kaishi.infrastructure.db.master.entity.base.*;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysRole;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysRoleDataRule;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysRolePermission;
+import thriving.softwood.kaishi.infrastructure.db.master.entity.base.SysUserRole;
 import thriving.softwood.kaishi.infrastructure.db.master.repo.*;
 
 @Service
@@ -171,9 +172,6 @@ public class RoleSvc implements RoleApi {
         }
 
         String newVersion = DateUtil.format(new java.util.Date(), "yyyyMMddHHmmss");
-        SysUser updater = new SysUser();
-        updater.setPermissionVersion(newVersion);
-
-        userRepo.update(updater, Wrappers.<SysUser>lambdaUpdate().in(SysUser::getId, userIds));
+        userRepo.updatePermissionVersionsByUserIds(newVersion, userIds.stream().toList());
     }
 }
