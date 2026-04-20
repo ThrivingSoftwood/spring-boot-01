@@ -5,43 +5,30 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
-    <artifactId>common-security</artifactId>
-    <name>common-security</name>
+    <artifactId>common-auth</artifactId>
     <groupId>thriving.softwood.common</groupId>
-    <description>安全</description>
+    <name>common-auth</name>
+    <description>身份管理中台：处理用户、角色、部门、权限、数据规则的 CRUD 及提供鉴权数据源</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
 
     <dependencies>
         <!--00.项目内依赖 begin-->
-        <dependency>
-            <groupId>thriving.softwood.common</groupId> <!-- 注意这里是 common -->
-            <artifactId>common-web</artifactId>
-        </dependency>
         <!-- ✨ 引入刚建好的数据库底座 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>thriving.softwood.common</groupId>
             <artifactId>common-database</artifactId>
         </dependency>
         <!--00.项目内依赖 end-->
-
-        <!--01.日志实现依赖 begin-->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-layout-template-json</artifactId>
-        </dependency>
-        <!--01.日志实现依赖 end-->
-
-        <!-- ✨ 显式指定具体使用的数据库驱动 -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <!--02.开发辅助依赖 end-->
     </dependencies>
+
 
     <build>
     </build>

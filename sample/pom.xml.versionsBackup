@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>spring-boot-01</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
-    <artifactId>kaishi</artifactId>
-    <name>kaishi</name>
-    <description>凯诗外挂系统</description>
+    <artifactId>sample</artifactId>
+    <name>sample</name>
+    <description>应用示例</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
@@ -18,7 +18,7 @@
         <!--00.项目内依赖 begin-->
         <dependency>
             <groupId>thriving.softwood.common</groupId> <!-- 注意这里是 common -->
-            <artifactId>common-auth</artifactId>
+            <artifactId>common-web</artifactId>
         </dependency>
         <!-- ✨ 引入刚建好的数据库底座 -->
         <dependency>
@@ -48,35 +48,6 @@
         <!--02.开发辅助依赖 end-->
     </dependencies>
 
-
-    <profiles>
-
-        <profile>
-            <id>prod-build</id>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <!-- 🚀 核心动作：打包时剔除所有的 yml 配置文件 -->
-                        <excludes>
-                            <!-- 剔除 config 文件夹下所有的 yml -->
-                            <exclude>config/**/*.yml</exclude>
-                            <!-- 如果根目录下还有，也可以一起剔除 -->
-                            <exclude>application*.yml</exclude>
-                        </excludes>
-                    </resource>
-                    <resource>
-                        <directory>src/main/java</directory>
-                        <includes>
-                            <include>thriving/softwood/**/mapper/**/*.xml</include>
-                        </includes>
-                        <filtering>false</filtering>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-    </profiles>
-
     <build>
         <plugins>
             <plugin>
@@ -84,7 +55,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>${project.artifactId}-plus</finalName>
+        <finalName>${project.artifactId}-sample</finalName>
     </build>
 
 </project>

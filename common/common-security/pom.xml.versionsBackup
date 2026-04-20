@@ -5,7 +5,7 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
     <artifactId>common-security</artifactId>
     <name>common-security</name>

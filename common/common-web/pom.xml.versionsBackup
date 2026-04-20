@@ -5,12 +5,12 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
     <groupId>thriving.softwood.common</groupId>
-    <artifactId>common-framework</artifactId>
-    <name>common-framework</name>
-    <description>框架整合模块</description>
+    <artifactId>common-web</artifactId>
+    <name>common-web</name>
+    <description>Web增强模块</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
@@ -19,20 +19,14 @@
         <!--01.内部依赖 begin-->
         <dependency>
             <groupId>thriving.softwood.common</groupId>
-            <artifactId>common-observability</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>error_prone_annotations</artifactId>
-                    <groupId>com.google.errorprone</groupId>
-                </exclusion>
-            </exclusions>
+            <artifactId>common-framework</artifactId>
         </dependency>
         <!--01.内部依赖 end-->
 
-        <!--02.Spring 核心依赖 begin-->
+        <!--02.Web 相关依赖 begin-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -42,24 +36,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-            <version>${springboot.aop.version}</version>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-        <!--02.Spring 核心依赖 end-->
-        <!--03.内存缓存依赖-->
-        <!-- Spring Cache 抽象层 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
+            <artifactId>spring-boot-restclient</artifactId>
         </dependency>
-        <!-- Caffeine 底层实现 -->
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>
+        <!--02.Web 相关依赖 end-->
     </dependencies>
 </project>
