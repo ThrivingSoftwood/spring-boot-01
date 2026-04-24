@@ -102,7 +102,7 @@ public class UserSvc implements UserApi {
         OrganizationNodeVO others = new OrganizationNodeVO();
         others.setId(DEPT_PREFIX + MAX_DEPT_ID);
         // 挂靠在根部门下
-        others.setParentId("D_1");
+        others.setParentId(allNodes.getFirst().getId());
         others.setName("其他部门");
         others.setNodeType(1);
         others.setStatus((byte)1);
