@@ -101,8 +101,8 @@ public class UserSvc implements UserApi {
         // 对于 Department 列未 null 或空串或空格的,增加其他部门
         OrganizationNodeVO others = new OrganizationNodeVO();
         others.setId(DEPT_PREFIX + MAX_DEPT_ID);
-        // 挂靠在根部门下
-        others.setParentId("D_1");
+        // 挂靠在根部门下，先写死为获取第一个元素的 id
+        others.setParentId(allNodes.getFirst().getId());
         others.setName("其他部门");
         others.setNodeType(1);
         others.setStatus((byte)1);
@@ -195,7 +195,6 @@ public class UserSvc implements UserApi {
     private List<OrganizationNodeVO> buildTree(List<OrganizationNodeVO> nodes, String rootId) {
         Map<String, List<OrganizationNodeVO>> childrenMap =
             nodes.stream().collect(Collectors.groupingBy(OrganizationNodeVO::getParentId));
-
         nodes.forEach(node -> {
             List<OrganizationNodeVO> children = childrenMap.get(node.getId());
             if (children != null) {
