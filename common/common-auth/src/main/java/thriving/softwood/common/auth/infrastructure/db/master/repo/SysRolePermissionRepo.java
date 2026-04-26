@@ -16,7 +16,7 @@ import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
  * 服务实现类
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-15
  */
 @DS("master")

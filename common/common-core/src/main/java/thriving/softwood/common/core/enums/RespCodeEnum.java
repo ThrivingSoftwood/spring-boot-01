@@ -74,7 +74,7 @@ public enum RespCodeEnum {
     /**
      * 构造器
      * 
-     * @author Eastean
+     * @author ThrivingSoftwood
      * @since version 2023-07-11
      * @param statusCode 状态码
      * @param enDetail 英文描述

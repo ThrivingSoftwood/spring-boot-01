@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.5-SNAPSHOT</version>
+    </parent>
+    <groupId>thriving.softwood.common</groupId>
+    <artifactId>common-message</artifactId>
+    <name>common-message</name>
+    <description>消息中心模块</description>
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+    <dependencies>
+        <!-- 获取 UserContext 和 JWT 校验能力 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-security</artifactId>
+        </dependency>
+        <!-- 提供 MyBatis-Plus 基础 Repo 能力 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-database</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

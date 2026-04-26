@@ -13,7 +13,7 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.Departm
  * 
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-06
  */
 @Data

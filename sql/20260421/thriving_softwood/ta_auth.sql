@@ -151,22 +151,25 @@ set identity_insert ts_auth.dbo.sys_permission on;
 INSERT INTO ts_auth.dbo.sys_permission (id, parent_id, permission_name, permission_code, permission_type, path,
                                         component, icon, sort_order, ext_info, deleted)
 VALUES (1, 0, N'系统管理', null, 1, N'/system', null, N'Setting', 1, null, 0),
-       (2, 1, N'部门管理', N'system:dept:menu', 2, N'dept', N'system/dept/IndexView', N'OfficeBuilding', 1, null, 0),
-       (3, 1, N'用户管理', N'system:user:menu', 2, N'user', N'system/user/IndexView', N'User', 2, null, 0),
-       (4, 1, N'角色与授权', N'system:role:menu', 2, N'role', N'system/role/IndexView', N'Key', 3, null, 0),
-       (5, 1, N'菜单与资源', N'system:permission:menu', 2, N'permission', N'system/permission/IndexView', N'Menu',
-        4, null, 0),
-       (6, 1, N'数据规则', N'system:datarule:menu', 2, N'data-rule', N'system/dataRule/IndexView', N'Filter', 5,
+       (2, 1, N'部门管理', N'system:dept:menu', 2, N'dept', N'modules/system/view/dept/IndexView', N'OfficeBuilding', 1,
         null, 0),
+       (3, 1, N'用户管理', N'system:user:menu', 2, N'user', N'modules/system/view/user/IndexView', N'User', 2, null, 0),
+       (4, 1, N'角色与授权', N'system:role:menu', 2, N'role', N'modules/system/view/role/IndexView', N'Key', 3, null,
+        0),
+       (5, 1, N'菜单与资源', N'system:permission:menu', 2, N'permission', N'modules/system/view/permission/IndexView',
+        N'Menu', 4, null, 0),
+       (6, 1, N'数据规则', N'system:datarule:menu', 2, N'data-rule', N'modules/system/view/dataRule/IndexView',
+        N'Filter', 5, null, 0),
        (7, 0, N'采购管理', null, 1, N'/purchase', null, N'ShoppingCart', 2, null, 0),
        (8, 7, N'采购单追踪', null, 1, N'trace', N'', N'List', 1, null, 0),
-       (9, 8, N'已完成采购单', N'purchase:trace:finished', 2, N'finished', N'purchase/trace/IndexView', N'', 1,
-        N'{ "queryPurchased": true }', 0),
-       (10, 8, N'其他采购单', N'purchase:trace:others', 2, N'others', N'purchase/trace/IndexView', N'', 2,
+       (9, 8, N'已完成采购单', N'purchase:trace:finished', 2, N'finished', N'modules/purchase/view/trace/IndexView',
+        N'', 1, N'{ "queryPurchased": true }', 0),
+       (10, 8, N'其他采购单', N'purchase:trace:others', 2, N'others', N'modules/purchase/view/trace/IndexView', N'', 2,
         N'{ "queryPurchased": false }', 0),
        (11, 8, N'置为完成(按钮)', N'purchase:trace:finish', 3, N'', N'', N'', 3, null, 0),
        (12, 8, N'查看采购单价(字段)', N'purchase:price:view', 5, N'', N'', N'', 4, null, 0),
        (13, 8, N'查看供应商字段', N'purchase:btype:view', 5, N'', N'', N'', 5, N'', 0);
+
 set identity_insert ts_auth.dbo.sys_permission off;
 
 /* =======================================================

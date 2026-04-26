@@ -13,7 +13,7 @@ import thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysDep
  * 
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-15
  */
 @Data

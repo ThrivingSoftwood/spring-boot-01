@@ -13,7 +13,7 @@ import thriving.softwood.kaishi.infrastructure.db.ksplus.mapper.base.PurchaseMan
  * 服务实现类
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-08
  */
 @DS("ksplus")

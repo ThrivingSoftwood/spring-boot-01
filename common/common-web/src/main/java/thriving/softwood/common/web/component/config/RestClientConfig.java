@@ -13,12 +13,12 @@ import org.springframework.web.client.RestTemplate;
 import io.micrometer.observation.ObservationRegistry;
 
 /**
- * 🚀 Spring Boot 4.0.5 客户端观测性自动配置
+ * 🚀 Spring Boot 4.0.6 客户端观测性自动配置
  * <p>
  * 解决了 RestClient.Builder 与 ObservationRegistry 的时序装配问题。 在 Spring Boot 4.x 中，Observation 是跨越 Tracing 和 Metrics 的核心抽象。
  * </p>
  *
- * @author CodeOmni (Technical Virtuoso)
+ * @author ThrivingSoftwood
  * @since 2026-01-29
  */
 @AutoConfiguration

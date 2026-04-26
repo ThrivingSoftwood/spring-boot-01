@@ -8,7 +8,7 @@ import java.util.Scanner;
  * Optimization Strategy: Replaced the naive O(N^5) summation loop with 2D Prefix Sum algorithm. - Preprocessing time:
  * O(N^2) - Query time: O(1) per submatrix - Total Complexity: O(N^3)
  *
- * @author CodeOmni
+ * @author ThrivingSoftwood
  */
 public class BalancedMatrices {
 

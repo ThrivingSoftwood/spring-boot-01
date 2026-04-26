@@ -24,7 +24,7 @@ import thriving.softwood.common.security.context.UserContext;
  * 作用：在 Spring MVC 将 Controller 返回的 Java 对象交给 HttpMessageConverter (如 Jackson) 序列化之前， 扫描对象上的 @FieldPerm
  * 注解，若当前用户无此权限，则利用反射将该字段物理置为 null，彻底防止抓包泄露。
  *
- * @author CodeOmni
+ * @author ThrivingSoftwood
  */
 @RestControllerAdvice
 public class FieldPermResponseBodyAdvice implements ResponseBodyAdvice<Object> {

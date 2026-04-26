@@ -12,6 +12,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+/**
+ * 不加改动时的鉴权配置
+ */
 @AutoConfiguration
 @ComponentScan("thriving.softwood.common.auth")
 @MapperScan("thriving.softwood.common.auth.infrastructure.db.master.mapper")

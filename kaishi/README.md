@@ -17,7 +17,7 @@
 
 本系统后端是一个追求性能、可观测性与代码规范的**微服务化单体架构 (Modulith)**。
 
-* **核心底座:** **JDK 25** + **Spring Boot 4.0.5**。
+* **核心底座:** **JDK 25** + **Spring Boot 4.0.6**。
 * **多模块架构 (Multi-Module):**
 * `common-core`: 纯净工具类、常量、全局异常定义、Result 封装、Sm4/JWT 工具。
 * `common-database`: MyBatis-Plus、多数据源动态切换配置、公共字段自动填充 (`MybatisPlusMetaObjectHandler`)。

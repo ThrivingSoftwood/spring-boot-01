@@ -17,7 +17,7 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.extend.Purch
  * 采购订单追踪 VO（前端展示对象） 核心逻辑：基于采购明细(a)与库存实绩(b)进行对撞显示
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-07
  */
 @Data

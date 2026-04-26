@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * 采购订单追踪 VO（前端交互对象） 对应 DlyBuy + Dlystock 联表查询 + 字典转译 结果集
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-06
  */
 @Data

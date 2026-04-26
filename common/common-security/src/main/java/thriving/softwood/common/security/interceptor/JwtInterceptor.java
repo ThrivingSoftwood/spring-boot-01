@@ -9,27 +9,34 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import thriving.softwood.common.core.exception.TokenException;
 import thriving.softwood.common.core.util.JwtUtil;
-import thriving.softwood.common.security.api.provider.UserAuthProviderApi;
 import thriving.softwood.common.security.context.UserContext;
 import thriving.softwood.common.security.pojo.dto.UserAuthInfoDTO;
+import thriving.softwood.common.security.spi.UserAuthProvider;
 
 public class JwtInterceptor implements HandlerInterceptor {
 
-    private final UserAuthProviderApi userAuthProviderApi;
+    private final UserAuthProvider userAuthProvider;
 
     // 通过 WebMvcConfig 注册时，将 AuthCacheSvc 注入进来
-    public JwtInterceptor(UserAuthProviderApi userAuthProviderApi) {
-        this.userAuthProviderApi = userAuthProviderApi;
+    public JwtInterceptor(UserAuthProvider userAuthProvider) {
+        this.userAuthProvider = userAuthProvider;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        String token;
         String authHeader = request.getHeader("Authorization");
-        if (StrUtil.isBlank(authHeader) || !authHeader.startsWith("Bearer ")) {
+        // 🌟 兼容逻辑：优先从 Header 取，如果没有，则尝试从 URL 参数(query) 取 (专为 SSE 打造)
+        if (StrUtil.isNotBlank(authHeader) && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        } else {
+            token = request.getParameter("token");
+        }
+
+        if (StrUtil.isBlank(token)) {
             throw new TokenException("未提供授权 Token 或格式错误");
         }
 
-        String token = authHeader.substring(7);
         JWTPayload payload = JwtUtil.verifyAndParse(token);
 
         Long userId = ConvertUtil.toLong(payload.getClaim("userId"));
@@ -40,7 +47,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             payload.getClaim("permVersion") != null ? payload.getClaim("permVersion").toString() : "";
 
         // 🌟 2. 从 Caffeine 缓存获取用户当前的实时权限信息 (命中缓存时耗时不到 1 微秒)
-        UserAuthInfoDTO authInfo = userAuthProviderApi.getAuthInfo(userId);
+        UserAuthInfoDTO authInfo = userAuthProvider.getAuthInfo(userId);
 
         if (authInfo == null || authInfo.getStatus() == 0) {
             throw new TokenException("账户不存在或已被禁用，请联系管理员");

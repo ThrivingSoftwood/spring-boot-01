@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
  * 
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-16
  */
 @Data
@@ -31,7 +31,7 @@ public class DepartmentAssociationInfo implements Serializable {
     public DepartmentAssociationInfo(Long authDepartmentId, String oriDepartmentTypeid) {
         this.authDepartmentId = authDepartmentId;
         this.oriDepartmentTypeid = oriDepartmentTypeid;
-        this.deleted = 0;
+        deleted = 0;
     }
 
     @TableId(value = "id", type = IdType.AUTO)

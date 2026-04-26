@@ -26,7 +26,7 @@ import thriving.softwood.common.core.enums.RespCodeEnum;
 /**
  * Http 请求工具类 (基于 Hutool V7 门面模式重构版)
  *
- * @author CodeOmni
+ * @author ThrivingSoftwood
  */
 public class ReqUtil {
 

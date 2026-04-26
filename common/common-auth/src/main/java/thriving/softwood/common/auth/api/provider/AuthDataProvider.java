@@ -19,15 +19,15 @@ import cn.hutool.v7.core.util.ObjUtil;
 import thriving.softwood.common.auth.infrastructure.db.master.entity.base.*;
 import thriving.softwood.common.auth.infrastructure.db.master.repo.*;
 import thriving.softwood.common.auth.spi.AuthBusinessProvider;
-import thriving.softwood.common.security.api.provider.UserAuthProviderApi;
 import thriving.softwood.common.security.pojo.dto.DataRuleDTO;
 import thriving.softwood.common.security.pojo.dto.UserAuthInfoDTO;
+import thriving.softwood.common.security.spi.UserAuthProvider;
 
 /**
  * 🚀 核心大脑：实现 common-security 的数据提供者接口
  */
 @Service
-public class AuthDataProvider implements UserAuthProviderApi {
+public class AuthDataProvider implements UserAuthProvider {
 
     private final CacheManager cacheManager;
     private final SysUserRepo userRepo;

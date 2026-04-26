@@ -9,7 +9,7 @@ import thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysPer
  * Mapper 接口
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-17
  */
 @DS("master")

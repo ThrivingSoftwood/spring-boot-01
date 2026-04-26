@@ -11,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--依赖版本管理-->
-        <springboot.version>4.0.5</springboot.version>
+        <springboot.version>4.0.6</springboot.version>
         <springboot.aop.version>4.0.0-M2</springboot.aop.version>
         <jakarta.servlet-api.version>6.2.0-M1</jakarta.servlet-api.version>
         <jakarta.servlet.jsp-api.version>4.1.0-M1</jakarta.servlet.jsp-api.version>
@@ -37,7 +37,7 @@
         <guava.version>33.5.0-jre</guava.version>
         <slf4j.version>2.0.17</slf4j.version>
         <otel.log4j.appender.version>2.24.0-alpha</otel.log4j.appender.version>
-        <bouncycastle.version>1.83</bouncycastle.version>
+        <bouncycastle.version>1.84</bouncycastle.version>
         <jasypt.version>4.0.4</jasypt.version>
         <velocity.version>2.4.1</velocity.version>
     </properties>
@@ -46,7 +46,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.5</version>
+        <version>4.0.6</version>
     </parent>
     <!--Step 01 : 添加 Springboot 父项目 end-->
 
@@ -109,6 +109,11 @@
             <dependency>
                 <groupId>thriving.softwood.common</groupId>
                 <artifactId>common-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-message</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- 1. 内部模块版本统管 end -->

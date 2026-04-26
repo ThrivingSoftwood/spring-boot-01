@@ -5,8 +5,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import jakarta.annotation.Resource;
-import thriving.softwood.common.security.api.provider.UserAuthProviderApi;
 import thriving.softwood.common.security.interceptor.JwtInterceptor;
+import thriving.softwood.common.security.spi.UserAuthProvider;
 
 /**
  * Spring MVC 扩展配置
@@ -18,12 +18,12 @@ import thriving.softwood.common.security.interceptor.JwtInterceptor;
 public class SecurityWebConfig implements WebMvcConfigurer {
 
     @Resource
-    private UserAuthProviderApi userAuthProviderApi;
+    private UserAuthProvider userAuthProvider;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 实例化并注册我们的 JWT 拦截器
-        registry.addInterceptor(new JwtInterceptor(userAuthProviderApi))
+        registry.addInterceptor(new JwtInterceptor(userAuthProvider))
             // 1. 指定需要拦截的 URL 模式 (拦截所有 /api/ 下的请求)
             .addPathPatterns("/**")
 

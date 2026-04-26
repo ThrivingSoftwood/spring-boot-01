@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  * 
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-06
  */
 @Data

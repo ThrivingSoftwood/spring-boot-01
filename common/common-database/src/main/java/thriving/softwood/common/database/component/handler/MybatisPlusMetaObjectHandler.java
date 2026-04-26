@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 /**
  * 🚀 MyBatis-Plus 自动填充处理器 作用：在执行 Insert 或 Update 时，自动为实体类的公共字段（如创建时间、更新时间）赋值。
  *
- * @author CodeOmni
+ * @author ThrivingSoftwood
  */
 @Component
 public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {

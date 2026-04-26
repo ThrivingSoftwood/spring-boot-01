@@ -11,20 +11,20 @@ import thriving.softwood.common.auth.pojo.record.LoginResp;
 import thriving.softwood.common.auth.pojo.record.PasswordReq;
 import thriving.softwood.common.core.util.JwtUtil;
 import thriving.softwood.common.core.util.Sm4Util;
-import thriving.softwood.common.security.api.provider.UserAuthProviderApi;
 import thriving.softwood.common.security.context.UserContext;
 import thriving.softwood.common.security.pojo.dto.UserAuthInfoDTO;
+import thriving.softwood.common.security.spi.UserAuthProvider;
 
 @Service
 public class AuthSvc implements AuthApi {
 
     private final SysUserRepo sysUserRepo;
     // 🌟 注入权限查询服务
-    private final UserAuthProviderApi userAuthProviderApi;
+    private final UserAuthProvider userAuthProvider;
 
-    public AuthSvc(SysUserRepo sysUserRepo, UserAuthProviderApi userAuthProviderApi) {
+    public AuthSvc(SysUserRepo sysUserRepo, UserAuthProvider userAuthProvider) {
         this.sysUserRepo = sysUserRepo;
-        this.userAuthProviderApi = userAuthProviderApi;
+        this.userAuthProvider = userAuthProvider;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AuthSvc implements AuthApi {
 
         // 🌟 5. 核心修复：引入部门活跃度检查（拒敌于国门之外）
         // 我们直接调用之前写好的权限大脑，它内部已经包含了“上帝模式判定”和“部门状态判定”
-        UserAuthInfoDTO authInfo = userAuthProviderApi.getAuthInfo(user.getId());
+        UserAuthInfoDTO authInfo = userAuthProvider.getAuthInfo(user.getId());
 
         if (!authInfo.getGodMode() && !authInfo.getDepartmentActive()) {
             throw new RuntimeException("登录失败：您所属的部门目前处于禁用状态");
@@ -118,7 +118,7 @@ public class AuthSvc implements AuthApi {
         Long userId = UserContext.userId();
         SysUser user = sysUserRepo.getById(userId);
 
-        UserAuthInfoDTO authInfo = userAuthProviderApi.getAuthInfo(userId);
+        UserAuthInfoDTO authInfo = userAuthProvider.getAuthInfo(userId);
 
         // 2. 签发全新 Token
         String newToken = JwtUtil.generateToken(userId, user.getLoginAccount(), user.getPermissionVersion());

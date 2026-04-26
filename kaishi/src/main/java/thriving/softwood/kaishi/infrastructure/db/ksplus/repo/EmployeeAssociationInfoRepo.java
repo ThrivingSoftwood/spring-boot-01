@@ -15,7 +15,7 @@ import thriving.softwood.kaishi.infrastructure.db.ksplus.mapper.base.EmployeeAss
  * 服务实现类
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-16
  */
 @DS("ksplus")

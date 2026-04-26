@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 统一服务日志切面 拦截所有以 Api 和 Svc 结尾的 Spring Bean
  * 
- * @author CodeOmni
+ * @author ThrivingSoftwood
  */
 @Aspect
 @Component

@@ -9,7 +9,7 @@ import thriving.softwood.kaishi.infrastructure.db.ksplus.entity.base.PurchaseMan
  * Mapper 接口
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-08
  */
 @DS("ksplus")

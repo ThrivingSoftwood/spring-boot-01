@@ -9,7 +9,7 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.base.Btype;
  * Mapper 接口
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-06
  */
 @DS("kaishi-2026")

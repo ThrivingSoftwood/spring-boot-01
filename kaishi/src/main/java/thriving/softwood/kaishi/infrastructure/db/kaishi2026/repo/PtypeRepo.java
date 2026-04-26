@@ -17,7 +17,7 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.mapper.base.PtypeMa
  * 服务实现类
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-06
  */
 @DS("kaishi-2026")

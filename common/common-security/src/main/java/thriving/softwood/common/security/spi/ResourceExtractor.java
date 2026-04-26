@@ -1,10 +1,10 @@
 // File: provider/ResourceExtractor.java
-package thriving.softwood.common.security.api.provider;
+package thriving.softwood.common.security.spi;
 
 /**
  * 资源名称提取器接口 (SPI) 由各个业务模块（如 kaishi）实现，告诉安全底座当前执行的 Mapper 属于哪个业务资源
  */
-public interface ResourceExtractorApi {
+public interface ResourceExtractor {
     /**
      * 解析 MappedStatementId (如 com.xxx.DlyBuyExtendMapper.selectList)
      * 

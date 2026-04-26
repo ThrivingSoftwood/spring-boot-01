@@ -52,18 +52,17 @@ public class SampleMybatisPlusCodeGenerator {
         // generateCode("mac-novel", MAC_NOVEL_TABLE_NAMES);
         // generateCode("material", MATERIAL_TABLE_NAMES);
         // generateCode("mac-embedding", MAC_EMBEDDING_TABLE_NAMES);
-        generateCode("kaishi-2026", KAISHI_2026_TABLE_NAMES);
     }
 
     private static void generateCode(String dsName, String[] tables) {
         String dsPkgName = dsName.replace("-", "");
 
         FastAutoGenerator.create(DS_BUILDER_MAP.get(dsName)).globalConfig(builder -> {
-            builder.author("meta-thriving").disableOpenDir().outputDir(System.getProperty("user.dir") + JAVA_DIR);
+            builder.author("ThrivingSoftwood").disableOpenDir().outputDir(System.getProperty("user.dir") + JAVA_DIR);
         }).packageConfig(builder -> {
-            builder.parent(SAMPLE_BASE_PACKAGE_NAME).moduleName(dsPkgName).entity(ENTITY_PKG_NAME)
-                .mapper(MAPPER_PKG_NAME).controller(CONTROLLER_PKG_NAME).serviceImpl(REPO_PKG_NAME)
-                .pathInfo(Collections.singletonMap(OutputFile.xml, getXmlPath(SAMPLE_BASE_PACKAGE_NAME, dsPkgName)));
+            builder.parent(BASE_PACKAGE_NAME).moduleName(dsPkgName).entity(ENTITY_PKG_NAME).mapper(MAPPER_PKG_NAME)
+                .controller(CONTROLLER_PKG_NAME).serviceImpl(REPO_PKG_NAME)
+                .pathInfo(Collections.singletonMap(OutputFile.xml, getXmlPath(BASE_PACKAGE_NAME, dsPkgName)));
         }).strategyConfig(builder -> {
             builder.addInclude(Arrays.asList(tables)).addTablePrefix(TABLE_PREFIXES).controllerBuilder().disable()
                 .entityBuilder().formatFileName("%s").enableSerialAnnotation().naming(NamingStrategy.underline_to_camel)
@@ -78,7 +77,7 @@ public class SampleMybatisPlusCodeGenerator {
             Map<String, Object> customMap = new HashMap<>();
             // 此处为使用 @DS 注解切换数据源的配置, dsName 要按照配置文件内容来
             customMap.put("dsName", dsName);
-            customMap.put("svcBeanName", SAMPLE_BASE_PACKAGE_NAME);
+            customMap.put("svcBeanName", BASE_PACKAGE_NAME);
             builder.customMap(customMap);
         }).templateEngine(new FreemarkerTemplateEngine()).execute();
 

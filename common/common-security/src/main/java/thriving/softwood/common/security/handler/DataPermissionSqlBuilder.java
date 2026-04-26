@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component;
 import cn.hutool.v7.core.text.StrUtil;
 import cn.hutool.v7.json.JSONUtil;
 import thriving.softwood.common.core.pojo.dto.ConditionItemDTO;
-import thriving.softwood.common.security.api.provider.ResourceExtractorApi;
 import thriving.softwood.common.security.context.UserContext;
 import thriving.softwood.common.security.pojo.dto.DataRuleDTO;
+import thriving.softwood.common.security.spi.ResourceExtractor;
 
 @Component
 public class DataPermissionSqlBuilder {
 
     // 🌟 注入所有实现了 ResourceExtractor 接口的 Bean
-    private final List<ResourceExtractorApi> extractors;
+    private final List<ResourceExtractor> extractors;
 
-    public DataPermissionSqlBuilder(ObjectProvider<ResourceExtractorApi> extractorProvider) {
+    public DataPermissionSqlBuilder(ObjectProvider<ResourceExtractor> extractorProvider) {
         extractors = extractorProvider.orderedStream().toList();
     }
 
@@ -32,7 +32,7 @@ public class DataPermissionSqlBuilder {
 
         // 🌟 遍历所有的 Extractor 寻找匹配的资源名
         String resourceName = null;
-        for (ResourceExtractorApi extractor : extractors) {
+        for (ResourceExtractor extractor : extractors) {
             resourceName = extractor.extract(mappedStatementId);
             if (StrUtil.isNotBlank(resourceName)) {
                 break;

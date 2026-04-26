@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
  * 采购明细表(DlyBuy)实体类
  * </p>
  *
- * @author meta-thriving
+ * @author ThrivingSoftwood
  * @since 2026-04-06
  */
 @Data

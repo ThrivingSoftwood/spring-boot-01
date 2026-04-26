@@ -26,7 +26,7 @@ import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.*;
  * 
  * 在 Spring Boot 启动完成后自动执行，将 DB 数据全量灌入 Caffeine 内存。
  * 
- * @author CodeOmni
+ * @author ThrivingSoftwood
  */
 @Component
 public class DictionaryPreloadRunner implements ApplicationRunner {
