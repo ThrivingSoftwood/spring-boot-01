@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.kaishi.infrastructure.db.edongfang.mapper.base.EdongfangProductPricesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangProductPrices">
+        <id column="pk" property="pk"/>
+        <result column="sku" property="sku"/>
+        <result column="market_price" property="marketPrice"/>
+        <result column="mall_price" property="mallPrice"/>
+        <result column="price" property="price"/>
+        <result column="tax_rate" property="taxRate"/>
+        <result column="naked_price" property="nakedPrice"/>
+        <result column="tax_amount" property="taxAmount"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="cu" property="cu"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pk, sku, market_price, mall_price, price, tax_rate, naked_price, tax_amount, create_by, create_time, update_by,
+        update_time, deleted, tenant_id, cu
+    </sql>
+
+</mapper>

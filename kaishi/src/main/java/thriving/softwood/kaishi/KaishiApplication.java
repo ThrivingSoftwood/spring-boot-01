@@ -3,9 +3,11 @@ package thriving.softwood.kaishi;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {"thriving.softwood", "cn.hutool.v7.extra.spring"})
 @MapperScan("thriving.softwood.**.infrastructure.db.**.mapper")
+@EnableScheduling
 public class KaishiApplication {
 
     static void main(String[] args) {

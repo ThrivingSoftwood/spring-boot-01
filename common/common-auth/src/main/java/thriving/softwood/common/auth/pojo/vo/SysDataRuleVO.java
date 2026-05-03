@@ -21,6 +21,12 @@ public class SysDataRuleVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+    private Long id;
+    private String targetResource;
+    private String ruleName;
+    private Byte scopeType;
+    private String customSqlJson;
+    private String extInfo;
 
     public SysDataRuleVO(SysDataRule sysDataRule) {
         id = sysDataRule.getId();
@@ -30,11 +36,4 @@ public class SysDataRuleVO implements Serializable {
         customSqlJson = sysDataRule.getCustomSqlJson();
         extInfo = sysDataRule.getExtInfo();
     }
-
-    private Long id;
-    private String targetResource;
-    private String ruleName;
-    private Byte scopeType;
-    private String customSqlJson;
-    private String extInfo;
 }

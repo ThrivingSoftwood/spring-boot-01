@@ -293,6 +293,97 @@ AI 进行代码分析并更新当前文档：*
    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose e55a2f2d69345cc6b23b50136326ba596743cae4667504310d4eb7567d54e1a9
    # mysql-20251224-9.5
    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose d95815199296fdcd7a82ed231c5368c0820a60c0b478c53301d9ccaf43af458e
+   
+   
+   # 定义输出文件名
+output_file="code_summary.md"
+
+# 初始化文件（如果存在则清空，不存在则创建）
+echo "# Python Project Code Summary" > "$output_file"
+echo "Generated on: $(date)" >> "$output_file"
+echo "" >> "$output_file"
+
+# 执行核心逻辑
+# 1. find . -name "*.py" : 查找当前路径下所有 .py 文件
+# 2. ! -name "__init__.py" : 排除掉 __init__.py
+find . -name "*.py" ! -name "__init__.py" | while read -r file; do
+    # 去除路径前的 ./ 符号，让文档更整洁
+    clean_path="${file#./}"
+    
+    # 写入 Markdown 标题
+    echo "### 📄 File: $clean_path" >> "$output_file"
+    echo "---" >> "$output_file"
+    
+    # 写入代码块标识
+    echo '```python' >> "$output_file"
+    
+    # 将文件内容追加到 md 中
+    cat "$file" >> "$output_file"
+    
+    # 闭合代码块并留出空行
+    echo -e '\n```' >> "$output_file"
+    echo "" >> "$output_file"
+done
+
+echo "✅ 处理完成！文档已生成至: $output_file"
+```
+
+```shell
+#!/bin/bash
+
+echo "### 1. 项目结构"
+echo '```'
+tree -I "target|node_modules|.git|out|*.iml|logs|package-info.java|mvnw*|*.md|.git*" --dirsfirst
+echo '```'
+echo -e "\n\n"
+
+echo "### 2. Maven 配置 (pom.xml)"
+find . -name "pom.xml" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+    echo "File: $file"
+    echo -e "\`\`\`xml"
+    cat "$file"
+    echo -e "\`\`\`\n"
+done
+
+echo "### 3. 基础配置文件 (YAML/Properties)"
+find . -type f \( -name "*.yml" -o -name "*.properties" -o \( -name "*.xml" ! -name "pom.xml" ! -name "*Mapper.xml" \) \) ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+    echo "File: $file"
+    echo -e "\`\`\`xml"
+    cat "$file"
+    echo -e "\`\`\`\n"
+done
+
+echo "### 4. Spring 自动装配 (imports)"
+find . -type f -name "*.imports" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+    echo "File: $file"
+    echo -e "\`\`\`text"
+    cat "$file"
+    echo -e "\`\`\`\n"
+done
+
+echo "### 5. SQL 脚本"
+find . -type f -name "*.sql" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+    echo "File: $file"
+    echo -e "\`\`\`sql"
+    cat "$file"
+    echo -e "\`\`\`\n"
+done
+
+echo "### 6. Java 源码"
+find . -type f -name "*.java" ! -name "package-info.java" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+    echo "File: $file"
+    echo -e "\`\`\`java"
+    cat "$file"
+    echo -e "\`\`\`\n"
+done
+
+echo "### 7. MyBatis Mapper XML"
+find . -type f -name "*Mapper.xml" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+    echo "File: $file"
+    echo -e "\`\`\`xml"
+    cat "$file"
+    echo -e "\`\`\`\n"
+done
 ```
 
 ---

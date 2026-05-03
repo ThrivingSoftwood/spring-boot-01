@@ -23,7 +23,7 @@ import thriving.softwood.common.security.context.UserContext;
  * @author CodeOmni
  */
 @Service
-@DS("master") // SysMessage 存在 ts_auth 库中
+@DS("master")
 public class DefaultMessageProvider implements MessageProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultMessageProvider.class);
@@ -46,7 +46,8 @@ public class DefaultMessageProvider implements MessageProvider {
     public void saveAndPushAsync(Long userId, MessageTypeEnum msgType, String msg, String bizRefId) {
 
         SysMessage msgObj = new SysMessage();
-        msgObj.setReceiverId(userId);
+        // 默认超管 id
+        msgObj.setReceiverId((null == userId || userId == 0L) ? 1L : userId);
         msgObj.setMsgType(msgType.typeCode());
         msgObj.setReadStatus((byte)0);
         msgObj.setTitle(msgType.typeDesc());

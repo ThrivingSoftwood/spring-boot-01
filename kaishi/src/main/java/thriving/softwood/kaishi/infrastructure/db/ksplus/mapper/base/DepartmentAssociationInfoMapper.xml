@@ -3,15 +3,16 @@
 <mapper namespace="thriving.softwood.kaishi.infrastructure.db.ksplus.mapper.base.DepartmentAssociationInfoMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="thriving.softwood.kaishi.infrastructure.db.ksplus.entity.base.DepartmentAssociationInfo">
-        <id column="id" property="id" />
-        <result column="auth_department_id" property="authDepartmentId" />
-        <result column="ori_department_typeid" property="oriDepartmentTypeid" />
-        <result column="ext_info" property="extInfo" />
-        <result column="deleted" property="deleted" />
-        <result column="last_modifier" property="lastModifier" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.kaishi.infrastructure.db.ksplus.entity.base.DepartmentAssociationInfo">
+        <id column="id" property="id"/>
+        <result column="auth_department_id" property="authDepartmentId"/>
+        <result column="ori_department_typeid" property="oriDepartmentTypeid"/>
+        <result column="ext_info" property="extInfo"/>
+        <result column="deleted" property="deleted"/>
+        <result column="last_modifier" property="lastModifier"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

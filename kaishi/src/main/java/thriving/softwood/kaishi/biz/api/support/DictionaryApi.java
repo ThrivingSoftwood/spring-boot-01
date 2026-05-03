@@ -20,6 +20,8 @@ public interface DictionaryApi {
 
     DlyndxDTO getDlyndxDTO(Long vchcode);
 
+    String getEdongfangProductName(String sku);
+
     String getUsedtypeName(String code);
 
     String getPdetailName(Integer code);

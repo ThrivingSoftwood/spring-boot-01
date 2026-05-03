@@ -45,7 +45,10 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         vchtype, name, fullname, comment
-        , typeid, parid, leveal, sonnum, soncount, deleted, version, numberhead, inputn, inputname1, inputname2, inputname3, inputname4, inputname5, SNMax, SNFormat, classno, AuditingOrder, AuditingType, Summary, stringno, dataareas, maingridtype, othergridtype, mainsubjecttype, othersubjecttype, summaryno, ProcessGridType, ProcessSubjectType, cNdxTableName, cDlyTableName, Caption
+        , typeid, parid, leveal, sonnum, soncount, deleted, version, numberhead, inputn, inputname1, inputname2,
+        inputname3, inputname4, inputname5, SNMax, SNFormat, classno, AuditingOrder, AuditingType, Summary, stringno,
+        dataareas, maingridtype, othergridtype, mainsubjecttype, othersubjecttype, summaryno, ProcessGridType,
+        ProcessSubjectType, cNdxTableName, cDlyTableName, Caption
     </sql>
 
 </mapper>

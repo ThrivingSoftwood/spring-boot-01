@@ -33,7 +33,7 @@ public class SystemErrorListener {
     @VtAsync
     public void onSystemError(SystemErrorEvent event) {
         SysMessage errorMsg = new SysMessage();
-        errorMsg.setReceiverId(event.getUserId());
+        errorMsg.setReceiverId(null == event.getUserId() ? 1L : event.getUserId());
         errorMsg.setMsgType(RUNTIME_ERROR.typeCode()); // 运行异常
         errorMsg.setReadStatus((byte)0);
         errorMsg.setTitle("操作执行异常通知");

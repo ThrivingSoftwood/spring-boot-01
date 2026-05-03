@@ -31,6 +31,24 @@ public class PermissionSvc implements PermissionApi {
         this.sysRolePermissionRepo = sysRolePermissionRepo;
     }
 
+    private static @NonNull List<SysPermissionVO> getTreedVOs(List<SysPermission> permissions) {
+        // 2. 将 Entity 转换为 VO
+        List<SysPermissionVO> allVOs = permissions.stream().map(SysPermissionVO::new).toList();
+
+        // 3. 按照 parentId 分组 (极其高效的 Java Stream API)
+        Map<Long, List<SysPermissionVO>> childrenMap =
+            allVOs.stream().collect(Collectors.groupingBy(SysPermissionVO::getParentId));
+
+        // 4. 遍历所有节点，将子节点塞入对应的父节点中
+        allVOs.forEach(node -> {
+            List<SysPermissionVO> children = childrenMap.get(node.getId());
+            if (children != null) {
+                node.setChildren(children);
+            }
+        });
+        return allVOs;
+    }
+
     /**
      * 📘 核心方法：获取整棵权限树
      */
@@ -75,24 +93,6 @@ public class PermissionSvc implements PermissionApi {
         // 5. 过滤出顶级节点 (parentId == 0)，它们内部已经包含了所有子孙节点
         return getTreedVOs(permissions).stream().filter(node -> node.getParentId() == 0L).filter(this::shouldKeep)
             .collect(Collectors.toList());
-    }
-
-    private static @NonNull List<SysPermissionVO> getTreedVOs(List<SysPermission> permissions) {
-        // 2. 将 Entity 转换为 VO
-        List<SysPermissionVO> allVOs = permissions.stream().map(SysPermissionVO::new).toList();
-
-        // 3. 按照 parentId 分组 (极其高效的 Java Stream API)
-        Map<Long, List<SysPermissionVO>> childrenMap =
-            allVOs.stream().collect(Collectors.groupingBy(SysPermissionVO::getParentId));
-
-        // 4. 遍历所有节点，将子节点塞入对应的父节点中
-        allVOs.forEach(node -> {
-            List<SysPermissionVO> children = childrenMap.get(node.getId());
-            if (children != null) {
-                node.setChildren(children);
-            }
-        });
-        return allVOs;
     }
 
     /**

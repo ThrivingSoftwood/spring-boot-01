@@ -50,15 +50,34 @@ exec sp_addextendedproperty 'MS_Description', N'修改时间', 'SCHEMA', 'dbo', 
 drop table if exists [dbo].[department_association_info];
 create table [dbo].department_association_info
 (
-    id                    bigint identity ( 1, 1 ) primary key,
-    auth_department_id    bigint       default 0  not null,
-    ori_department_typeid nvarchar(25) default '' not null,
-    ext_info              nvarchar(max),
-    deleted               int          default 0,
-    last_modifier         varchar(100),
-    create_time           datetime     default getdate(),
-    update_time           datetime     default getdate()
-);
+    id
+    bigint
+    identity
+(
+    1,
+    1
+) primary key,
+    auth_department_id bigint default 0 not null,
+    ori_department_typeid nvarchar
+(
+    25
+) default '' not null,
+    ext_info nvarchar
+(
+    max
+),
+    deleted int default 0,
+    last_modifier varchar
+(
+    100
+),
+    create_time datetime default getdate
+(
+),
+    update_time datetime default getdate
+(
+)
+    );
 EXEC sp_addextendedproperty 'MS_Description', '部门关联信息表([ts_auth] 库到 [凯诗防护2026] 库)', 'SCHEMA', 'dbo',
      'TABLE', 'department_association_info';
 
@@ -67,18 +86,51 @@ EXEC sp_addextendedproperty 'MS_Description', '部门关联信息表([ts_auth] �
 drop table if exists [dbo].employee_association_info;
 create table [dbo].employee_association_info
 (
-    id                    bigint identity primary key,
-    login_account         varchar(100)             not null,
-    ori_fullname          nvarchar(100) default '' not null,
-    employee_typeid       nvarchar(25)  default '',
-    employee_user_code    nvarchar(26)  default '',
-    login_employee_typeid nvarchar(25)  default '',
-    login_user_code       nvarchar(50)  default '' not null,
-    ext_info              nvarchar(max),
-    deleted               int           default 0  not null,
-    last_modifier         varchar(100),
-    create_time           datetime      default getdate(),
-    update_time           datetime      default getdate()
-);
+    id
+    bigint
+    identity
+    primary
+    key,
+    login_account
+    varchar
+(
+    100
+) not null,
+    ori_fullname nvarchar
+(
+    100
+) default '' not null,
+    employee_typeid nvarchar
+(
+    25
+) default '',
+    employee_user_code nvarchar
+(
+    26
+) default '',
+    login_employee_typeid nvarchar
+(
+    25
+) default '',
+    login_user_code nvarchar
+(
+    50
+) default '' not null,
+    ext_info nvarchar
+(
+    max
+),
+    deleted int default 0 not null,
+    last_modifier varchar
+(
+    100
+),
+    create_time datetime default getdate
+(
+),
+    update_time datetime default getdate
+(
+)
+    );
 EXEC sp_addextendedproperty 'MS_Description', '用户关联信息表([ts_auth] 库到 [凯诗防护2026] 库)', 'SCHEMA', 'dbo',
      'TABLE', 'employee_association_info';

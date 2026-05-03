@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ public class GlobalExceptionHandler {
      * 专门捕获 TokenException，将其转换为 HTTP 401 返回
      */
     @ExceptionHandler(TokenException.class)
+    @RequestMapping(produces = "application/json")
     public Result<String> handleTokenException(TokenException e, HttpServletRequest request) {
         // 返回 HTTP 状态码 401
         return Result.error(RespCodeEnum.UNAUTHORIZED, e, request.getRequestURI());
@@ -58,6 +60,18 @@ public class GlobalExceptionHandler {
         // 返回 HTTP 状态码 403
         return Result.error(FORBIDDEN.code(), e.getMessage());
     }
+
+    /**
+     * 专项拦截：文件上传大小超出限制
+     */
+    // @ExceptionHandler(MaxUploadSizeExceededException.class)
+    // @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    // public Result<String> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+    // logger.warn("🛑 文件上传失败：文件大小超出系统允许的阈值");
+    //
+    // // 从异常信息中提取具体的限制值，给用户更精准的提示
+    // return Result.error(RespCodeEnum.BAD_REQ.code(), "上传失败：单个文件大小不能超过 10MB");
+    // }
 
     /**
      * 2. 🌟 核心：处理所有未知的系统异常

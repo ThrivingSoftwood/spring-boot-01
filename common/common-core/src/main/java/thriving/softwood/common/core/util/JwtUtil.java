@@ -19,11 +19,11 @@ import thriving.softwood.common.core.exception.TokenException;
 @Component
 public class JwtUtil {
 
-    private String privateKeyBase64;
-    private String publicKeyBase64;
     private static RSA rsa;
     private static JWTSigner privateKeySigner;
     private static JWTSigner publicKeySigner;
+    private String privateKeyBase64;
+    private String publicKeyBase64;
 
     public static void init(String privateKeyBase64, String publicKeyBase64) {
         // 从 Base64 还原密钥对

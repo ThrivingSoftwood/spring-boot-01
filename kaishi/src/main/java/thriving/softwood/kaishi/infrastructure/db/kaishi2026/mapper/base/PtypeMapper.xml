@@ -131,8 +131,18 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        typeId, ParId, leveal, sonnum, soncount, CanModify, UserCode, FullName, Name, Standard, Type, Area, Unit1, Unit2, UnitRate1, UnitRate2, preprice1, preprice2, preprice3, preprice4, UsefulLifeMonth, UsefulLifeDay, Comment
-        , recPrice, deleted, costmode, Namepy, warnup, warndown, Rec, ParRec, barcode, preprice5, preprice6, disrecprice, uselistcode, OrderNo, LastOperaterID, LastOperatDay, AssistConfig, SerialConfig, Price7, Price8, Price9, Price10, GoodsProp, WLType, WLSource, MRPCalc, BeforeDay, DefaultStock, MaxOrder, MinOrder, MaxStock, MinStock, ClassP2, Btypeid, Safedaycount, MinSalePrice, Brandtypeid, price90, OtherPrice, IsTaxPrice, GoodsOrder, Custom1, Custom2, UnitOther, UpdateTag, CheckCustom, Custom3, Custom4, Custom5, KtypeId, WorkShop, SafeQty, CostPrice, BeforeDate, PObject, QuotePrice, WorkPlanVchCode, bBlockNo, bCustom1, bCustom2, RefPrice, ManSerialNum, bPurchase, bProduce, bConsign, bCustom3, bCustom4, Unit3, UnitFz, bReceive, DefInUnit, DefOutUnit, Barcode1, Barcode2, Comment1, Comment2, Comment3, Comment4, Comment5, Comment6, Comment7, Comment8, Tax, ShelfLife, TakeOut, ProduceBeforeDay, ConsignBeforeDay, WeiWaiTax, DefPandianUnit, InputNo, CreateTime, ModifyPerson, ModifyDate, NRefPrice, NCostPrice, PushRec, CalcPeriod, ReportCalcPeriod, VeriMode, VeriRate
+        typeId, ParId, leveal, sonnum, soncount, CanModify, UserCode, FullName, Name, Standard, Type, Area, Unit1,
+        Unit2, UnitRate1, UnitRate2, preprice1, preprice2, preprice3, preprice4, UsefulLifeMonth, UsefulLifeDay, Comment
+        , recPrice, deleted, costmode, Namepy, warnup, warndown, Rec, ParRec, barcode, preprice5, preprice6,
+        disrecprice, uselistcode, OrderNo, LastOperaterID, LastOperatDay, AssistConfig, SerialConfig, Price7, Price8,
+        Price9, Price10, GoodsProp, WLType, WLSource, MRPCalc, BeforeDay, DefaultStock, MaxOrder, MinOrder, MaxStock,
+        MinStock, ClassP2, Btypeid, Safedaycount, MinSalePrice, Brandtypeid, price90, OtherPrice, IsTaxPrice,
+        GoodsOrder, Custom1, Custom2, UnitOther, UpdateTag, CheckCustom, Custom3, Custom4, Custom5, KtypeId, WorkShop,
+        SafeQty, CostPrice, BeforeDate, PObject, QuotePrice, WorkPlanVchCode, bBlockNo, bCustom1, bCustom2, RefPrice,
+        ManSerialNum, bPurchase, bProduce, bConsign, bCustom3, bCustom4, Unit3, UnitFz, bReceive, DefInUnit, DefOutUnit,
+        Barcode1, Barcode2, Comment1, Comment2, Comment3, Comment4, Comment5, Comment6, Comment7, Comment8, Tax,
+        ShelfLife, TakeOut, ProduceBeforeDay, ConsignBeforeDay, WeiWaiTax, DefPandianUnit, InputNo, CreateTime,
+        ModifyPerson, ModifyDate, NRefPrice, NCostPrice, PushRec, CalcPeriod, ReportCalcPeriod, VeriMode, VeriRate
     </sql>
 
 </mapper>

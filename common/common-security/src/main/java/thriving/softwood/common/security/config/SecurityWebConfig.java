@@ -37,7 +37,8 @@ public class SecurityWebConfig implements WebMvcConfigurer {
                 // 网站图标
                 "/favicon.ico",
                 // 如果后续接入 OpenAPI/Swagger 文档
-                "/swagger-ui/**", "/v3/api-docs/**");
+                "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/register", "/error", "/favicon.ico",
+                "/**/file/preview/**", "/**/*.html", "/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
     }
 
 }

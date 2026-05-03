@@ -91,8 +91,16 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        typeId, parid, leveal, soncount, sonnum, UserCode, FullName, Name, Area, TelAndAddress, PostCode, Person, TaxNumber, BankAndAcount, Comment
-        , ARTotal, APTotal, ARTotal00, APTotal00, deleted, Namepy, Rec, ParRec, isclient, arlimit, aplimit, AreaTypeID, otherar, otherap, arsaletax, apbuytax, preprice, fax, otherar00, otherap00, arsaletax00, apbuytax00, SendGoods, SendGoods00, SendGoodsJ, SendGoodsJ00, OrderNo, LastOperaterID, LastOperatDay, RDate, BankAcount, Email, PreApTotal00, PreARTotal00, PreARTotal, PreAPTotal, UpdateTag, EtypeID, isWeiWai, WeiWaiAPTotal00, WeiWaiPreAPTotal00, WeiWaiAPTotal, WeiWaiPreAPTotal, PrePriceType, AttnID, TaxRegNum, SettleBtypeId, Mobile, Comment1, Comment2, Comment3, Comment4, Comment5, Comment6, Comment7, Comment8, SettleMode, InputNo, CreateTime, ModifyPerson, ModifyDate, PushRec, bNoArLimit, OtherAPTotal, OtherAPTotal00, OtherARTotal, OtherARTotal00, Descript
+        typeId, parid, leveal, soncount, sonnum, UserCode, FullName, Name, Area, TelAndAddress, PostCode, Person,
+        TaxNumber, BankAndAcount, Comment
+        , ARTotal, APTotal, ARTotal00, APTotal00, deleted, Namepy, Rec, ParRec, isclient, arlimit, aplimit, AreaTypeID,
+        otherar, otherap, arsaletax, apbuytax, preprice, fax, otherar00, otherap00, arsaletax00, apbuytax00, SendGoods,
+        SendGoods00, SendGoodsJ, SendGoodsJ00, OrderNo, LastOperaterID, LastOperatDay, RDate, BankAcount, Email,
+        PreApTotal00, PreARTotal00, PreARTotal, PreAPTotal, UpdateTag, EtypeID, isWeiWai, WeiWaiAPTotal00,
+        WeiWaiPreAPTotal00, WeiWaiAPTotal, WeiWaiPreAPTotal, PrePriceType, AttnID, TaxRegNum, SettleBtypeId, Mobile,
+        Comment1, Comment2, Comment3, Comment4, Comment5, Comment6, Comment7, Comment8, SettleMode, InputNo, CreateTime,
+        ModifyPerson, ModifyDate, PushRec, bNoArLimit, OtherAPTotal, OtherAPTotal00, OtherARTotal, OtherARTotal00,
+        Descript
     </sql>
 
 </mapper>

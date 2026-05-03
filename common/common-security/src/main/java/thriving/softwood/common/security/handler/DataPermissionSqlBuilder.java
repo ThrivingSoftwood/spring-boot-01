@@ -24,6 +24,46 @@ public class DataPermissionSqlBuilder {
         extractors = extractorProvider.orderedStream().toList();
     }
 
+    private static @NonNull StringBuilder getSqlFragmentBuilder(DataRuleDTO rule) {
+        List<ConditionItemDTO> conditions = JSONUtil.toList(rule.getCustomSqlJson(), ConditionItemDTO.class);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < conditions.size(); i++) {
+            ConditionItemDTO cond = conditions.get(i);
+            if (!cond.getColumn().matches("^[a-zA-Z0-9_\\.]+$")) {
+                throw new RuntimeException("检测到非法的数据列名");
+            }
+            String op = cond.getOperator().toUpperCase();
+            if (!op.matches("^(>|<|=|>=|<=|IN|NOT IN)$")) {
+                throw new RuntimeException("非法的逻辑操作符");
+            }
+
+            String rawValue = cond.getValue().replace("'", "");
+            sb.append(cond.getColumn()).append(" ").append(op);
+
+            if ("IN".equals(op) || "NOT IN".equals(op)) {
+                String[] vals = rawValue.split(",");
+                StringBuilder inSb = new StringBuilder("(");
+                for (int j = 0; j < vals.length; j++) {
+                    String item = vals[j].trim();
+                    if (StrUtil.isNotBlank(item)) {
+                        inSb.append("'").append(item.replace("'", "''")).append("'");
+                        if (j < vals.length - 1) {
+                            inSb.append(",");
+                        }
+                    }
+                }
+                inSb.append(")");
+                sb.append(" ").append(inSb.toString());
+            } else {
+                sb.append(" '").append(rawValue.replace("'", "''")).append("'");
+            }
+            if (i < conditions.size() - 1) {
+                sb.append(" AND ");
+            }
+        }
+        return sb;
+    }
+
     public String buildSqlSegment(String mappedStatementId) {
         if (UserContext.underSystemMode() || UserContext.userId() == null
             || Boolean.TRUE.equals(UserContext.godMode())) {
@@ -84,45 +124,5 @@ public class DataPermissionSqlBuilder {
                 }
         }
         return null;
-    }
-
-    private static @NonNull StringBuilder getSqlFragmentBuilder(DataRuleDTO rule) {
-        List<ConditionItemDTO> conditions = JSONUtil.toList(rule.getCustomSqlJson(), ConditionItemDTO.class);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < conditions.size(); i++) {
-            ConditionItemDTO cond = conditions.get(i);
-            if (!cond.getColumn().matches("^[a-zA-Z0-9_\\.]+$")) {
-                throw new RuntimeException("检测到非法的数据列名");
-            }
-            String op = cond.getOperator().toUpperCase();
-            if (!op.matches("^(>|<|=|>=|<=|IN|NOT IN)$")) {
-                throw new RuntimeException("非法的逻辑操作符");
-            }
-
-            String rawValue = cond.getValue().replace("'", "");
-            sb.append(cond.getColumn()).append(" ").append(op);
-
-            if ("IN".equals(op) || "NOT IN".equals(op)) {
-                String[] vals = rawValue.split(",");
-                StringBuilder inSb = new StringBuilder("(");
-                for (int j = 0; j < vals.length; j++) {
-                    String item = vals[j].trim();
-                    if (StrUtil.isNotBlank(item)) {
-                        inSb.append("'").append(item.replace("'", "''")).append("'");
-                        if (j < vals.length - 1) {
-                            inSb.append(",");
-                        }
-                    }
-                }
-                inSb.append(")");
-                sb.append(" ").append(inSb.toString());
-            } else {
-                sb.append(" '").append(rawValue.replace("'", "''")).append("'");
-            }
-            if (i < conditions.size() - 1) {
-                sb.append(" AND ");
-            }
-        }
-        return sb;
     }
 }

@@ -49,15 +49,6 @@ public class DepartmentSvc implements DepartmentApi {
         this.bizProvider = bizProvider;
     }
 
-    @Override
-    public List<SysDeptVO> treeDepartments() {
-        List<SysDept> departments = sysDeptRepo.listAll();
-        Map<Long, String> associations = bizProvider.loadAssocDeptIds();
-
-        return getTreedVOs(departments, associations).stream()
-            .filter(node -> node.getParentId() == ROOT_PARENT_DEPT_ID_LONG).collect(Collectors.toList());
-    }
-
     private static @NonNull List<SysDeptVO> getTreedVOs(List<SysDept> departments, Map<Long, String> associations) {
         // 2. 将 Entity 转换为 VO
         List<SysDeptVO> allVOs = departments.stream().map(department -> {
@@ -76,6 +67,15 @@ public class DepartmentSvc implements DepartmentApi {
             }
         });
         return allVOs;
+    }
+
+    @Override
+    public List<SysDeptVO> treeDepartments() {
+        List<SysDept> departments = sysDeptRepo.listAll();
+        Map<Long, String> associations = bizProvider.loadAssocDeptIds();
+
+        return getTreedVOs(departments, associations).stream()
+            .filter(node -> node.getParentId() == ROOT_PARENT_DEPT_ID_LONG).collect(Collectors.toList());
     }
 
     @Override

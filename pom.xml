@@ -23,8 +23,8 @@
         <mvn.compiler.plugin.version>3.14.1</mvn.compiler.plugin.version>
         <mvn.surefire.plugin.version>3.5.4</mvn.surefire.plugin.version>
         <lombok.version>1.18.42</lombok.version>
-        <mysql.connector.version>9.6.0</mysql.connector.version>
-        <postgresql.connector.version>42.7.10</postgresql.connector.version>
+        <mysql.connector.version>9.7.0</mysql.connector.version>
+        <postgresql.connector.version>42.7.11</postgresql.connector.version>
         <mssql.jdbc.version>13.4.0.jre11</mssql.jdbc.version>
         <disruptor.version>4.0.0</disruptor.version>
         <pagehelper.version>6.1.1</pagehelper.version>
@@ -114,6 +114,11 @@
             <dependency>
                 <groupId>thriving.softwood.common</groupId>
                 <artifactId>common-message</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>thriving.softwood.common</groupId>
+                <artifactId>common-file</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- 1. 内部模块版本统管 end -->

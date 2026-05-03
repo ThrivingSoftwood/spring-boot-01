@@ -41,7 +41,8 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         typeId, Parid, leveal, soncount, sonnum, FullName, Name, UserCode, Department, Tel, Address, Comment
-        , deleted, Namepy, Rec, ParRec, Pay, Incumbency, birthday, OrderNo, creditupperlimit, yshouupperlimit, ProduceType, Account, clerk, OnDutyDate, Sex, UpdateTag, Education, ID, Birthplace, CreateDate
+        , deleted, Namepy, Rec, ParRec, Pay, Incumbency, birthday, OrderNo, creditupperlimit, yshouupperlimit,
+        ProduceType, Account, clerk, OnDutyDate, Sex, UpdateTag, Education, ID, Birthplace, CreateDate
     </sql>
 
 </mapper>

@@ -26,6 +26,73 @@ public class PurchaseTraceVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+    /** 进销存单据编号 */
+    String number;
+
+    // ========================== 1. 状态展示字段 (后端计算) ==========================
+    /** 进销存单据摘要 */
+    String summary;
+    /**
+     * 订单状态名称：未到货、部分到货、已完成 逻辑：根据 aQty 与 bQty 的比对结果生成
+     */
+    private String statusName;
+    /**
+     * 状态标签颜色：danger(红), warning(黄), success(绿) 适配 Element Plus 的 el-tag 类型
+     */
+    private String statusTag;
+
+    // ========================== 2. 采购计划信息 (A表核心+进销存简要信息) ==========================
+    /**
+     * 欠交数量 (计算字段) 逻辑：aQty - bQty
+     */
+    private BigDecimal owedQty;
+    /** 采购日期 */
+    private String aDate;
+    /** 采购单号 */
+    private Long aVchcode;
+    /**
+     * 单据序号
+     */
+    private Long aDlyOrder;
+    /** 供应商全称 */
+    @FieldPerm("purchase:btype:view")
+    private String aBtypeidFullname;
+    /** 存货/商品名称 */
+    private String aPtypeIdFullname;
+    /** 单位名称 */
+    private String aUnitName;
+    /** 采购计划数量 */
+    private BigDecimal aQty;
+    /** 采购单价 (折前) */
+    @FieldPerm("purchase:price:view")
+    private Double aPrice;
+    /** 折后总金额 (实际应付) */
+    @FieldPerm("purchase:price:view")
+    private BigDecimal aDiscounttotal;
+    /** 采购备注 */
+    private String aComment;
+    /** 红冲状态名称 (如：被红冲单据) */
+    private String aRedOldName;
+    /** 实际入库数量 (汇总后的数量) */
+    private BigDecimal bQty;
+
+    // ========================== 3. 入库执行信息 (B表核心) ==========================
+    /** 最近一次入库日期 */
+    private String bDate;
+    /** 实际入库单号 */
+    private Long bVchcode;
+    /**
+     * 单据序号
+     */
+    private Long bDlyOrder;
+    /** 入库仓库名称 */
+    private String bKtypeidFullname;
+    /** 采购员名称 */
+    private String aEtypeidFullname;
+
+    // ========================== 4. 扩展信息 (按需展示) ==========================
+    /** 批号 */
+    private String aBlockno;
 
     public PurchaseTraceVO(PurchaseTraceOrder obj) {
         number = obj.getNumber();
@@ -67,94 +134,4 @@ public class PurchaseTraceVO implements Serializable {
             statusTag = STATUS_TAG_SUCCESS;
         }
     }
-
-    // ========================== 1. 状态展示字段 (后端计算) ==========================
-
-    /**
-     * 订单状态名称：未到货、部分到货、已完成 逻辑：根据 aQty 与 bQty 的比对结果生成
-     */
-    private String statusName;
-
-    /**
-     * 状态标签颜色：danger(红), warning(黄), success(绿) 适配 Element Plus 的 el-tag 类型
-     */
-    private String statusTag;
-
-    /**
-     * 欠交数量 (计算字段) 逻辑：aQty - bQty
-     */
-    private BigDecimal owedQty;
-
-    // ========================== 2. 采购计划信息 (A表核心+进销存简要信息) ==========================
-
-    /** 进销存单据编号 */
-    String number;
-
-    /** 进销存单据摘要 */
-    String summary;
-
-    /** 采购日期 */
-    private String aDate;
-
-    /** 采购单号 */
-    private Long aVchcode;
-
-    /**
-     * 单据序号
-     */
-    private Long aDlyOrder;
-
-    /** 供应商全称 */
-    @FieldPerm("purchase:btype:view")
-    private String aBtypeidFullname;
-
-    /** 存货/商品名称 */
-    private String aPtypeIdFullname;
-
-    /** 单位名称 */
-    private String aUnitName;
-
-    /** 采购计划数量 */
-    private BigDecimal aQty;
-
-    /** 采购单价 (折前) */
-    @FieldPerm("purchase:price:view")
-    private Double aPrice;
-
-    /** 折后总金额 (实际应付) */
-    @FieldPerm("purchase:price:view")
-    private BigDecimal aDiscounttotal;
-
-    /** 采购备注 */
-    private String aComment;
-
-    /** 红冲状态名称 (如：被红冲单据) */
-    private String aRedOldName;
-
-    // ========================== 3. 入库执行信息 (B表核心) ==========================
-
-    /** 实际入库数量 (汇总后的数量) */
-    private BigDecimal bQty;
-
-    /** 最近一次入库日期 */
-    private String bDate;
-
-    /** 实际入库单号 */
-    private Long bVchcode;
-
-    /**
-     * 单据序号
-     */
-    private Long bDlyOrder;
-
-    /** 入库仓库名称 */
-    private String bKtypeidFullname;
-
-    // ========================== 4. 扩展信息 (按需展示) ==========================
-
-    /** 采购员名称 */
-    private String aEtypeidFullname;
-
-    /** 批号 */
-    private String aBlockno;
 }

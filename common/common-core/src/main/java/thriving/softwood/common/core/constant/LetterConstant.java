@@ -5,10 +5,6 @@ package thriving.softwood.common.core.constant;
  */
 public final class LetterConstant {
 
-    private LetterConstant() {
-        // 私有构造，禁止实例化
-    }
-
     // 大写字母 A-Z
     public static final String UPPER_A = "A";
     public static final String UPPER_B = "B";
@@ -36,7 +32,6 @@ public final class LetterConstant {
     public static final String UPPER_X = "X";
     public static final String UPPER_Y = "Y";
     public static final String UPPER_Z = "Z";
-
     // 小写字母 a-z
     public static final String LOWER_A = "a";
     public static final String LOWER_B = "b";
@@ -64,4 +59,8 @@ public final class LetterConstant {
     public static final String LOWER_X = "x";
     public static final String LOWER_Y = "y";
     public static final String LOWER_Z = "z";
+
+    private LetterConstant() {
+        // 私有构造，禁止实例化
+    }
 }

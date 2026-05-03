@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.kaishi.infrastructure.db.edongfang.mapper.base.EdongfangProductsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangProducts">
+        <id column="pk" property="pk"/>
+        <result column="sku" property="sku"/>
+        <result column="url" property="url"/>
+        <result column="model" property="model"/>
+        <result column="weight" property="weight"/>
+        <result column="image_path" property="imagePath"/>
+        <result column="state" property="state"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="name" property="name"/>
+        <result column="product_area" property="productArea"/>
+        <result column="upc" property="upc"/>
+        <result column="unit" property="unit"/>
+        <result column="category" property="category"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="service" property="service"/>
+        <result column="introduction" property="introduction"/>
+        <result column="param" property="param"/>
+        <result column="ware" property="ware"/>
+        <result column="tax_rate" property="taxRate"/>
+        <result column="tax_category_code" property="taxCategoryCode"/>
+        <result column="search_keyword" property="searchKeyword"/>
+        <result column="sale_actives" property="saleActives"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="cu" property="cu"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pk, sku, url, model, weight, image_path, state, brand_name, name, product_area, upc, unit, category,
+        category_name, service, introduction, param, ware, tax_rate, tax_category_code, search_keyword, sale_actives,
+        create_by, create_time, update_by, update_time, deleted, tenant_id, cu
+    </sql>
+
+</mapper>

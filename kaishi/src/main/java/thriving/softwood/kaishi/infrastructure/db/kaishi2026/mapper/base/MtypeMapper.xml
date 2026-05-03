@@ -43,7 +43,10 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        Typeid, parid, leveal, sonnum, soncount, Rec, ParRec, FullName, UserCode, deleted, NAMEPY, OrderNo, remark, ZbLeiXing, UpdateTag, PushRec, BeginDate, EndDate, GrossInCome, GrossOutCome, BtypeId, CustomerPerson, CustomerTel, ContractNumber, ContractTotal, EtypeId, ProjectId, TeamMembers, PlanCreateTime, PlanUserOver, PlanYearClose, InputNo, CreateTime, ModifyPerson, ModifyDate
+        Typeid, parid, leveal, sonnum, soncount, Rec, ParRec, FullName, UserCode, deleted, NAMEPY, OrderNo, remark,
+        ZbLeiXing, UpdateTag, PushRec, BeginDate, EndDate, GrossInCome, GrossOutCome, BtypeId, CustomerPerson,
+        CustomerTel, ContractNumber, ContractTotal, EtypeId, ProjectId, TeamMembers, PlanCreateTime, PlanUserOver,
+        PlanYearClose, InputNo, CreateTime, ModifyPerson, ModifyDate
     </sql>
 
 </mapper>

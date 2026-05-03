@@ -31,6 +31,28 @@ public class SysDept implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+    @TableField("parent_id")
+    private Long parentId;
+    @TableField("ancestors")
+    private String ancestors;
+    @TableField("dept_name")
+    private String deptName;
+    @TableField("sort_order")
+    private Integer sortOrder;
+    @TableField("status")
+    private Byte status;
+    @TableField("ext_info")
+    private String extInfo;
+    @TableField("deleted")
+    private Integer deleted;
+    @TableField("last_modifier")
+    private String lastModifier;
+    @TableField("create_time")
+    private LocalDateTime createTime;
+    @TableField("update_time")
+    private LocalDateTime updateTime;
 
     public SysDept(SysDept parentDept, String deptName, Integer sortOrder) {
         parentId = ROOT_PARENT_DEPT_ID_LONG;
@@ -44,37 +66,4 @@ public class SysDept implements Serializable {
         status = (byte)1;
         deleted = 0;
     }
-
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
-    @TableField("parent_id")
-    private Long parentId;
-
-    @TableField("ancestors")
-    private String ancestors;
-
-    @TableField("dept_name")
-    private String deptName;
-
-    @TableField("sort_order")
-    private Integer sortOrder;
-
-    @TableField("status")
-    private Byte status;
-
-    @TableField("ext_info")
-    private String extInfo;
-
-    @TableField("deleted")
-    private Integer deleted;
-
-    @TableField("last_modifier")
-    private String lastModifier;
-
-    @TableField("create_time")
-    private LocalDateTime createTime;
-
-    @TableField("update_time")
-    private LocalDateTime updateTime;
 }

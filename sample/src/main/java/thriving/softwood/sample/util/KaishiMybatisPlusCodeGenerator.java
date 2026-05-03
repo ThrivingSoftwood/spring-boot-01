@@ -35,6 +35,9 @@ public class KaishiMybatisPlusCodeGenerator {
                 new DataSourceConfig.Builder(
                     "jdbc:sqlserver://localhost:1433;DatabaseName=凯诗防护2026;encrypt=false;trustServerCertificate=true;",
                     "sa", decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
+            put("edongfang", new DataSourceConfig.Builder(
+                "jdbc:mysql://localhost:3306/edongfang?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai",
+                "metathriving", decrypt("ENC(aa3411511790ce0c0c9e1ecc81f8b9f8)")));
 
         }
     };
@@ -42,7 +45,8 @@ public class KaishiMybatisPlusCodeGenerator {
     private static final String[] TABLE_PREFIXES = {"base_", "t_"};
 
     static void main(String[] args) {
-        generateCode("master", new String[] {"sys_message"});
+        generateCode("edongfang", new String[] {"edongfang_order_stub"});
+
     }
 
     private static void generateCode(String dsName, String[] tables) {

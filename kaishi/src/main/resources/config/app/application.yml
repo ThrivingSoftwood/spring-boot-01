@@ -11,7 +11,12 @@ spring:
   web:
     locale-resolver: accept_header
     locale: en_US
-
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 100MB
+  
   # 🔥 核心魔法：按模块组装所有拆分出来的配置文件
   config:
     import:
@@ -20,3 +25,4 @@ spring:
       - classpath:/config/app/application-async.yml
       - classpath:/config/app/application-observability.yml
       - classpath:/config/app/application-security.yml
+      - classpath:/config/app/application-file.yml

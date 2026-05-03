@@ -62,6 +62,46 @@ public class ErpSyncSvc implements ErpSyncApi {
         this.deptAssocRepo = deptAssocRepo;
     }
 
+    private static @NonNull List<OrgNodeVO> loadAllNodes(List<Department> erpDepartments, List<Employee> erpEmployees,
+        Set<String> syncedEmpTypeIds) {
+        List<OrgNodeVO> allNodes = new ArrayList<>();
+
+        // 1. 转换 ERP 部门
+        for (Department d : erpDepartments) {
+            OrgNodeVO node = new OrgNodeVO();
+            node.setId(DEPT_PREFIX + d.getTypeid());
+            node.setParentId(ROOT_DEPARTMENT_ID_STR.equals(d.getParid()) ? "0" : (DEPT_PREFIX + d.getParid()));
+            node.setName(d.getFullName());
+            node.setNodeType(1);
+            // 弹窗中部门不可勾选，只供展示层级
+            // node.setDisabled(true);
+            allNodes.add(node);
+        }
+        // 对于 Department 列未 null 或空串或空格的,增加其他部门
+        OrgNodeVO others = new OrgNodeVO();
+        others.setId(DEPT_PREFIX + MAX_DEPT_ID);
+        others.setParentId("D_00000");
+        others.setName("其他部门");
+        others.setNodeType(1);
+        allNodes.add(others);
+
+        // 2. 转换未同步的 ERP 员工
+        for (Employee e : erpEmployees) {
+            if (!syncedEmpTypeIds.contains(e.getTypeId())) {
+                OrgNodeVO node = new OrgNodeVO();
+                node.setId(EMPLOYEE_PREFIX + e.getTypeId());
+                // 员工关联的 ERP 部门 ID; 当 Department 为空时,填入"其他部门"
+                node.setParentId(DEPT_PREFIX + (StrUtil.isBlank(e.getDepartment()) ? MAX_DEPT_ID : e.getDepartment()));
+                node.setName(e.getFullName());
+                node.setLoginCode(e.getUserCode());
+                node.setSourceId(e.getTypeId());
+                node.setNodeType(2);
+                allNodes.add(node);
+            }
+        }
+        return allNodes;
+    }
+
     // ==========================================
     // 1. 同步人员逻辑
     // ==========================================
@@ -281,46 +321,6 @@ public class ErpSyncSvc implements ErpSyncApi {
         });
 
         return nodes.stream().filter(n -> rootId.equals(n.getParentId())).collect(Collectors.toList());
-    }
-
-    private static @NonNull List<OrgNodeVO> loadAllNodes(List<Department> erpDepartments, List<Employee> erpEmployees,
-        Set<String> syncedEmpTypeIds) {
-        List<OrgNodeVO> allNodes = new ArrayList<>();
-
-        // 1. 转换 ERP 部门
-        for (Department d : erpDepartments) {
-            OrgNodeVO node = new OrgNodeVO();
-            node.setId(DEPT_PREFIX + d.getTypeid());
-            node.setParentId(ROOT_DEPARTMENT_ID_STR.equals(d.getParid()) ? "0" : (DEPT_PREFIX + d.getParid()));
-            node.setName(d.getFullName());
-            node.setNodeType(1);
-            // 弹窗中部门不可勾选，只供展示层级
-            // node.setDisabled(true);
-            allNodes.add(node);
-        }
-        // 对于 Department 列未 null 或空串或空格的,增加其他部门
-        OrgNodeVO others = new OrgNodeVO();
-        others.setId(DEPT_PREFIX + MAX_DEPT_ID);
-        others.setParentId("D_00000");
-        others.setName("其他部门");
-        others.setNodeType(1);
-        allNodes.add(others);
-
-        // 2. 转换未同步的 ERP 员工
-        for (Employee e : erpEmployees) {
-            if (!syncedEmpTypeIds.contains(e.getTypeId())) {
-                OrgNodeVO node = new OrgNodeVO();
-                node.setId(EMPLOYEE_PREFIX + e.getTypeId());
-                // 员工关联的 ERP 部门 ID; 当 Department 为空时,填入"其他部门"
-                node.setParentId(DEPT_PREFIX + (StrUtil.isBlank(e.getDepartment()) ? MAX_DEPT_ID : e.getDepartment()));
-                node.setName(e.getFullName());
-                node.setLoginCode(e.getUserCode());
-                node.setSourceId(e.getTypeId());
-                node.setNodeType(2);
-                allNodes.add(node);
-            }
-        }
-        return allNodes;
     }
 
     @Override

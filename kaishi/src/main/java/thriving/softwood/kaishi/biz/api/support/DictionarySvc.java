@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import thriving.softwood.kaishi.biz.pojo.dto.DlyndxDTO;
+import thriving.softwood.kaishi.infrastructure.db.edongfang.repo.EdongfangProductsRepo;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.*;
 
 ;
@@ -27,6 +28,7 @@ public class DictionarySvc implements DictionaryApi {
     private final StockRepo stockRepo;
     private final GblVchtypeRepo gblVchtypeRepo;
     private final DlyndxRepo dlyndxRepo;
+    private final EdongfangProductsRepo edongfangProductsRepo;
 
     private Cache usedTypeCache;
     private Cache pdetailCache;
@@ -35,7 +37,7 @@ public class DictionarySvc implements DictionaryApi {
     @Autowired
     public DictionarySvc(@Qualifier(KAISHI_CACHE_MANAGER) CacheManager cachemanager, DepartmentRepo departmentRepo,
         BtypeRepo btypeRepo, EmployeeRepo employeeRepo, MtypeRepo mtypeRepo, PtypeRepo ptypeRepo, StockRepo stockRepo,
-        GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo) {
+        GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo, EdongfangProductsRepo edongfangProductsRepo) {
         cacheManager = cachemanager;
         this.departmentRepo = departmentRepo;
         this.btypeRepo = btypeRepo;
@@ -45,6 +47,7 @@ public class DictionarySvc implements DictionaryApi {
         this.stockRepo = stockRepo;
         this.gblVchtypeRepo = gblVchtypeRepo;
         this.dlyndxRepo = dlyndxRepo;
+        this.edongfangProductsRepo = edongfangProductsRepo;
         usedTypeCache = cachemanager.getCache(USEDTYPE_CACHE);
         pdetailCache = cachemanager.getCache(PDETAIL_CACHE);
         redWordCache = cachemanager.getCache(RED_WORD_CACHE);
@@ -96,6 +99,12 @@ public class DictionarySvc implements DictionaryApi {
     @Cacheable(cacheNames = DLYNDX_CACHE, key = "#vchcode")
     public DlyndxDTO getDlyndxDTO(Long vchcode) {
         return dlyndxRepo.getDTOByVchcode(vchcode);
+    }
+
+    @Override
+    @Cacheable(cacheNames = EDONGFANG_PRODUCT_NAME_CACHE, key = "#sku")
+    public String getEdongfangProductName(String sku) {
+        return edongfangProductsRepo.getProductNameBySku(sku);
     }
 
     @Override

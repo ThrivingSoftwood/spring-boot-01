@@ -97,8 +97,17 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        Vchcode, atypeid, btypeid, etypeid, ktypeid, PtypeId, Qty, discount, DiscountPrice, costtotal, costprice, Blockno, price, total, Prodate, TaxPrice, TaxTotal, comment
-        , date, usedtype, period, tax_total, tax, discounttotal, Vchtype, redword, dlyorder, unit, PDETAIL, SourceDlyOrder, Toqty, RedOld, UserDefined01, UserDefined02, WLDZ, QtyOther, FreeDom01, FreeDom02, FreeDom03, FreeDom04, FreeDom05, FreeDom06, FreeDom07, FreeDom08, FreeDom09, FreeDom10, ToOutQty, InNumber, InVchCode, InVchType, InDlyorder, SourceVchcode, SourceVchtype, RowNo, ProjectID, Appoint, Draft, FeeTotal, CalcCostOrder, FreeDom11, FreeDom12, FreeDom13, FreeDom14, FreeDom15, FreeDom16, FreeDomDateDif, Custom3, Custom4, SourceVchtype2, SourceVchcode2, SourceDlyOrder2, SettleBtypeId, BtypeOtherCode, DetailSign, ProduceDate, IniInStockToQty, IniInStockBackQty, InStockToQty, InStockBackQty, InstockBackSign, IniInstockToQtyOther, mtypeid, IniToFactQty, ParVchtype, BtypeOtherName, BtypeOtherStandardType, AuditToQty, AuditInstockToQty, ReturnReason
+        Vchcode, atypeid, btypeid, etypeid, ktypeid, PtypeId, Qty, discount, DiscountPrice, costtotal, costprice,
+        Blockno, price, total, Prodate, TaxPrice, TaxTotal, comment
+        , date, usedtype, period, tax_total, tax, discounttotal, Vchtype, redword, dlyorder, unit, PDETAIL,
+        SourceDlyOrder, Toqty, RedOld, UserDefined01, UserDefined02, WLDZ, QtyOther, FreeDom01, FreeDom02, FreeDom03,
+        FreeDom04, FreeDom05, FreeDom06, FreeDom07, FreeDom08, FreeDom09, FreeDom10, ToOutQty, InNumber, InVchCode,
+        InVchType, InDlyorder, SourceVchcode, SourceVchtype, RowNo, ProjectID, Appoint, Draft, FeeTotal, CalcCostOrder,
+        FreeDom11, FreeDom12, FreeDom13, FreeDom14, FreeDom15, FreeDom16, FreeDomDateDif, Custom3, Custom4,
+        SourceVchtype2, SourceVchcode2, SourceDlyOrder2, SettleBtypeId, BtypeOtherCode, DetailSign, ProduceDate,
+        IniInStockToQty, IniInStockBackQty, InStockToQty, InStockBackQty, InstockBackSign, IniInstockToQtyOther,
+        mtypeid, IniToFactQty, ParVchtype, BtypeOtherName, BtypeOtherStandardType, AuditToQty, AuditInstockToQty,
+        ReturnReason
     </sql>
 
 </mapper>

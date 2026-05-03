@@ -84,7 +84,15 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        Vchcode, DATE, NUMBER, VchType, summary, btypeid, etypeid, ktypeid, ktypeid2, ifcheck, period, RedWord, RedOld, InputNo, draft, Total, GatheringDate, projectid, ETypeID2, SourceVchcode, SourceVchType, BillTotal, UserDefined01, UserDefined02, UserDefined03, BTypeID2, AuditLeveal, ProjectId2, WtypeId, Compact, MatchQty, Pubufts, SaveTime, DifAType, Appoint, Acc, NoteCode, isPreARAP, InvoiceType, CancelType, SettleType, NormCost, UserDefined04, UserDefined05, UserDefined06, UserDefined07, UserDefined08, UserDefined09, UserDefined10, UserDefined11, UserDefined12, UserDefined13, UserDefined14, UserDefined15, UserDefined16, SettleBtypeId, IsCheckOut, ModifyPerson, ModifyDate, LastYear, BuildType, BuildNo, IsAutoBuild, InstockBackSign, AuditDate, mtypeid, BillType, IsRejected, ParVchtype, DataCheck, SysUserName, BillFrom, SourceNumber, AuditTime, SourceVchtype2, SourceVchcode2
+        Vchcode, DATE, NUMBER, VchType, summary, btypeid, etypeid, ktypeid, ktypeid2, ifcheck, period, RedWord, RedOld,
+        InputNo, draft, Total, GatheringDate, projectid, ETypeID2, SourceVchcode, SourceVchType, BillTotal,
+        UserDefined01, UserDefined02, UserDefined03, BTypeID2, AuditLeveal, ProjectId2, WtypeId, Compact, MatchQty,
+        Pubufts, SaveTime, DifAType, Appoint, Acc, NoteCode, isPreARAP, InvoiceType, CancelType, SettleType, NormCost,
+        UserDefined04, UserDefined05, UserDefined06, UserDefined07, UserDefined08, UserDefined09, UserDefined10,
+        UserDefined11, UserDefined12, UserDefined13, UserDefined14, UserDefined15, UserDefined16, SettleBtypeId,
+        IsCheckOut, ModifyPerson, ModifyDate, LastYear, BuildType, BuildNo, IsAutoBuild, InstockBackSign, AuditDate,
+        mtypeid, BillType, IsRejected, ParVchtype, DataCheck, SysUserName, BillFrom, SourceNumber, AuditTime,
+        SourceVchtype2, SourceVchcode2
     </sql>
 
 </mapper>

@@ -60,7 +60,11 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         Vchcode, btypeid, etypeid, ktypeid, PtypeId, Qty, Blockno, Prodate, comment
-        , date, usedtype, period, Vchtype, dlyorder, unit, SourceDlyOrder, ktypeid2, SourceVchType, UserDefined01, UserDefined02, FreeDom01, FreeDom02, FreeDom03, FreeDom04, FreeDom05, FreeDom06, FreeDom07, FreeDom08, FreeDom09, FreeDom10, SourceVchcode, RowNo, Position, Position2, Draft, FreeDom11, FreeDom12, FreeDom13, FreeDom14, FreeDom15, FreeDom16, FreeDomDateDif, QtyOther, Custom3, Custom4, BtypeOtherCode, ProduceDate, mtypeid, ParVchtype, BtypeOtherName, BtypeOtherStandardType
+        , date, usedtype, period, Vchtype, dlyorder, unit, SourceDlyOrder, ktypeid2, SourceVchType, UserDefined01,
+        UserDefined02, FreeDom01, FreeDom02, FreeDom03, FreeDom04, FreeDom05, FreeDom06, FreeDom07, FreeDom08,
+        FreeDom09, FreeDom10, SourceVchcode, RowNo, Position, Position2, Draft, FreeDom11, FreeDom12, FreeDom13,
+        FreeDom14, FreeDom15, FreeDom16, FreeDomDateDif, QtyOther, Custom3, Custom4, BtypeOtherCode, ProduceDate,
+        mtypeid, ParVchtype, BtypeOtherName, BtypeOtherStandardType
     </sql>
 
 </mapper>

@@ -32,6 +32,7 @@ public class KaishiCaffeineCacheConfig {
     public static final String USEDTYPE_CACHE = KAISHI_CACHE_KEY + "usedtypeCache";
     public static final String RED_WORD_CACHE = KAISHI_CACHE_KEY + "redWordCache";
     public static final String PDETAIL_CACHE = KAISHI_CACHE_KEY + "pdetailCache";
+    public static final String EDONGFANG_PRODUCT_NAME_CACHE = KAISHI_CACHE_KEY + "edongfangProductNameCache";
 
     @Bean(name = KAISHI_CACHE_MANAGER)
     public CacheManager cacheManager() {
@@ -49,6 +50,7 @@ public class KaishiCaffeineCacheConfig {
         cacheManager.registerCustomCache(USEDTYPE_CACHE, caffeine(5, 5).build());
         cacheManager.registerCustomCache(RED_WORD_CACHE, caffeine(2, 2).build());
         cacheManager.registerCustomCache(PDETAIL_CACHE, caffeine(2, 2).build());
+        cacheManager.registerCustomCache(EDONGFANG_PRODUCT_NAME_CACHE, caffeine(500, 2000).build());
 
         return cacheManager;
     }

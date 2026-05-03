@@ -42,47 +42,6 @@ public class UserSvc implements UserApi {
         this.bizProvider = bizProvider;
     }
 
-    // ==========================================
-    // 1. 获取本地系统树 (部门 + 员工)
-    // ==========================================
-    @Override
-    public List<OrganizationNodeVO> treeSynced() {
-        // 1. 获取所有本地部门
-        List<SysDept> departments = sysDeptRepo.listAll();
-
-        // 2. 获取所有本地用户 (🌟 核心：排除上帝账号)
-        List<SysUser> users = sysUserRepo.listAll();
-
-        List<OrganizationNodeVO> allNodes = loadAllNodes(departments, users);
-
-        List<OrganizationNodeVO> tree = buildTree(allNodes, "0");
-        // 2. 🌟 核心：自底向上计算总人数
-        for (OrganizationNodeVO root : tree) {
-            calculateTotalUserCount(root);
-        }
-        return tree;
-    }
-
-    /**
-     * 递归计算部门总人数（当前部门人数 + 所有子部门人数）
-     */
-    private int calculateTotalUserCount(OrganizationNodeVO node) {
-        int count = 0;
-
-        // 如果当前是用户节点，计数为 1
-        if (node.getNodeType() == 2) {
-            count = 1;
-        } else {
-            // 如果是部门节点，递归累加子节点的人数
-            for (OrganizationNodeVO child : node.getChildren()) {
-                count += calculateTotalUserCount(child);
-            }
-        }
-
-        node.setUserCount(count);
-        return count;
-    }
-
     private static @NonNull List<OrganizationNodeVO> loadAllNodes(List<SysDept> departments, List<SysUser> users) {
         List<OrganizationNodeVO> allNodes = new ArrayList<>();
 
@@ -122,6 +81,47 @@ public class UserSvc implements UserApi {
             allNodes.add(node);
         }
         return allNodes;
+    }
+
+    // ==========================================
+    // 1. 获取本地系统树 (部门 + 员工)
+    // ==========================================
+    @Override
+    public List<OrganizationNodeVO> treeSynced() {
+        // 1. 获取所有本地部门
+        List<SysDept> departments = sysDeptRepo.listAll();
+
+        // 2. 获取所有本地用户 (🌟 核心：排除上帝账号)
+        List<SysUser> users = sysUserRepo.listAll();
+
+        List<OrganizationNodeVO> allNodes = loadAllNodes(departments, users);
+
+        List<OrganizationNodeVO> tree = buildTree(allNodes, "0");
+        // 2. 🌟 核心：自底向上计算总人数
+        for (OrganizationNodeVO root : tree) {
+            calculateTotalUserCount(root);
+        }
+        return tree;
+    }
+
+    /**
+     * 递归计算部门总人数（当前部门人数 + 所有子部门人数）
+     */
+    private int calculateTotalUserCount(OrganizationNodeVO node) {
+        int count = 0;
+
+        // 如果当前是用户节点，计数为 1
+        if (node.getNodeType() == 2) {
+            count = 1;
+        } else {
+            // 如果是部门节点，递归累加子节点的人数
+            for (OrganizationNodeVO child : node.getChildren()) {
+                count += calculateTotalUserCount(child);
+            }
+        }
+
+        node.setUserCount(count);
+        return count;
     }
 
     // ==========================================

@@ -2,13 +2,13 @@ package ${package.Mapper};
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 <#list importMapperFrameworkPackages as pkg>
-import ${pkg};
+    import ${pkg};
 </#list>
 <#if importMapperJavaPackages?size !=0>
 
-<#list importMapperJavaPackages as pkg>
-import ${pkg};
-</#list>
+    <#list importMapperJavaPackages as pkg>
+        import ${pkg};
+    </#list>
 </#if>
 
 /**
@@ -20,7 +20,7 @@ import ${pkg};
 * @since ${date}
 */
 <#if mapperAnnotationClass??>
-@${mapperAnnotationClass.simpleName}
+    @${mapperAnnotationClass.simpleName}
 </#if>
 @DS("${dsName}")
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {

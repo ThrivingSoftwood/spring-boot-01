@@ -20,6 +20,7 @@
         <module>common-security</module>
         <module>common-auth</module>
         <module>common-message</module>
+        <module>common-file</module>
     </modules>
 
     <properties>

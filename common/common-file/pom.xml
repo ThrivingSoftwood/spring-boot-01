@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>common-file</artifactId>
+    <name>common-file</name>
+    <groupId>thriving.softwood.common</groupId>
+    <description>文件</description>
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- 1. 内部核心依赖：获取统一 Result、StringUtil 等 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
+
+
+        <!-- 2. Spring Boot Web：必须引入，因为需要处理 MultipartFile 接口 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 4. Lombok：由父工程管理版本 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+    </build>
+
+</project>
