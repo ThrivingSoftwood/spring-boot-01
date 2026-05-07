@@ -5,25 +5,25 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.6-SNAPSHOT</version>
+        <version>0.0.5-SNAPSHOT</version>
     </parent>
+    <artifactId>common-file</artifactId>
+    <name>common-file</name>
     <groupId>thriving.softwood.common</groupId>
-    <artifactId>common-web</artifactId>
-    <name>common-web</name>
-    <description>Web增强模块</description>
+    <description>文件</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
 
     <dependencies>
-        <!--01.内部依赖 begin-->
+        <!-- 1. 内部核心依赖：获取统一 Result、StringUtil 等 -->
         <dependency>
             <groupId>thriving.softwood.common</groupId>
-            <artifactId>common-framework</artifactId>
+            <artifactId>common-core</artifactId>
         </dependency>
-        <!--01.内部依赖 end-->
 
-        <!--02.Web 相关依赖 begin-->
+
+        <!-- 2. Spring Boot Web：必须引入，因为需要处理 MultipartFile 接口 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -34,14 +34,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- 4. Lombok：由父工程管理版本 -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-restclient</artifactId>
-        </dependency>
-        <!--02.Web 相关依赖 end-->
     </dependencies>
+
+    <build>
+    </build>
+
 </project>

@@ -5,32 +5,26 @@
     <parent>
         <groupId>thriving.softwood</groupId>
         <artifactId>common</artifactId>
-        <version>0.0.6-SNAPSHOT</version>
+        <version>0.0.5-SNAPSHOT</version>
     </parent>
-    <artifactId>common-auth</artifactId>
     <groupId>thriving.softwood.common</groupId>
-    <name>common-auth</name>
-    <description>身份管理中台：处理用户、角色、部门、权限、数据规则的 CRUD 及提供鉴权数据源</description>
+    <artifactId>common-message</artifactId>
+    <name>common-message</name>
+    <description>消息中心模块</description>
     <properties>
         <java.version>${jdk.version}</java.version>
     </properties>
-
     <dependencies>
-        <!--00.项目内依赖 begin-->
-        <!-- ✨ 引入刚建好的数据库底座 -->
+        <!-- 获取 UserContext 和 JWT 校验能力 -->
         <dependency>
             <groupId>thriving.softwood.common</groupId>
             <artifactId>common-security</artifactId>
         </dependency>
+        <!-- 提供 MyBatis-Plus 基础 Repo 能力 -->
         <dependency>
             <groupId>thriving.softwood.common</groupId>
             <artifactId>common-database</artifactId>
         </dependency>
-        <!--00.项目内依赖 end-->
     </dependencies>
-
-
-    <build>
-    </build>
 
 </project>
