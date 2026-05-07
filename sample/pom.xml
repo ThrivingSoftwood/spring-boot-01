@@ -57,6 +57,16 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 🌟 新增 configuration 配置 -->
+                <configuration>
+                    <!-- 🚀 核心魔法：告诉 Spring Boot 启动时将国密 BC 库解压到系统物理磁盘临时目录，绕过嵌套 Jar 的原生签名校验 Bug -->
+                    <requiresUnpack>
+                        <dependency>
+                            <groupId>org.bouncycastle</groupId>
+                            <artifactId>bcprov-jdk18on</artifactId>
+                        </dependency>
+                    </requiresUnpack>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>${project.artifactId}-sample</finalName>
