@@ -9,6 +9,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import cn.hutool.v7.core.collection.CollUtil;
 import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrderStub;
+import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrders;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.mapper.base.EdongfangOrderStubMapper;
 
 /**
@@ -35,4 +36,12 @@ public class EdongfangOrderStubRepo extends AncestorServiceImpl<EdongfangOrderSt
         return lambdaQuery().eq(EdongfangOrderStub::getEOrderId, eOrderId).one();
     }
 
+    public EdongfangOrderStub loadStub(EdongfangOrders order) {
+        EdongfangOrderStub currentStub = getByOrderId(order.getEOrderId());
+        if (null != currentStub) {
+            return currentStub;
+        }
+        currentStub = new EdongfangOrderStub(order);
+        return currentStub;
+    }
 }

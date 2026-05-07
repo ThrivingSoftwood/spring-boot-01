@@ -10,6 +10,7 @@
         <result column="last_submit_state" property="lastSubmitState"/>
         <result column="last_status" property="lastStatus"/>
         <result column="last_receive_time" property="lastReceiveTime"/>
+        <result column="pending_action_status" property="pendingActionStatus"/>
         <result column="shipped_flag" property="shippedFlag"/>
         <result column="preorder_notified" property="preorderNotified"/>
         <result column="consult_result_notified" property="consultResultNotified"/>
@@ -23,7 +24,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, e_order_id, last_submit_state, last_status, last_receive_time, shipped_flag, preorder_notified,
+        id, e_order_id, last_submit_state, last_status, last_receive_time, pending_action_status, shipped_flag,
+        preorder_notified,
         consult_result_notified, confirm_receipt_notified, order_price, purchaser, name, create_time, update_time
     </sql>
 </mapper>

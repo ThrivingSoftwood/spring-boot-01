@@ -1,11 +1,12 @@
 package thriving.softwood.kaishi.biz.api.edongfang;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import thriving.softwood.kaishi.biz.pojo.dto.EdongfangOrderDTO;
 import thriving.softwood.kaishi.biz.pojo.record.EdongfangOrderQryReq;
 import thriving.softwood.kaishi.biz.pojo.record.EdongfangOrderReq;
 import thriving.softwood.kaishi.biz.pojo.vo.EdongfangOrderDetailVO;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrderItems;
-import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrders;
 
 public interface EdongfangOrderApi {
     /**
@@ -26,7 +27,7 @@ public interface EdongfangOrderApi {
     /**
      * 查询
      */
-    Page<EdongfangOrders> pageOrders(long pageNo, long pageSize, EdongfangOrderQryReq req);
+    Page<EdongfangOrderDTO> pageOrders(long pageNo, long pageSize, EdongfangOrderQryReq req);
 
     EdongfangOrderDetailVO getOrderDetail(String eOrderId);
 

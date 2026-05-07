@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import thriving.softwood.common.core.result.Result;
 import thriving.softwood.kaishi.biz.api.edongfang.EdongfangOrderApi;
+import thriving.softwood.kaishi.biz.pojo.dto.EdongfangOrderDTO;
 import thriving.softwood.kaishi.biz.pojo.record.EdongfangOrderQryReq;
 import thriving.softwood.kaishi.biz.pojo.record.EdongfangOrderReq;
 import thriving.softwood.kaishi.biz.pojo.vo.EdongfangOrderDetailVO;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrderItems;
-import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrders;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.repo.EdongfangOrdersRepo;
 
 @RestController
@@ -29,7 +29,7 @@ public class EdongfangOrderController {
      * 🌟 分页查询订单 (支持 E采订单号逗号分割 IN 查询)
      */
     @GetMapping("/page")
-    public Result<Page<EdongfangOrders>> pageOrders(@RequestParam(defaultValue = "1") long pageNo,
+    public Result<Page<EdongfangOrderDTO>> pageOrders(@RequestParam(defaultValue = "1") long pageNo,
         @RequestParam(defaultValue = "50") long pageSize, EdongfangOrderQryReq req) { // 👈 移除 @RequestParam
         return Result.success(edongfangOrderApi.pageOrders(pageNo, pageSize, req));
     }

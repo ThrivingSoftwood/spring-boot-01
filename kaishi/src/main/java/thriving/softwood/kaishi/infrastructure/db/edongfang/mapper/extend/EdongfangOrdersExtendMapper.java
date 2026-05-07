@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import thriving.softwood.kaishi.biz.pojo.dto.EdongfangOrderDTO;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrders;
@@ -21,4 +23,7 @@ import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.Edongfan
 @DS("edongfang")
 public interface EdongfangOrdersExtendMapper extends BaseMapper<EdongfangOrders> {
     List<EdongfangOrderDTO> listUnnotified(@Param("maxOrderId") String maxOrderId);
+
+    Page<EdongfangOrderDTO> page(Page<?> page, @Param("queryShipped") Boolean queryShipped,
+        @Param("ew") Wrapper<EdongfangOrderDTO> wrapper);
 }

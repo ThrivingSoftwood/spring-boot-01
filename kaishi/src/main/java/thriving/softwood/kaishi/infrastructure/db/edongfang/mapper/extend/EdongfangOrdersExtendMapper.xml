@@ -7,6 +7,8 @@
     <resultMap id="BaseResultMap" type="thriving.softwood.kaishi.biz.pojo.dto.EdongfangOrderDTO">
         <id column="pk" property="pk"/>
         <result column="stub_id" property="stubId"/>
+        <result column="preorder_notified" property="preorderNotified"/>
+        <result column="pending_action_status" property="pendingActionStatus"/>
         <result column="e_order_id" property="eOrderId"/>
         <result column="name" property="name"/>
         <result column="province" property="province"/>
@@ -49,7 +51,9 @@
     </resultMap>
 
     <select id="listUnnotified" resultMap="BaseResultMap">
-        select b.id as stub_id, a.e_order_id, a.submit_state, a.status, a.name, a.purchaser, a.order_price
+        select b.id as stub_id, ifnull(b.preorder_notified, 0) as preorder_notified, a.e_order_id, a.submit_state,
+        a.status, a.name, a.purchaser,
+        a.order_price
         from edongfang_orders as a
         left join edongfang_order_stub as b on a.e_order_id = b.e_order_id
         <where>
@@ -59,11 +63,30 @@
             <!-- 🌟 核心修复：加了外层的大括号包裹 OR 逻辑 -->
             AND (
             b.id IS NULL
-            OR (a.submit_state IS NOT NULL AND a.submit_state &lt;&gt; 0 AND b.consult_result_notified = 0)
+            OR (ifnull(b.preorder_notified, 0) = 0)
+            OR (a.submit_state IS NOT NULL AND a.submit_state &lt;&gt; 0)
             OR (a.status = 1 AND b.confirm_receipt_notified = 0)
             )
         </where>
         order by a.e_order_id
+    </select>
+
+
+    <select id="page" resultMap="BaseResultMap">
+        select a.* from (
+        select b.id as stub_id, b.pending_action_status, a.*
+        from edongfang_orders as a
+        left join edongfang_order_stub as b on a.e_order_id = b.e_order_id
+        <where>
+            <choose>
+                <when test="queryShipped">
+                    and ifnull(b.shipped_flag, 0) = 1
+                </when>
+                <otherwise></otherwise>
+            </choose>
+        </where>
+        ) as a
+        ${ew.customSqlSegment}
     </select>
 
 </mapper>

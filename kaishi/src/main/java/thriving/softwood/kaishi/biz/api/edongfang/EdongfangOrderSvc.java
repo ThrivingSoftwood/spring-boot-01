@@ -2,7 +2,6 @@ package thriving.softwood.kaishi.biz.api.edongfang;
 
 import static thriving.softwood.kaishi.biz.enums.EdongfangOrderStatusEnum.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -15,11 +14,13 @@ import cn.hutool.v7.core.map.MapUtil;
 import cn.hutool.v7.core.text.StrUtil;
 import cn.hutool.v7.json.JSONUtil;
 import thriving.softwood.kaishi.biz.api.support.DictionaryApi;
+import thriving.softwood.kaishi.biz.pojo.dto.EdongfangOrderDTO;
 import thriving.softwood.kaishi.biz.pojo.record.EdongfangOrderQryReq;
 import thriving.softwood.kaishi.biz.pojo.record.EdongfangOrderReq;
 import thriving.softwood.kaishi.biz.pojo.vo.EdongfangOrderDetailVO;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangMessages;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrderItems;
+import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrderStub;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangOrders;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.repo.EdongfangMessagesRepo;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.repo.EdongfangOrderItemsRepo;
@@ -50,6 +51,8 @@ public class EdongfangOrderSvc implements EdongfangOrderApi {
      */
     @Override
     public void cancelOrders(EdongfangOrderReq req) {
+        ordersRepo.lambdaUpdate().in(EdongfangOrders::getEOrderId, req.eOrderIds())
+            .set(EdongfangOrders::getStatus, CANCELED.code()).update();
         pushOrderStateMessage(req, CANCELED.code());
     }
 
@@ -58,6 +61,8 @@ public class EdongfangOrderSvc implements EdongfangOrderApi {
      */
     @Override
     public void deliverOrders(EdongfangOrderReq req) {
+        ordersRepo.lambdaUpdate().in(EdongfangOrders::getEOrderId, req.eOrderIds())
+            .set(EdongfangOrders::getStatus, SIGNED.code()).update();
         pushOrderStateMessage(req, SIGNED.code());
     }
 
@@ -66,6 +71,8 @@ public class EdongfangOrderSvc implements EdongfangOrderApi {
      */
     @Override
     public void shipOrders(EdongfangOrderReq req) {
+        ordersRepo.lambdaUpdate().in(EdongfangOrders::getEOrderId, req.eOrderIds())
+            .set(EdongfangOrders::getStatus, SHIPPED.code()).update();
         pushOrderStateMessage(req, SHIPPED.code());
         edongfangOrderStubRepo.shipOrders(req.eOrderIds());
     }
@@ -74,7 +81,15 @@ public class EdongfangOrderSvc implements EdongfangOrderApi {
      * 核心推送逻辑
      */
     private void pushOrderStateMessage(EdongfangOrderReq req, Integer state) {
-        for (String eOrderId : req.eOrderIds()) {
+
+        List<String> eOrderIds = req.eOrderIds();
+        if (eOrderIds == null || eOrderIds.isEmpty()) {
+            return;
+        }
+
+        for (String eOrderId : eOrderIds) {
+
+            // 3. 构建并保存消息
             EdongfangMessages msg = new EdongfangMessages();
             msg.setPk(IdUtil.fastSimpleUUID());
             msg.setType("302");
@@ -88,25 +103,8 @@ public class EdongfangOrderSvc implements EdongfangOrderApi {
     }
 
     @Override
-    public Page<EdongfangOrders> pageOrders(long pageNo, long pageSize, EdongfangOrderQryReq req) {
-        var queryWrapper = ordersRepo.lambdaQuery();
-
-        // 🌟 支持逗号分隔的 E采平台订单号 IN 查询
-        if (StrUtil.isNotBlank(req.eOrderIds())) {
-            List<String> idList = Arrays.asList(req.eOrderIds().split(","));
-            queryWrapper.in(EdongfangOrders::getEOrderId, idList);
-        }
-
-        // 🌟 需求 2.3.9：发货信息页面复用（增加条件 status not in ('0','-2')）
-        if (Boolean.TRUE.equals(req.queryShipped())) {
-            queryWrapper.exists("select 1 from edongfang_order_stub as eos"
-                + " where eos.e_order_id = edongfang_orders.e_order_id and eos.shipped_flag = {0}", 1);
-        } else if (req.status() != null) {
-            queryWrapper.eq(EdongfangOrders::getStatus, req.status());
-        }
-
-        queryWrapper.orderByDesc(EdongfangOrders::getCreateTime);
-        return queryWrapper.page(new Page<>(pageNo, pageSize));
+    public Page<EdongfangOrderDTO> pageOrders(long pageNo, long pageSize, EdongfangOrderQryReq req) {
+        return ordersRepo.page(pageNo, pageSize, req);
     }
 
     @Override
@@ -125,7 +123,9 @@ public class EdongfangOrderSvc implements EdongfangOrderApi {
             }
             item.setName(dict.getEdongfangProductName(item.getSku()));
         });
-        return new EdongfangOrderDetailVO(order, items);
+        EdongfangOrderStub stub =
+            edongfangOrderStubRepo.lambdaQuery().eq(EdongfangOrderStub::getEOrderId, eOrderId).one();
+        return new EdongfangOrderDetailVO(new EdongfangOrderDTO(order, stub), items);
     }
 
     @Override

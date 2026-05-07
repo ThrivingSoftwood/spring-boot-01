@@ -157,9 +157,9 @@ public class EdongfangProductSvc implements EdongfangProductApi {
         LocalDateTime now = LocalDateTime.now();
         req.params().stream().filter(dto -> DELETE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);
-            dto.setDeleted(1);
             dto.setUpdateTime(now);
             paramsRepo.updateById(dto);
+            paramsRepo.removeById(dto);
         });
         req.params().stream().filter(dto -> UPDATE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);
@@ -180,9 +180,9 @@ public class EdongfangProductSvc implements EdongfangProductApi {
         LocalDateTime now = LocalDateTime.now();
         req.images().stream().filter(dto -> DELETE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);
-            dto.setDeleted(1);
             dto.setUpdateTime(now);
             imagesRepo.updateById(dto);
+            imagesRepo.removeById(dto);
         });
         req.images().stream().filter(dto -> UPDATE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);
@@ -203,9 +203,9 @@ public class EdongfangProductSvc implements EdongfangProductApi {
         LocalDateTime now = LocalDateTime.now();
         req.stocks().stream().filter(dto -> DELETE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);
-            dto.setDeleted(1);
             dto.setUpdateTime(now);
             stocksRepo.updateById(dto);
+            stocksRepo.removeById(dto);
         });
         req.stocks().stream().filter(dto -> UPDATE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);
@@ -226,9 +226,9 @@ public class EdongfangProductSvc implements EdongfangProductApi {
         LocalDateTime now = LocalDateTime.now();
         req.prices().stream().filter(dto -> DELETE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);
-            dto.setDeleted(1);
             dto.setUpdateTime(now);
             pricesRepo.updateById(dto);
+            pricesRepo.removeById(dto);
         });
         req.prices().stream().filter(dto -> UPDATE.code().equals(dto.getDealType())).forEach(dto -> {
             dto.setUpdateBy(loginAccount);

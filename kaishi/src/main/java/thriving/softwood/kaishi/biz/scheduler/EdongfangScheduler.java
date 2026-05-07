@@ -74,10 +74,10 @@ public class EdongfangScheduler {
 
         for (EdongfangOrderDTO dto : dtos) {
             // 🌟 修复关键漏洞：每次必须 new 一个干净的实体
-            EdongfangOrderStub currentStub = loadStub(dto);
+            EdongfangOrderStub currentStub = stubRepo.loadStub(dto);
 
             // 1. 处理新订单
-            if (dto.getStubId() == null) {
+            if (!dto.getPreorderNotified()) {
                 String content = String.format("E采平台有一笔新增订单【%s】收货人【%s】采购人【%s】金额【%s】，待发货处理。", dto.getEOrderId(),
                     dto.getName(), dto.getPurchaser(), dto.getOrderPrice());
                 loadAndSendMsg(receiverId, "新预购订单提醒", content, dto.getEOrderId());
@@ -85,11 +85,13 @@ public class EdongfangScheduler {
             }
 
             // 2. 处理客户确认/取消状态
-            if (dto.getSubmitState() != null && dto.getSubmitState() != 0 && !currentStub.getConsultResultNotified()) {
+            if (dto.getSubmitState() != null && dto.getSubmitState() != 0
+                && !currentStub.getLastSubmitState().equals(dto.getSubmitState())) {
                 String action = dto.getSubmitState() > 0 ? "已确认采购" : "已取消采购";
                 String content = String.format("订单【%s】客户 %s，请及时跟进。", dto.getEOrderId(), action);
                 loadAndSendMsg(receiverId, "预购订单状态变更", content, dto.getEOrderId());
                 currentStub.setConsultResultNotified(true);
+                currentStub.setLastSubmitState(dto.getSubmitState());
             }
 
             // 3. 处理客户确认收货
@@ -97,7 +99,12 @@ public class EdongfangScheduler {
                 String content = String.format("订单【%s】客户已确认收货。", dto.getEOrderId());
                 loadAndSendMsg(receiverId, "订单已确认收货提醒", content, dto.getEOrderId());
                 currentStub.setConfirmReceiptNotified(true);
+                currentStub.setLastStatus(dto.getStatus());
             }
+
+            currentStub.setOrderPrice(dto.getOrderPrice());
+            currentStub.setPurchaser(dto.getPurchaser());
+            currentStub.setName(dto.getName());
 
             stubsToSave.add(currentStub);
         }
@@ -105,25 +112,6 @@ public class EdongfangScheduler {
         // 🌟 批量保存存根表，提升数据库 I/O 性能
         stubRepo.saveOrUpdateBatch(stubsToSave);
         logger.info("✅ 成功处理并发送了 {} 笔订单的业务状态变更通知", dtos.size());
-    }
-
-    private EdongfangOrderStub loadStub(EdongfangOrderDTO dto) {
-        EdongfangOrderStub currentStub = stubRepo.getByOrderId(dto.getEOrderId());
-        if (null != currentStub) {
-            return currentStub;
-        }
-        currentStub = new EdongfangOrderStub();
-        currentStub.setId(dto.getStubId());
-        currentStub.setEOrderId(dto.getEOrderId());
-        currentStub.setOrderPrice(dto.getOrderPrice());
-        currentStub.setPurchaser(dto.getPurchaser());
-        currentStub.setName(dto.getName());
-        currentStub.setLastSubmitState(dto.getSubmitState());
-        currentStub.setLastStatus(dto.getStatus());
-        currentStub.setPreorderNotified(false);
-        currentStub.setConsultResultNotified(false);
-        currentStub.setConfirmReceiptNotified(false);
-        return currentStub;
     }
 
     private void scanLogistics(String maxOrderId, Long receiverId) {

@@ -29,6 +29,18 @@ public class EdongfangOrderStub implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public EdongfangOrderStub(EdongfangOrders order) {
+        this.eOrderId = order.getEOrderId();
+        this.orderPrice = order.getOrderPrice();
+        this.purchaser = order.getPurchaser();
+        this.name = order.getName();
+        this.lastSubmitState = order.getSubmitState();
+        this.lastStatus = order.getStatus();
+        this.preorderNotified = false;
+        this.consultResultNotified = false;
+        this.confirmReceiptNotified = false;
+    }
+
     /**
      * 自增主键
      */
@@ -58,6 +70,12 @@ public class EdongfangOrderStub implements Serializable {
      */
     @TableField("last_receive_time")
     private LocalDateTime lastReceiveTime;
+
+    /**
+     * 进行中的操作指令状态(5:发货中, -2:取消中, 1:妥投中，为空代表无挂起操作)
+     */
+    @TableField("pending_action_status")
+    private Integer pendingActionStatus;
 
     /**
      * 发货状态(0:未发货, 1:已发货)

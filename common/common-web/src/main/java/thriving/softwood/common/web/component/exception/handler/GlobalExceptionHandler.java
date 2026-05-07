@@ -6,9 +6,12 @@ import static thriving.softwood.common.core.enums.RespCodeEnum.INTERNAL_SERVER_E
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import thriving.softwood.common.core.enums.RespCodeEnum;
@@ -64,14 +67,27 @@ public class GlobalExceptionHandler {
     /**
      * 专项拦截：文件上传大小超出限制
      */
-    // @ExceptionHandler(MaxUploadSizeExceededException.class)
-    // @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    // public Result<String> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
-    // logger.warn("🛑 文件上传失败：文件大小超出系统允许的阈值");
-    //
-    // // 从异常信息中提取具体的限制值，给用户更精准的提示
-    // return Result.error(RespCodeEnum.BAD_REQ.code(), "上传失败：单个文件大小不能超过 10MB");
-    // }
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<String> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        logger.warn("🛑 文件上传失败：文件大小超出系统允许的阈值");
+
+        // 从异常信息中提取具体的限制值，给用户更精准的提示
+        return Result.error(RespCodeEnum.BAD_REQ.code(), "上传失败：单个文件大小不能超过配置限额!");
+    }
+
+    /**
+     * 🎧 专项拦截：客户端主动断开异步请求 (SSE 长连接断开) 这是一个正常现象，不需要打印长长的 Error 堆栈，也不需要报警。
+     */
+    @ExceptionHandler(AsyncRequestNotUsableException.class)
+    public Result<String> handleAsyncRequestNotUsableException(AsyncRequestNotUsableException e) {
+        // 仅仅打印一行 info 或 debug 级别的日志即可
+        logger.info("📡 SSE 连接已关闭：客户端断开连接 (Broken pipe)");
+
+        // 这里其实前端已经收不到响应了，因为连接已经断了。
+        // 返回一个标准数据结构只是为了符合代码规范。
+        return Result.error(INTERNAL_SERVER_ERROR.code(), "连接已断开");
+    }
 
     /**
      * 2. 🌟 核心：处理所有未知的系统异常
