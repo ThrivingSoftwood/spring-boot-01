@@ -8,6 +8,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import cn.hutool.v7.core.text.StrUtil;
+import cn.hutool.v7.core.util.ObjUtil;
 import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
 import thriving.softwood.kaishi.biz.pojo.record.EdongfangProductQryReq;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.entity.base.EdongfangProducts;
@@ -38,6 +39,10 @@ public class EdongfangProductsRepo extends AncestorServiceImpl<EdongfangProducts
             .eq(StrUtil.isNotBlank(qryReq.sku()), EdongfangProducts::getSku, qryReq.sku())
             // 支持按名称模糊查询
             .like(StrUtil.isNotBlank(qryReq.name()), EdongfangProducts::getName, qryReq.name())
+
+            .like(StrUtil.isNotBlank(qryReq.productArea()), EdongfangProducts::getProductArea, qryReq.productArea())
+            .ge(ObjUtil.isNotEmpty(qryReq.minWeight()), EdongfangProducts::getWeight, qryReq.minWeight())
+            .le(ObjUtil.isNotEmpty(qryReq.maxWeight()), EdongfangProducts::getWeight, qryReq.maxWeight())
             .orderByDesc(EdongfangProducts::getCreateTime).page(page);
     }
 
