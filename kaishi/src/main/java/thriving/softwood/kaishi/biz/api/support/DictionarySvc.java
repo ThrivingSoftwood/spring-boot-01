@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import thriving.softwood.kaishi.biz.pojo.dto.DlyndxDTO;
 import thriving.softwood.kaishi.infrastructure.db.edongfang.repo.EdongfangProductsRepo;
+import thriving.softwood.kaishi.infrastructure.db.kaishi2026.mapper.extend.DictionaryExtendMapper;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.repo.*;
 
 ;
@@ -29,6 +30,7 @@ public class DictionarySvc implements DictionaryApi {
     private final GblVchtypeRepo gblVchtypeRepo;
     private final DlyndxRepo dlyndxRepo;
     private final EdongfangProductsRepo edongfangProductsRepo;
+    private final DictionaryExtendMapper dictMapper;
 
     private Cache usedTypeCache;
     private Cache pdetailCache;
@@ -37,7 +39,8 @@ public class DictionarySvc implements DictionaryApi {
     @Autowired
     public DictionarySvc(@Qualifier(KAISHI_CACHE_MANAGER) CacheManager cachemanager, DepartmentRepo departmentRepo,
         BtypeRepo btypeRepo, EmployeeRepo employeeRepo, MtypeRepo mtypeRepo, PtypeRepo ptypeRepo, StockRepo stockRepo,
-        GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo, EdongfangProductsRepo edongfangProductsRepo) {
+        GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo, EdongfangProductsRepo edongfangProductsRepo,
+        DictionaryExtendMapper dictMapper) {
         cacheManager = cachemanager;
         this.departmentRepo = departmentRepo;
         this.btypeRepo = btypeRepo;
@@ -51,54 +54,55 @@ public class DictionarySvc implements DictionaryApi {
         usedTypeCache = cachemanager.getCache(USEDTYPE_CACHE);
         pdetailCache = cachemanager.getCache(PDETAIL_CACHE);
         redWordCache = cachemanager.getCache(RED_WORD_CACHE);
+        this.dictMapper = dictMapper;
     }
 
     @Override
     @Cacheable(cacheNames = BTYPE_CACHE, key = "#typeId")
     public String getBtypeName(String typeId) {
-        return btypeRepo.getFullNameByTypeid(typeId);
+        return dictMapper.getBtypeFullNameByTypeid(typeId);
     }
 
     @Override
     @Cacheable(cacheNames = EMPLOYEE_CACHE, key = "#typeId")
     public String getEmployeeName(String typeId) {
-        return employeeRepo.getFullNameByTypeid(typeId);
+        return dictMapper.getEmployeeFullNameByTypeid(typeId);
     }
 
     @Override
     @Cacheable(cacheNames = STOCK_CACHE, key = "#typeId")
     public String getStockName(String typeId) {
-        return stockRepo.getFullNameByTypeid(typeId);
+        return dictMapper.getStockFullNameByTypeid(typeId);
     }
 
     @Override
     @Cacheable(cacheNames = PTYPE_CACHE, key = "#typeId")
     public String getPtypeName(String typeId) {
-        return ptypeRepo.getFullNameByTypeid(typeId);
+        return dictMapper.getPtypeFullNameByTypeid(typeId);
     }
 
     @Override
     @Cacheable(cacheNames = VCHTYPE_CACHE, key = "#vchtype")
     public String getVchName(Integer vchtype) {
-        return gblVchtypeRepo.getFullNameByVchType(vchtype);
+        return dictMapper.getVchNameByVchtype(vchtype);
     }
 
     @Override
     @Cacheable(cacheNames = DEPARTMENT_CACHE, key = "#typeId")
     public String getDepartmentName(String typeId) {
-        return departmentRepo.getFullNameByTypeid(typeId);
+        return dictMapper.getDepartmentFullNameByTypeid(typeId);
     }
 
     @Override
     @Cacheable(cacheNames = MTYPE_CACHE, key = "#typeId")
     public String getMtypeName(String typeId) {
-        return mtypeRepo.getFullNameByTypeid(typeId);
+        return dictMapper.getMtypeFullNameByTypeid(typeId);
     }
 
     @Override
     @Cacheable(cacheNames = DLYNDX_CACHE, key = "#vchcode")
     public DlyndxDTO getDlyndxDTO(Long vchcode) {
-        return dlyndxRepo.getDTOByVchcode(vchcode);
+        return dictMapper.getDlyndxDTOByVchcode(vchcode);
     }
 
     @Override

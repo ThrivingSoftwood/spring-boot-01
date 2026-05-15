@@ -198,13 +198,13 @@ EXECUTE PROCEDURE update_update_time();
 TRUNCATE TABLE public.contact_info RESTART IDENTITY;
 
 -- ============================================================
--- 报价单信息表 (quote)
+-- 报价单信息表 (quotation)
 -- ============================================================
-DROP TABLE IF EXISTS public.quote CASCADE;
-CREATE TABLE public.quote
+DROP TABLE IF EXISTS public.quotation CASCADE;
+CREATE TABLE public.quotation
 (
     id                 SERIAL PRIMARY KEY,
-    quote_no           VARCHAR(30)  NOT NULL, -- 报价单号
+    quotation_no       VARCHAR(30)  NOT NULL, -- 报价单号
     supplier_code      VARCHAR(20)  NOT NULL, -- 所属供应商编码
     product_info       VARCHAR(30),           -- 商品信息
     product_name       VARCHAR(100) NOT NULL, -- 商品名称
@@ -212,7 +212,7 @@ CREATE TABLE public.quote
     supply_place       TEXT,                  -- 供货地
     available_qty      NUMERIC(64, 8),        -- 可供货数量
     quantity_unit      TEXT,                  -- 数量单位
-    quote_type         TEXT,                  -- 报价类型
+    quotation_type     TEXT,                  -- 报价类型
     unit_price         NUMERIC(64, 8),        -- 报价单价(含税)
     tax_rate           NUMERIC(7, 4),         -- 增值税税率(%)
     remark             TEXT,                  -- 报价备注信息
@@ -224,35 +224,35 @@ CREATE TABLE public.quote
     ext_info           TEXT
 );
 
-COMMENT ON TABLE public.quote IS '报价单信息表';
-COMMENT ON COLUMN public.quote.id IS '自增主键，唯一标识每条报价记录';
-COMMENT ON COLUMN public.quote.quote_no IS '报价单号';
-COMMENT ON COLUMN public.quote.supplier_code IS '所属供应商编码';
-COMMENT ON COLUMN public.quote.product_info IS '商品信息';
-COMMENT ON COLUMN public.quote.product_name IS '商品名称';
-COMMENT ON COLUMN public.quote.product_code IS '商品编码';
-COMMENT ON COLUMN public.quote.supply_place IS '供货地';
-COMMENT ON COLUMN public.quote.available_qty IS '可供货数量';
-COMMENT ON COLUMN public.quote.quantity_unit IS '数量单位';
-COMMENT ON COLUMN public.quote.quote_type IS '报价类型';
-COMMENT ON COLUMN public.quote.unit_price IS '报价单价(含税)';
-COMMENT ON COLUMN public.quote.tax_rate IS '增值税税率(%)';
-COMMENT ON COLUMN public.quote.remark IS '报价备注信息';
-COMMENT ON COLUMN public.quote.auxiliary_material IS '报价辅助材料';
-COMMENT ON COLUMN public.quote.outdated IS '过期(失效)标记 (0:生效, 1:失效)';
-COMMENT ON COLUMN public.quote.deleted IS '已删除标记 (0:正常, 1:删除)';
-COMMENT ON COLUMN public.quote.create_time IS '创建时间';
-COMMENT ON COLUMN public.quote.update_time IS '更新时间';
-COMMENT ON COLUMN public.quote.ext_info IS '扩展信息';
+COMMENT ON TABLE public.quotation IS '报价单信息表';
+COMMENT ON COLUMN public.quotation.id IS '自增主键，唯一标识每条报价记录';
+COMMENT ON COLUMN public.quotation.quotation_no IS '报价单号';
+COMMENT ON COLUMN public.quotation.supplier_code IS '所属供应商编码';
+COMMENT ON COLUMN public.quotation.product_info IS '商品信息';
+COMMENT ON COLUMN public.quotation.product_name IS '商品名称';
+COMMENT ON COLUMN public.quotation.product_code IS '商品编码';
+COMMENT ON COLUMN public.quotation.supply_place IS '供货地';
+COMMENT ON COLUMN public.quotation.available_qty IS '可供货数量';
+COMMENT ON COLUMN public.quotation.quantity_unit IS '数量单位';
+COMMENT ON COLUMN public.quotation.quotation_type IS '报价类型';
+COMMENT ON COLUMN public.quotation.unit_price IS '报价单价(含税)';
+COMMENT ON COLUMN public.quotation.tax_rate IS '增值税税率(%)';
+COMMENT ON COLUMN public.quotation.remark IS '报价备注信息';
+COMMENT ON COLUMN public.quotation.auxiliary_material IS '报价辅助材料';
+COMMENT ON COLUMN public.quotation.outdated IS '过期(失效)标记 (0:生效, 1:失效)';
+COMMENT ON COLUMN public.quotation.deleted IS '已删除标记 (0:正常, 1:删除)';
+COMMENT ON COLUMN public.quotation.create_time IS '创建时间';
+COMMENT ON COLUMN public.quotation.update_time IS '更新时间';
+COMMENT ON COLUMN public.quotation.ext_info IS '扩展信息';
 
-ALTER TABLE public.quote
+ALTER TABLE public.quotation
     OWNER TO postgres;
 
-CREATE TRIGGER trg_update_quote_ut
+CREATE TRIGGER trg_update_quotation_ut
     BEFORE UPDATE
-    ON public.quote
+    ON public.quotation
     FOR EACH ROW
 EXECUTE PROCEDURE update_update_time();
 
 
-TRUNCATE TABLE public.quote RESTART IDENTITY;
+TRUNCATE TABLE public.quotation RESTART IDENTITY;

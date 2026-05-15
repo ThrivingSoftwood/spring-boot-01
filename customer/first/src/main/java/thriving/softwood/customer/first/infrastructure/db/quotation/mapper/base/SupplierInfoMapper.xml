@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.quotation.mapper.base.SupplierInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="thriving.softwood.customer.first.infrastructure.db.quotation.entity.base.SupplierInfo">
+        <id column="id" property="id" />
+        <result column="supplier_code" property="supplierCode" />
+        <result column="supplier_name" property="supplierName" />
+        <result column="basic_info" property="basicInfo" />
+        <result column="region" property="region" />
+        <result column="raw_material_name" property="rawMaterialName" />
+        <result column="quotation_manager" property="quotationManager" />
+        <result column="internal_contact" property="internalContact" />
+        <result column="purchase_contact" property="purchaseContact" />
+        <result column="contact_name" property="contactName" />
+        <result column="contact_phone" property="contactPhone" />
+        <result column="remark" property="remark" />
+        <result column="email" property="email" />
+        <result column="notify_method" property="notifyMethod" />
+        <result column="attachment" property="attachment" />
+        <result column="financial_info" property="financialInfo" />
+        <result column="vat_rate" property="vatRate" />
+        <result column="invoice_name" property="invoiceName" />
+        <result column="tax_id" property="taxId" />
+        <result column="bank_name" property="bankName" />
+        <result column="bank_account" property="bankAccount" />
+        <result column="bank_address" property="bankAddress" />
+        <result column="bank_phone" property="bankPhone" />
+        <result column="related_contact" property="relatedContact" />
+        <result column="deleted" property="deleted" />
+        <result column="last_modifier" property="lastModifier" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="ext_info" property="extInfo" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, supplier_code, supplier_name, basic_info, region, raw_material_name, quotation_manager, internal_contact, purchase_contact, contact_name, contact_phone, remark, email, notify_method, attachment, financial_info, vat_rate, invoice_name, tax_id, bank_name, bank_account, bank_address, bank_phone, related_contact, deleted, last_modifier, create_time, update_time, ext_info
+    </sql>
+
+</mapper>

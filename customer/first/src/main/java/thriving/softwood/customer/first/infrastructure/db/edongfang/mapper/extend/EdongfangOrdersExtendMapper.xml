@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.edongfang.mapper.extend.EdongfangOrdersExtendMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="thriving.softwood.customer.first.biz.pojo.dto.EdongfangOrderDTO">
+        <id column="pk" property="pk"/>
+        <result column="stub_id" property="stubId"/>
+        <result column="preorder_notified" property="preorderNotified"/>
+        <result column="pending_action_status" property="pendingActionStatus"/>
+        <result column="e_order_id" property="eOrderId"/>
+        <result column="name" property="name"/>
+        <result column="province" property="province"/>
+        <result column="province_name" property="provinceName"/>
+        <result column="city" property="city"/>
+        <result column="city_name" property="cityName"/>
+        <result column="county" property="county"/>
+        <result column="county_name" property="countyName"/>
+        <result column="purchaser" property="purchaser"/>
+        <result column="address" property="address"/>
+        <result column="zip" property="zip"/>
+        <result column="phone" property="phone"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="remark" property="remark"/>
+        <result column="invoice_title" property="invoiceTitle"/>
+        <result column="invoice_type" property="invoiceType"/>
+        <result column="invoice_tax_num" property="invoiceTaxNum"/>
+        <result column="invoice_bank" property="invoiceBank"/>
+        <result column="invoice_bank_account" property="invoiceBankAccount"/>
+        <result column="invoice_address" property="invoiceAddress"/>
+        <result column="invoice_phone" property="invoicePhone"/>
+        <result column="payment" property="payment"/>
+        <result column="order_price" property="orderPrice"/>
+        <result column="freight" property="freight"/>
+        <result column="dep_name" property="depName"/>
+        <result column="purchaser_phone" property="purchaserPhone"/>
+        <result column="purchaser_mobile" property="purchaserMobile"/>
+        <result column="purchaser_email" property="purchaserEmail"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="cu" property="cu"/>
+        <result column="submit_state" property="submitState"/>
+        <result column="refund_status" property="refundStatus"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="listUnnotified" resultMap="BaseResultMap">
+        select b.id as stub_id, ifnull(b.preorder_notified, 0) as preorder_notified, a.e_order_id, a.submit_state,
+        a.status, a.name, a.purchaser,
+        a.order_price
+        from edongfang_orders as a
+        left join edongfang_order_stub as b on a.e_order_id = b.e_order_id
+        <where>
+            <if test="maxOrderId != null and maxOrderId != ''">
+                a.e_order_id &lt;= #{maxOrderId}
+            </if>
+            <!-- 🌟 核心修复：加了外层的大括号包裹 OR 逻辑 -->
+            AND (
+            b.id IS NULL
+            OR (ifnull(b.preorder_notified, 0) = 0)
+            OR (a.submit_state IS NOT NULL AND a.submit_state &lt;&gt; 0)
+            OR (a.status = 1 AND b.confirm_receipt_notified = 0)
+            )
+        </where>
+        order by a.e_order_id
+    </select>
+
+
+    <select id="page" resultMap="BaseResultMap">
+        select a.* from (
+        select b.id as stub_id, b.pending_action_status, a.*
+        from edongfang_orders as a
+        left join edongfang_order_stub as b on a.e_order_id = b.e_order_id
+        <where>
+            <choose>
+                <when test="queryShipped">
+                    and ifnull(b.shipped_flag, 0) = 1
+                </when>
+                <otherwise></otherwise>
+            </choose>
+        </where>
+        ) as a
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>thriving.softwood</groupId>
+        <artifactId>customer</artifactId>
+        <version>0.0.6-SNAPSHOT</version>
+    </parent>
+    <artifactId>first</artifactId>
+    <name>first</name>
+    <description>对应明道云招标采购一体化应用</description>
+    <properties>
+        <java.version>${jdk.version}</java.version>
+    </properties>
+
+    <dependencies>
+        <!--00.项目内依赖 begin-->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId> <!-- 注意这里是 common -->
+            <artifactId>common-auth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-file</artifactId>
+        </dependency>
+        <!-- ✨ 引入刚建好的数据库底座 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-database</artifactId>
+        </dependency>
+        <!-- 引入消息中心 -->
+        <dependency>
+            <groupId>thriving.softwood.common</groupId>
+            <artifactId>common-message</artifactId>
+        </dependency>
+        <!--00.项目内依赖 end-->
+
+        <!--01.日志实现依赖 begin-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-layout-template-json</artifactId>
+        </dependency>
+        <!--01.日志实现依赖 end-->
+
+        <!--02.开发辅助依赖 begin-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- ✨ 显式指定具体使用的数据库驱动 -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <!--02.开发辅助依赖 end-->
+    </dependencies>
+
+
+    <profiles>
+
+        <profile>
+            <id>ts-c1-build</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <!-- 🚀 核心动作：打包时剔除所有的 yml 配置文件 -->
+                        <excludes>
+                            <!-- 剔除 config 文件夹下所有的 yml -->
+                            <exclude>config/**/*.yml</exclude>
+                            <!-- 如果根目录下还有，也可以一起剔除 -->
+                            <exclude>application*.yml</exclude>
+                        </excludes>
+                    </resource>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>thriving/softwood/**/mapper/**/*.xml</include>
+                        </includes>
+                        <filtering>false</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 🌟 新增 configuration 配置 -->
+                <configuration>
+                    <!-- 🚀 核心魔法：告诉 Spring Boot 启动时将国密 BC 库解压到系统物理磁盘临时目录，绕过嵌套 Jar 的原生签名校验 Bug -->
+                    <requiresUnpack>
+                        <dependency>
+                            <groupId>org.bouncycastle</groupId>
+                            <artifactId>bcprov-jdk18on</artifactId>
+                        </dependency>
+                    </requiresUnpack>
+                </configuration>
+            </plugin>
+        </plugins>
+        <finalName>${project.artifactId}-plus</finalName>
+    </build>
+
+</project>

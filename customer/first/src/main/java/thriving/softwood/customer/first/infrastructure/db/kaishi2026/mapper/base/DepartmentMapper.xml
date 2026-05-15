@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.kaishi2026.mapper.base.DepartmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.customer.first.infrastructure.db.kaishi2026.entity.base.Department">
+        <result column="typeid" property="typeid"/>
+        <result column="parid" property="parid"/>
+        <result column="leveal" property="leveal"/>
+        <result column="sonnum" property="sonnum"/>
+        <result column="soncount" property="soncount"/>
+        <result column="usercode" property="usercode"/>
+        <result column="FullName" property="fullName"/>
+        <result column="Comment" property="comment"/>
+        <result column="deleted" property="deleted"/>
+        <result column="rec" property="rec"/>
+        <result column="namepy" property="namepy"/>
+        <result column="parrec" property="parrec"/>
+        <result column="OrderNo" property="orderNo"/>
+        <result column="deptype" property="deptype"/>
+        <result column="Costtype" property="costtype"/>
+        <result column="Atypeid" property="atypeid"/>
+        <result column="UpdateTag" property="updateTag"/>
+        <result column="EtypeID" property="etypeID"/>
+        <result column="CreateDate" property="createDate"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        typeid, parid, leveal, sonnum, soncount, usercode, FullName, Comment
+        , deleted, rec, namepy, parrec, OrderNo, deptype, Costtype, Atypeid, UpdateTag, EtypeID, CreateDate
+    </sql>
+
+</mapper>

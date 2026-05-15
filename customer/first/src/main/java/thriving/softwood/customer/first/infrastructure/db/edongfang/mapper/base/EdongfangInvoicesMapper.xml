@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.edongfang.mapper.base.EdongfangInvoicesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.customer.first.infrastructure.db.edongfang.entity.base.EdongfangInvoices">
+        <id column="pk" property="pk"/>
+        <result column="bill_no" property="billNo"/>
+        <result column="e_order_ids" property="eOrderIds"/>
+        <result column="mark_id" property="markId"/>
+        <result column="settle_num" property="settleNum"/>
+        <result column="settle_naked_price" property="settleNakedPrice"/>
+        <result column="settle_tax_price" property="settleTaxPrice"/>
+        <result column="invoice_type" property="invoiceType"/>
+        <result column="invoice_content" property="invoiceContent"/>
+        <result column="invoice_expect_date" property="invoiceExpectDate"/>
+        <result column="invoice_title" property="invoiceTitle"/>
+        <result column="invoice_address" property="invoiceAddress"/>
+        <result column="invoice_phone" property="invoicePhone"/>
+        <result column="invoice_tax_num" property="invoiceTaxNum"/>
+        <result column="invoice_bank" property="invoiceBank"/>
+        <result column="invoice_bank_accout" property="invoiceBankAccout"/>
+        <result column="invoice_company_name" property="invoiceCompanyName"/>
+        <result column="bill_toer" property="billToer"/>
+        <result column="bill_to_contact" property="billToContact"/>
+        <result column="bill_to_province" property="billToProvince"/>
+        <result column="bill_to_city" property="billToCity"/>
+        <result column="bill_to_county" property="billToCounty"/>
+        <result column="bill_to_town" property="billToTown"/>
+        <result column="bill_to_address" property="billToAddress"/>
+        <result column="repayment_date" property="repaymentDate"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="cu" property="cu"/>
+        <result column="invoice_code" property="invoiceCode"/>
+        <result column="invoice_num" property="invoiceNum"/>
+        <result column="invoice_naked_amount" property="invoiceNakedAmount"/>
+        <result column="invoice_tax_rate" property="invoiceTaxRate"/>
+        <result column="invoice_tax_amount" property="invoiceTaxAmount"/>
+        <result column="invoice_amount" property="invoiceAmount"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pk, bill_no, e_order_ids, mark_id, settle_num, settle_naked_price, settle_tax_price, invoice_type,
+        invoice_content, invoice_expect_date, invoice_title, invoice_address, invoice_phone, invoice_tax_num,
+        invoice_bank, invoice_bank_accout, invoice_company_name, bill_toer, bill_to_contact, bill_to_province,
+        bill_to_city, bill_to_county, bill_to_town, bill_to_address, repayment_date, remark, create_by, create_time,
+        update_by, update_time, deleted, tenant_id, cu, invoice_code, invoice_num, invoice_naked_amount,
+        invoice_tax_rate, invoice_tax_amount, invoice_amount
+    </sql>
+
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.kaishi2026.mapper.base.DlyndxMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.customer.first.infrastructure.db.kaishi2026.entity.base.Dlyndx">
+        <result column="Vchcode" property="vchcode"/>
+        <result column="DATE" property="date"/>
+        <result column="NUMBER" property="number"/>
+        <result column="VchType" property="vchType"/>
+        <result column="summary" property="summary"/>
+        <result column="btypeid" property="btypeid"/>
+        <result column="etypeid" property="etypeid"/>
+        <result column="ktypeid" property="ktypeid"/>
+        <result column="ktypeid2" property="ktypeid2"/>
+        <result column="ifcheck" property="ifcheck"/>
+        <result column="period" property="period"/>
+        <result column="RedWord" property="redWord"/>
+        <result column="RedOld" property="redOld"/>
+        <result column="InputNo" property="inputNo"/>
+        <result column="draft" property="draft"/>
+        <result column="Total" property="total"/>
+        <result column="GatheringDate" property="gatheringDate"/>
+        <result column="projectid" property="projectid"/>
+        <result column="ETypeID2" property="eTypeID2"/>
+        <result column="SourceVchcode" property="sourceVchcode"/>
+        <result column="SourceVchType" property="sourceVchType"/>
+        <result column="BillTotal" property="billTotal"/>
+        <result column="UserDefined01" property="userDefined01"/>
+        <result column="UserDefined02" property="userDefined02"/>
+        <result column="UserDefined03" property="userDefined03"/>
+        <result column="BTypeID2" property="bTypeID2"/>
+        <result column="AuditLeveal" property="auditLeveal"/>
+        <result column="ProjectId2" property="projectId2"/>
+        <result column="WtypeId" property="wtypeId"/>
+        <result column="Compact" property="compact"/>
+        <result column="MatchQty" property="matchQty"/>
+        <result column="Pubufts" property="pubufts"/>
+        <result column="SaveTime" property="saveTime"/>
+        <result column="DifAType" property="difAType"/>
+        <result column="Appoint" property="appoint"/>
+        <result column="Acc" property="acc"/>
+        <result column="NoteCode" property="noteCode"/>
+        <result column="isPreARAP" property="isPreARAP"/>
+        <result column="InvoiceType" property="invoiceType"/>
+        <result column="CancelType" property="cancelType"/>
+        <result column="SettleType" property="settleType"/>
+        <result column="NormCost" property="normCost"/>
+        <result column="UserDefined04" property="userDefined04"/>
+        <result column="UserDefined05" property="userDefined05"/>
+        <result column="UserDefined06" property="userDefined06"/>
+        <result column="UserDefined07" property="userDefined07"/>
+        <result column="UserDefined08" property="userDefined08"/>
+        <result column="UserDefined09" property="userDefined09"/>
+        <result column="UserDefined10" property="userDefined10"/>
+        <result column="UserDefined11" property="userDefined11"/>
+        <result column="UserDefined12" property="userDefined12"/>
+        <result column="UserDefined13" property="userDefined13"/>
+        <result column="UserDefined14" property="userDefined14"/>
+        <result column="UserDefined15" property="userDefined15"/>
+        <result column="UserDefined16" property="userDefined16"/>
+        <result column="SettleBtypeId" property="settleBtypeId"/>
+        <result column="IsCheckOut" property="isCheckOut"/>
+        <result column="ModifyPerson" property="modifyPerson"/>
+        <result column="ModifyDate" property="modifyDate"/>
+        <result column="LastYear" property="lastYear"/>
+        <result column="BuildType" property="buildType"/>
+        <result column="BuildNo" property="buildNo"/>
+        <result column="IsAutoBuild" property="isAutoBuild"/>
+        <result column="InstockBackSign" property="instockBackSign"/>
+        <result column="AuditDate" property="auditDate"/>
+        <result column="mtypeid" property="mtypeid"/>
+        <result column="BillType" property="billType"/>
+        <result column="IsRejected" property="isRejected"/>
+        <result column="ParVchtype" property="parVchtype"/>
+        <result column="DataCheck" property="dataCheck"/>
+        <result column="SysUserName" property="sysUserName"/>
+        <result column="BillFrom" property="billFrom"/>
+        <result column="SourceNumber" property="sourceNumber"/>
+        <result column="AuditTime" property="auditTime"/>
+        <result column="SourceVchtype2" property="sourceVchtype2"/>
+        <result column="SourceVchcode2" property="sourceVchcode2"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        Vchcode, DATE, NUMBER, VchType, summary, btypeid, etypeid, ktypeid, ktypeid2, ifcheck, period, RedWord, RedOld,
+        InputNo, draft, Total, GatheringDate, projectid, ETypeID2, SourceVchcode, SourceVchType, BillTotal,
+        UserDefined01, UserDefined02, UserDefined03, BTypeID2, AuditLeveal, ProjectId2, WtypeId, Compact, MatchQty,
+        Pubufts, SaveTime, DifAType, Appoint, Acc, NoteCode, isPreARAP, InvoiceType, CancelType, SettleType, NormCost,
+        UserDefined04, UserDefined05, UserDefined06, UserDefined07, UserDefined08, UserDefined09, UserDefined10,
+        UserDefined11, UserDefined12, UserDefined13, UserDefined14, UserDefined15, UserDefined16, SettleBtypeId,
+        IsCheckOut, ModifyPerson, ModifyDate, LastYear, BuildType, BuildNo, IsAutoBuild, InstockBackSign, AuditDate,
+        mtypeid, BillType, IsRejected, ParVchtype, DataCheck, SysUserName, BillFrom, SourceNumber, AuditTime,
+        SourceVchtype2, SourceVchcode2
+    </sql>
+
+</mapper>

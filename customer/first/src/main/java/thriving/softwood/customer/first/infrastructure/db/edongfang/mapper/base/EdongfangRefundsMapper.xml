@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.edongfang.mapper.base.EdongfangRefundsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.customer.first.infrastructure.db.edongfang.entity.base.EdongfangRefunds">
+        <id column="pk" property="pk"/>
+        <result column="apply_code" property="applyCode"/>
+        <result column="package_id" property="packageId"/>
+        <result column="apply_type" property="applyType"/>
+        <result column="apply_time" property="applyTime"/>
+        <result column="apply_reason" property="applyReason"/>
+        <result column="pickup_way" property="pickupWay"/>
+        <result column="address" property="address"/>
+        <result column="apply_name" property="applyName"/>
+        <result column="apply_mobile" property="applyMobile"/>
+        <result column="province_code" property="provinceCode"/>
+        <result column="city_code" property="cityCode"/>
+        <result column="county_code" property="countyCode"/>
+        <result column="full_address" property="fullAddress"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="cu" property="cu"/>
+        <result column="operator" property="operator"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pk, apply_code, package_id, apply_type, apply_time, apply_reason, pickup_way, address, apply_name, apply_mobile,
+        province_code, city_code, county_code, full_address, create_by, create_time, update_by, update_time, deleted,
+        tenant_id, cu, operator
+    </sql>
+
+</mapper>

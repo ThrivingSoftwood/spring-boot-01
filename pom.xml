@@ -60,6 +60,7 @@
         <module>sample</module>
         <module>algorithm</module>
         <module>kaishi</module>
+        <module>customer</module>
     </modules>
 
     <!--依赖管理 (BOM模式) begin-->

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.edongfang.mapper.base.EdongfangLogisticsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="thriving.softwood.customer.first.infrastructure.db.edongfang.entity.base.EdongfangLogistics">
+        <id column="pk" property="pk"/>
+        <result column="e_order_id" property="eOrderId"/>
+        <result column="logistics_state" property="logisticsState"/>
+        <result column="submit_state" property="submitState"/>
+        <result column="package_id" property="packageId"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="cu" property="cu"/>
+        <result column="order_price" property="orderPrice"/>
+        <result column="order_type" property="orderType"/>
+        <result column="express_company" property="expressCompany"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="invoice_no" property="invoiceNo"/>
+        <result column="invoice_code" property="invoiceCode"/>
+        <result column="type" property="type"/>
+        <result column="receive_time" property="receiveTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pk, e_order_id, logistics_state, submit_state, package_id, create_by, create_time, update_by, update_time,
+        deleted, tenant_id, cu, order_price, order_type, express_company, express_no, invoice_no, invoice_code, type,
+        receive_time
+    </sql>
+
+</mapper>

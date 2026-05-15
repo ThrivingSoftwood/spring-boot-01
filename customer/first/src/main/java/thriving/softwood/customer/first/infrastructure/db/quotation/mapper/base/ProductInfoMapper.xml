@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.quotation.mapper.base.ProductInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="thriving.softwood.customer.first.infrastructure.db.quotation.entity.base.ProductInfo">
+        <id column="id" property="id" />
+        <result column="product_code" property="productCode" />
+        <result column="product_name" property="productName" />
+        <result column="specification" property="specification" />
+        <result column="purchase_price" property="purchasePrice" />
+        <result column="sale_price" property="salePrice" />
+        <result column="tax_rate" property="taxRate" />
+        <result column="default_supplier" property="defaultSupplier" />
+        <result column="unit" property="unit" />
+        <result column="optional_suppliers" property="optionalSuppliers" />
+        <result column="data_status" property="dataStatus" />
+        <result column="disable_status" property="disableStatus" />
+        <result column="material_property" property="materialProperty" />
+        <result column="base_unit" property="baseUnit" />
+        <result column="remark" property="remark" />
+        <result column="attachment" property="attachment" />
+        <result column="deleted" property="deleted" />
+        <result column="last_modifier" property="lastModifier" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="ext_info" property="extInfo" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, product_code, product_name, specification, purchase_price, sale_price, tax_rate, default_supplier, unit, optional_suppliers, data_status, disable_status, material_property, base_unit, remark, attachment, deleted, last_modifier, create_time, update_time, ext_info
+    </sql>
+
+</mapper>
