@@ -3,14 +3,17 @@
 <mapper namespace="thriving.softwood.common.auth.infrastructure.db.master.mapper.extend.SysDeptExtendMapper">
 
     <select id="listDeptWithChildren"
-            resultMap="thriving.softwood.common.auth.infrastructure.db.master.mapper.base.SysDeptMapper.BaseResultMap">
-        WITH Tree AS (SELECT *
-                      FROM sys_dept
-                      where id = ${dept_id}
-                      UNION ALL
-                      SELECT t.*
-                      FROM sys_dept t
-                               INNER JOIN Tree ON t.parent_id = Tree.id)
+            resultMap="thriving.softwood.common.auth.infrastructure.db.master.mapper.base.SysDeptMapper.BaseResultMap"
+            databaseId="sqlserver">
+        WITH
+        <if test="_databaseId == 'postgres' or _databaseId == 'mysql'">RECURSIVE</if>
+        Tree AS (SELECT *
+        FROM sys_dept
+        where id = #{dept_id}
+        UNION ALL
+        SELECT t.*
+        FROM sys_dept t
+        INNER JOIN Tree ON t.parent_id = Tree.id)
         SELECT *
         FROM Tree
         WHERE deleted = 0

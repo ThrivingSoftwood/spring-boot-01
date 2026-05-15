@@ -1,5 +1,9 @@
 package thriving.softwood.common.security.config;
 
+import java.util.Properties;
+
+import org.apache.ibatis.mapping.DatabaseIdProvider;
+import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -8,6 +12,7 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+
 import thriving.softwood.common.security.handler.DataPermissionSqlBuilder;
 import thriving.softwood.common.security.handler.UserDataPermissionHandler;
 import thriving.softwood.common.security.interceptor.PlaceholderPermissionInterceptor;
@@ -36,5 +41,18 @@ public class SecurityMybatisConfig {
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
 
         return interceptor;
+    }
+
+    @Bean
+    public DatabaseIdProvider databaseIdProvider() {
+        VendorDatabaseIdProvider databaseIdProvider = new VendorDatabaseIdProvider();
+        Properties properties = new Properties();
+        // 为数据库产品名设置别名，请根据实际返回的产品名字符串进行匹配
+        properties.setProperty("SQL Server", "sqlserver");
+        properties.setProperty("PostgreSQL", "postgres");
+        properties.setProperty("MySQL", "mysql");
+        // 可以继续添加其他数据库
+        databaseIdProvider.setProperties(properties);
+        return databaseIdProvider;
     }
 }

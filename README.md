@@ -190,6 +190,8 @@ AI 进行代码分析并更新当前文档：*
 2. bash 命令
 
 ```bash
+    mvn clean package -P prod-build
+
     # 升级漏洞 begin
     # 查找版本控制
     mvn dependency:tree -Dverbose -Dincludes=groupId:artifactId
