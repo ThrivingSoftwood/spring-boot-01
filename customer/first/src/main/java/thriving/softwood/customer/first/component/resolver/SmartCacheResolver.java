@@ -1,7 +1,7 @@
 package thriving.softwood.customer.first.component.resolver;
 
 import static thriving.softwood.common.auth.config.AncestorAuthConfig.AUTH_CACHE_KEY;
-import static thriving.softwood.customer.first.infrastructure.cache.local.KaishiCaffeineCacheConfig.KAISHI_CACHE_KEY;
+import static thriving.softwood.customer.first.infrastructure.cache.local.CaffeineCacheConfig.KAISHI_CACHE_KEY;
 
 import java.util.ArrayList;
 import java.util.Collection;

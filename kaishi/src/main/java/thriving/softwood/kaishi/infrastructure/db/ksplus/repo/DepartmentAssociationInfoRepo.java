@@ -32,6 +32,9 @@ public class DepartmentAssociationInfoRepo
     }
 
     public String getTypeIdByDeptId(Long deptId) {
+        if (deptId == null) {
+            return null;
+        }
         return lambdaQuery().eq(DepartmentAssociationInfo::getAuthDepartmentId, deptId).one().getOriDepartmentTypeid();
     }
 }

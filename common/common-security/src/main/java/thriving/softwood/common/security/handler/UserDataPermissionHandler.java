@@ -11,9 +11,9 @@ import net.sf.jsqlparser.schema.Table;
 @Component
 public class UserDataPermissionHandler implements MultiDataPermissionHandler {
 
-    private final DataPermissionSqlBuilder sqlBuilder;
+    private final AbstractDataPermissionSqlBuilder sqlBuilder;
 
-    public UserDataPermissionHandler(DataPermissionSqlBuilder sqlBuilder) {
+    public UserDataPermissionHandler(AbstractDataPermissionSqlBuilder sqlBuilder) {
         this.sqlBuilder = sqlBuilder;
     }
 

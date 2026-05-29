@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thriving.softwood.customer.first.infrastructure.db.quotation.mapper.extend.QuotationExtendMapper">
+
+
+    <select id="listValidQuotationsWithRank" resultType="thriving.softwood.customer.first.biz.pojo.vo.QuotationRankVO">
+        WITH RankedQuotes AS (SELECT id,
+                                     supplier_code AS supplierCode,
+                                     product_code  AS productCode,
+                                     unit_price    AS unitPrice,
+                                     update_time   AS updateTime,
+                                     ROW_NUMBER() OVER (
+                                         PARTITION BY product_code
+                                         ORDER BY unit_price ASC, update_time ASC
+                                         )         AS rankNum
+                              FROM quotation
+                              WHERE product_code = #{productCode}
+                                AND outdated = 0
+                                AND deleted = 0)
+        SELECT *
+        FROM RankedQuotes
+        ORDER BY rankNum ASC
+    </select>
+
+    <!-- 🌟 针对供应商的查询，计算全网排名后，在外层结果集中根据 supplierCode 过滤 -->
+    <select id="listMyQuotationsWithRank" resultType="thriving.softwood.customer.first.biz.pojo.vo.QuotationRankVO">
+        WITH RankedQuotes AS (SELECT id,
+                                     supplier_code AS supplierCode,
+                                     product_code  AS productCode,
+                                     unit_price    AS unitPrice,
+                                     update_time   AS updateTime,
+                                     ROW_NUMBER() OVER (
+                                         PARTITION BY product_code
+                                         ORDER BY unit_price ASC, update_time ASC
+                                         )         AS rankNum
+                              FROM quotation
+                              WHERE outdated = 0
+                                AND deleted = 0)
+        SELECT *
+        FROM RankedQuotes
+        WHERE supplierCode = #{supplierCode}
+        ORDER BY updateTime DESC
+    </select>
+
+
+</mapper>

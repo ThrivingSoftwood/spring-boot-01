@@ -32,27 +32,27 @@ public class SysDept implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    protected Long id;
     @TableField("parent_id")
-    private Long parentId;
+    protected Long parentId;
     @TableField("ancestors")
-    private String ancestors;
+    protected String ancestors;
     @TableField("dept_name")
-    private String deptName;
+    protected String deptName;
     @TableField("sort_order")
-    private Integer sortOrder;
+    protected Integer sortOrder;
     @TableField("status")
-    private Byte status;
+    protected Byte status;
     @TableField("ext_info")
-    private String extInfo;
+    protected String extInfo;
     @TableField("deleted")
-    private Integer deleted;
+    protected Integer deleted;
     @TableField("last_modifier")
-    private String lastModifier;
+    protected String lastModifier;
     @TableField("create_time")
-    private LocalDateTime createTime;
+    protected LocalDateTime createTime;
     @TableField("update_time")
-    private LocalDateTime updateTime;
+    protected LocalDateTime updateTime;
 
     public SysDept(SysDept parentDept, String deptName, Integer sortOrder) {
         parentId = ROOT_PARENT_DEPT_ID_LONG;

@@ -21,17 +21,17 @@ import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 
 import cn.hutool.v7.core.text.StrUtil;
 import thriving.softwood.common.security.annotation.ReplacePlaceholder;
-import thriving.softwood.common.security.handler.DataPermissionSqlBuilder;
+import thriving.softwood.common.security.handler.AbstractDataPermissionSqlBuilder;
 
 /**
  * 🚀 基于占位符的数据权限字符串替换拦截器 (完美适配分页插件版)
  */
 public class PlaceholderPermissionInterceptor implements InnerInterceptor {
 
-    private final DataPermissionSqlBuilder sqlBuilder;
+    private final AbstractDataPermissionSqlBuilder sqlBuilder;
     private final Map<String, String> placeholderCache = new ConcurrentHashMap<>();
 
-    public PlaceholderPermissionInterceptor(DataPermissionSqlBuilder sqlBuilder) {
+    public PlaceholderPermissionInterceptor(AbstractDataPermissionSqlBuilder sqlBuilder) {
         this.sqlBuilder = sqlBuilder;
     }
 

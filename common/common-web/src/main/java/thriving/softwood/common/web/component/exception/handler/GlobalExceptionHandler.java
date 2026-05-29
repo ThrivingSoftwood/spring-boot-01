@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
     @RequestMapping(produces = "application/json")
     public Result<String> handleTokenException(TokenException e, HttpServletRequest request) {
         // 返回 HTTP 状态码 401
+        logger.warn("🔐 Token 拦截: URL={}, Reason={}", request.getRequestURI(), e.getMessage());
         return Result.error(RespCodeEnum.UNAUTHORIZED, e, request.getRequestURI());
     }
 
@@ -52,6 +53,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AuthException.class)
     public Result<String> handleLoginException(TokenException e, HttpServletRequest request) {
+        logger.warn("🔐 鉴权拦截: URL={}, Reason={}", request.getRequestURI(), e.getMessage());
         return Result.error(INTERNAL_SERVER_ERROR.code(), e.getMessage());
     }
 

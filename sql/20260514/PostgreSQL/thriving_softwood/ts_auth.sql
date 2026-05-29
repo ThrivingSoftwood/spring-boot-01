@@ -470,3 +470,43 @@ EXECUTE PROCEDURE update_update_time();
 
 TRUNCATE TABLE public.sys_dictionary RESTART IDENTITY;
 
+-- 采购/供应链管理目录
+INSERT INTO public.sys_permission (id, parent_id, permission_name, permission_code, permission_type, path, component,
+                                   icon, sort_order)
+VALUES (30, 0, '供应商协同平台', null, 1, '/customer/first', null, 'Connection', 4);
+
+-- 内部员工菜单
+INSERT INTO public.sys_permission (id, parent_id, permission_name, permission_code, permission_type, path, component,
+                                   icon, sort_order)
+VALUES (31, 30, '入库商品管理', 'customer:first:product:menu', 2, 'product/list',
+        'modules/customer/first/product/view/IndexView', 'Box', 1);
+
+INSERT INTO public.sys_permission (id, parent_id, permission_name, permission_code, permission_type, path, component,
+                                   icon, sort_order)
+VALUES (32, 30, '供应商库管理', 'customer:first:supplier:menu', 2, 'supplier/list',
+        'modules/customer/first/supplier/view/IndexView', 'UserFilled', 2);
+
+-- 确保 30 节点（供应商协同平台）已存在
+-- 这次我们增加针对“供应商”专属的菜单，并挂载到路由上
+
+INSERT INTO public.sys_permission (id, parent_id, permission_name, permission_code, permission_type, path, component,
+                                   icon, sort_order)
+VALUES (33, 30, '商品大厅 (报价)', 'customer:first:supplier_product:menu', 2, 'supplier-product/list',
+        'modules/customer/first/quotation/view/SupplierProductIndexView', 'Goods', 3);
+
+INSERT INTO public.sys_permission (id, parent_id, permission_name, permission_code, permission_type, path, component,
+                                   icon, sort_order)
+VALUES (34, 30, '我的报价', 'customer:first:my_quotation:menu', 2, 'my-quotation/list',
+        'modules/customer/first/quotation/view/MyQuotationIndexView', 'Money', 4);
+
+-- 记得修正序列
+SELECT setval('public.sys_permission_id_seq', 34);
+
+-- 将报价大盘挂载到 内部员工视图下
+INSERT INTO public.sys_permission (id, parent_id, permission_name, permission_code,
+                                   permission_type, path, component, icon, sort_order)
+VALUES (35, 30, '报价大盘监控', 'customer:first:dashboard:menu',
+        2, 'quotation/dashboard', 'modules/customer/first/quotation/view/DashboardIndexView', 'DataAnalysis', 5);
+
+-- 更新序列值，防止主键冲突
+SELECT setval('public.sys_permission_id_seq', 35);

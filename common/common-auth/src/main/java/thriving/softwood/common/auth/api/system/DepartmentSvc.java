@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
@@ -26,9 +27,10 @@ import thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysDep
 import thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysUser;
 import thriving.softwood.common.auth.infrastructure.db.master.repo.SysDeptRepo;
 import thriving.softwood.common.auth.infrastructure.db.master.repo.SysUserRepo;
-import thriving.softwood.common.auth.pojo.record.DepartmentReq;
-import thriving.softwood.common.auth.pojo.vo.SysDeptVO;
-import thriving.softwood.common.auth.spi.AuthBusinessProvider;
+import thriving.softwood.common.auth.pojo.dto.DepartmentDTO;
+import thriving.softwood.common.security.pojo.vo.SysDeptVO;
+import thriving.softwood.common.core.exception.DetailException;
+import thriving.softwood.common.security.spi.AuthAssociationProvider;
 
 @Service
 public class DepartmentSvc implements DepartmentApi {
@@ -38,22 +40,27 @@ public class DepartmentSvc implements DepartmentApi {
 
     SysDeptRepo sysDeptRepo;
     SysUserRepo sysUserRepo;
-    AuthBusinessProvider bizProvider;
+    AuthAssociationProvider assocProvider;
 
     @Autowired
     public DepartmentSvc(SysDeptRepo sysDeptRepo, SysUserRepo sysUserRepo,
-        @Qualifier(AUTH_CACHE_MANAGER) CacheManager cacheManager, AuthBusinessProvider bizProvider) {
+        @Qualifier(AUTH_CACHE_MANAGER) CacheManager cacheManager,
+        ObjectProvider<AuthAssociationProvider> assocProvider) {
         this.sysDeptRepo = sysDeptRepo;
         this.sysUserRepo = sysUserRepo;
         this.cacheManager = cacheManager;
-        this.bizProvider = bizProvider;
+        this.assocProvider = assocProvider.getIfAvailable();
     }
 
-    private static @NonNull List<SysDeptVO> getTreedVOs(List<SysDept> departments, Map<Long, String> associations) {
+    private @NonNull List<SysDeptVO> getTreedVOs(List<SysDept> departments) {
         // 2. 将 Entity 转换为 VO
         List<SysDeptVO> allVOs = departments.stream().map(department -> {
             // 调用构造函数创建 VO
-            return new SysDeptVO(department, associations.get(department.getId()));
+            SysDeptVO vo = toVO(department);
+            if (null != assocProvider) {
+                vo = assocProvider.loadAssocInfo(vo);
+            }
+            return vo;
         }).collect(Collectors.toList());
 
         // 3. 按照 parentId 分组 (极其高效的 Java Stream API)
@@ -72,27 +79,26 @@ public class DepartmentSvc implements DepartmentApi {
     @Override
     public List<SysDeptVO> treeDepartments() {
         List<SysDept> departments = sysDeptRepo.listAll();
-        Map<Long, String> associations = bizProvider.loadAssocDeptIds();
 
-        return getTreedVOs(departments, associations).stream()
-            .filter(node -> node.getParentId() == ROOT_PARENT_DEPT_ID_LONG).collect(Collectors.toList());
+        return getTreedVOs(departments).stream().filter(node -> node.getParentId() == ROOT_PARENT_DEPT_ID_LONG)
+            .collect(Collectors.toList());
     }
 
     @Override
     @DSTransactional
-    public void update(DepartmentReq departmentReq) {
-        SysDept department = sysDeptRepo.getById(departmentReq.id());
-        if (ObjUtil.notEquals(department.getSortOrder(), departmentReq.sortOrder())) {
-            department.setSortOrder(departmentReq.sortOrder());
+    public void update(DepartmentDTO dto) {
+        SysDept department = sysDeptRepo.getById(dto.getId());
+        if (ObjUtil.notEquals(department.getSortOrder(), dto.getSortOrder())) {
+            department.setSortOrder(dto.getSortOrder());
             sysDeptRepo.updateById(department);
         }
-        if (ObjUtil.notEquals(department.getStatus(), departmentReq.status())) {
-            changeStatusAndReloadPermission(departmentReq, department);
+        if (ObjUtil.notEquals(department.getStatus(), dto.getStatus())) {
+            changeStatusAndReloadPermission(dto, department);
         }
     }
 
-    private void changeStatusAndReloadPermission(DepartmentReq departmentReq, SysDept department) {
-        byte targetStatus = departmentReq.status();
+    private void changeStatusAndReloadPermission(DepartmentDTO dto, SysDept department) {
+        byte targetStatus = dto.getStatus();
         Long deptId = department.getId();
 
         // A. 定位所有受影响的部门：包括当前部门及其所有子孙部门
@@ -175,17 +181,31 @@ public class DepartmentSvc implements DepartmentApi {
 
     @Override
     @DSTransactional
-    public String delete(DepartmentReq departmentReq) {
-        if (sysDeptRepo.countSubDept(departmentReq.id()) > 0) {
-            throw new RuntimeException("该部门存在未删除的下属部门,请检查!");
+    public String delete(DepartmentDTO dto) {
+        if (sysDeptRepo.countSubDept(dto.getId()) > 0) {
+            throw new DetailException("该部门存在未删除的下属部门,请检查!");
         }
-        if (sysUserRepo.countUsers(departmentReq.id()) > 0) {
-            throw new RuntimeException("该部门下存在已分配的用户,请检查!");
+        if (sysUserRepo.countUsers(dto.getId()) > 0) {
+            throw new DetailException("该部门下存在已分配的用户,请检查!");
         }
-        if (!sysDeptRepo.logicDelete(departmentReq.id())) {
+        if (!sysDeptRepo.logicDelete(dto.getId())) {
             return "该部门不存在!";
         }
-        bizProvider.associateDelete(departmentReq);
+        if (null != assocProvider) {
+            assocProvider.associateDelete(dto.getId());
+        }
         return "删除成功!";
+    }
+
+    private SysDeptVO toVO(SysDept dept) {
+        SysDeptVO vo = new SysDeptVO();
+        vo.setId(dept.getId());
+        vo.setParentId(dept.getParentId());
+        vo.setAncestors(dept.getAncestors());
+        vo.setDeptName(dept.getDeptName());
+        vo.setSortOrder(dept.getSortOrder());
+        vo.setStatus(dept.getStatus());
+        vo.setExtInfo(dept.getExtInfo());
+        return vo;
     }
 }

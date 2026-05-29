@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import thriving.softwood.common.auth.api.system.UserApi;
-import thriving.softwood.common.auth.pojo.record.UserReq;
+import thriving.softwood.common.auth.pojo.dto.UserDTO;
 import thriving.softwood.common.auth.pojo.vo.OrganizationNodeVO;
 import thriving.softwood.common.core.result.Result;
 
@@ -27,14 +27,14 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public Result<String> updateUser(@RequestBody UserReq req) {
-        userApi.updateUser(req);
+    public Result<String> updateUser(@RequestBody UserDTO dto) {
+        userApi.updateUser(dto);
         return Result.success("更新成功");
     }
 
     @PutMapping("/reset/pwd")
-    public Result<String> resetPassword(@RequestBody UserReq req) {
-        userApi.resetPassword(req);
+    public Result<String> resetPassword(@RequestBody UserDTO dto) {
+        userApi.resetPassword(dto);
         return Result.success("密码重置成功");
     }
 
@@ -50,8 +50,8 @@ public class UserController {
      * 🌟 为用户分配角色 接收参数：{ "id": 1, "roleIds": [1, 2, 5] }
      */
     @PostMapping("/assign-roles")
-    public Result<String> assignRoles(@RequestBody UserReq req) {
-        userApi.assignRoles(req.id(), req.roleIds());
+    public Result<String> assignRoles(@RequestBody UserDTO dto) {
+        userApi.assignRoles(dto.getId(), dto.getRoleIds());
         return Result.success("角色分配成功，权限已同步");
     }
 

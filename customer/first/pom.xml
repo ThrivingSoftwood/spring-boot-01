@@ -63,6 +63,7 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
+        <!-- 显式引入 poi-->
         <!--02.开发辅助依赖 end-->
     </dependencies>
 

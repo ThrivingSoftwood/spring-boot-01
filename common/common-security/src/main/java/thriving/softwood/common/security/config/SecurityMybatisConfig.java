@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 
-import thriving.softwood.common.security.handler.DataPermissionSqlBuilder;
+import thriving.softwood.common.security.handler.AbstractDataPermissionSqlBuilder;
 import thriving.softwood.common.security.handler.UserDataPermissionHandler;
 import thriving.softwood.common.security.interceptor.PlaceholderPermissionInterceptor;
 
@@ -21,7 +21,7 @@ import thriving.softwood.common.security.interceptor.PlaceholderPermissionInterc
 public class SecurityMybatisConfig {
 
     @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor(DataPermissionSqlBuilder sqlBuilder) {
+    public MybatisPlusInterceptor mybatisPlusInterceptor(AbstractDataPermissionSqlBuilder sqlBuilder) {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 
         // 🌟 1. 自定义占位符替换（必须在分页前面，修改了 beforeQuery 以支持 count 语句的安全生成）

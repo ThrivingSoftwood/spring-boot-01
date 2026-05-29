@@ -1,7 +1,7 @@
 package thriving.softwood.customer.first.component.config;
 
 import static thriving.softwood.common.auth.config.AncestorAuthConfig.AUTH_CACHE_MANAGER;
-import static thriving.softwood.customer.first.infrastructure.cache.local.KaishiCaffeineCacheConfig.KAISHI_CACHE_MANAGER;
+import static thriving.softwood.customer.first.infrastructure.cache.local.CaffeineCacheConfig.KAISHI_CACHE_MANAGER;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;

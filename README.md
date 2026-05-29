@@ -347,13 +347,13 @@ find . -name "pom.xml" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/
     echo -e "\`\`\`\n"
 done
 
-echo "### 3. 基础配置文件 (YAML/Properties)"
-find . -type f \( -name "*.yml" -o -name "*.properties" -o \( -name "*.xml" ! -name "pom.xml" ! -name "*Mapper.xml" \) \) ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
-    echo "File: $file"
-    echo -e "\`\`\`xml"
-    cat "$file"
-    echo -e "\`\`\`\n"
-done
+#echo "### 3. 基础配置文件 (YAML/Properties)"
+#find . -type f \( -name "*.yml" -o -name "*.properties" -o \( -name "*.xml" ! -name "pom.xml" ! -name "*Mapper.xml" \) \) ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+#    echo "File: $file"
+#    echo -e "\`\`\`xml"
+#    cat "$file"
+#    echo -e "\`\`\`\n"
+#done
 
 echo "### 4. Spring 自动装配 (imports)"
 find . -type f -name "*.imports" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
@@ -385,6 +385,84 @@ find . -type f -name "*Mapper.xml" ! -path "*/target/*" ! -path "*/test/*" | whi
     echo -e "\`\`\`xml"
     cat "$file"
     echo -e "\`\`\`\n"
+done
+```
+
+```zsh
+#!/bin/zsh
+
+EXCLUDE_MODULES="algorithm|sample|common/observability|sql/20260421|sql/20260425"
+
+BIZ_MODULES="customer/first"
+
+BASE_IGNORE_PATTERN="target|node_modules|.git|out|*.iml|logs|package-info.java|mvnw*|.git*|docs"
+
+is_in_list() {
+    local path=$1
+    local list=$2
+    local regex="^\./($list)(/|$)"
+    [[ -n $list ]] && [[ "$path" =~ $regex ]]
+}
+
+echo "### 1. 项目结构"
+echo -e "\n\`\`\`"
+tree -I "$BASE_IGNORE_PATTERN|$EXCLUDE_MODULES" --dirsfirst
+echo -e "\`\`\`"
+echo -e "\n\n"
+
+echo "### 2. Maven 配置 (pom.xml)"
+find . -name "pom.xml" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+    if is_in_list "$file" "$EXCLUDE_MODULES"; then continue; fi
+    echo "File: $file"
+    echo -e "\`\`\`xml\n"
+    cat "$file"
+    echo -e "\n\`\`\`\n"
+done
+
+echo "### 3. Spring 自动装配 (imports)"
+find . -type f -name "*.imports" ! -path "*/target/*" ! -path "*/.idea/*" ! -path "*/.mvn/*" | while read -r file; do
+    if is_in_list "$file" "$EXCLUDE_MODULES" || is_in_list "$file" "$BIZ_MODULES"; then continue; fi
+    echo "File: $file"
+    echo -e "\`\`\`text\n"
+    cat "$file"
+    echo -e "\n\`\`\`\n"
+done
+
+echo "### 4. SQL 脚本"
+find . -type f -name "*.sql" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+    if is_in_list "$file" "$EXCLUDE_MODULES" || is_in_list "$file" "$BIZ_MODULES"; then continue; fi
+    echo "File: $file"
+    echo -e "\`\`\`sql\n"
+    cat "$file"
+    echo -e "\n\`\`\`\n"
+done
+
+echo "### 5. Java 源码"
+find . -type f -name "*.java" ! -name "package-info.java" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+    if is_in_list "$file" "$EXCLUDE_MODULES"; then continue; fi
+    
+    if is_in_list "$file" "$BIZ_MODULES"; then
+        if [[ "$file" =~ ".*Application\.java$" ]]; then
+            echo "File: $file (Business Module Startup Class)"
+            echo -e "\`\`\`java\n"
+            cat "$file"
+            echo -e "\n\`\`\`\n"
+        fi
+    else
+        echo "File: $file"
+        echo -e "\`\`\`java\n"
+        cat "$file"
+        echo -e "\n\`\`\`\n"
+    fi
+done
+
+echo "### 6. MyBatis Mapper XML"
+find . -type f -name "*Mapper.xml" ! -path "*/target/*" ! -path "*/test/*" | while read -r file; do
+    if is_in_list "$file" "$EXCLUDE_MODULES" || is_in_list "$file" "$BIZ_MODULES"; then continue; fi
+    echo "File: $file"
+    echo -e "\`\`\`xml\n"
+    cat "$file"
+    echo -e "\n\`\`\`\n"
 done
 ```
 

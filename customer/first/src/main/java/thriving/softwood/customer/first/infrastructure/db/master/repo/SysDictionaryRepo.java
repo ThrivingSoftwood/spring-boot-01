@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 
-import thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysDictionary;
 import thriving.softwood.common.database.ancestor.AncestorServiceImpl;
+import thriving.softwood.customer.first.infrastructure.db.master.entity.base.SysDictionary;
 import thriving.softwood.customer.first.infrastructure.db.master.mapper.base.SysDictionaryMapper;
 
 /**

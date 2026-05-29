@@ -2,9 +2,7 @@ package thriving.softwood.customer.first.biz.runner;
 
 import static thriving.softwood.common.core.constant.LetterConstant.UPPER_F;
 import static thriving.softwood.common.core.constant.LetterConstant.UPPER_T;
-import static thriving.softwood.customer.first.infrastructure.cache.local.KaishiCaffeineCacheConfig.*;
-
-import java.util.List;
+import static thriving.softwood.customer.first.infrastructure.cache.local.CaffeineCacheConfig.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +15,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 import thriving.softwood.common.security.util.SecurityUtil;
-import thriving.softwood.customer.first.biz.pojo.dto.DlyndxDTO;
-import thriving.softwood.customer.first.infrastructure.db.edongfang.entity.base.EdongfangProducts;
-import thriving.softwood.customer.first.infrastructure.db.edongfang.repo.EdongfangProductsRepo;
-import thriving.softwood.customer.first.infrastructure.db.kaishi2026.entity.base.*;
-import thriving.softwood.customer.first.infrastructure.db.kaishi2026.repo.*;
 
 /**
  * 字典数据全量预热器
@@ -36,31 +29,10 @@ public class DictionaryPreloadRunner implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(DictionaryPreloadRunner.class);
 
     private final CacheManager cacheManager;
-    private final DepartmentRepo departmentRepo;
-    private final BtypeRepo btypeRepo;
-    private final EmployeeRepo employeeRepo;
-    private final MtypeRepo mtypeRepo;
-    private final PtypeRepo ptypeRepo;
-    private final StockRepo stockRepo;
-    private final GblVchtypeRepo gblVchtypeRepo;
-    private final DlyndxRepo dlyndxRepo;
-    private final EdongfangProductsRepo edongfangProductsRepo;
 
     @Autowired
-    public DictionaryPreloadRunner(@Qualifier(KAISHI_CACHE_MANAGER) CacheManager cacheManager,
-        DepartmentRepo departmentRepo, BtypeRepo btypeRepo, EmployeeRepo employeeRepo, MtypeRepo mtypeRepo,
-        PtypeRepo ptypeRepo, StockRepo stockRepo, GblVchtypeRepo gblVchtypeRepo, DlyndxRepo dlyndxRepo,
-        EdongfangProductsRepo edongfangProductsRepo) {
+    public DictionaryPreloadRunner(@Qualifier(KAISHI_CACHE_MANAGER) CacheManager cacheManager) {
         this.cacheManager = cacheManager;
-        this.departmentRepo = departmentRepo;
-        this.btypeRepo = btypeRepo;
-        this.employeeRepo = employeeRepo;
-        this.mtypeRepo = mtypeRepo;
-        this.ptypeRepo = ptypeRepo;
-        this.stockRepo = stockRepo;
-        this.gblVchtypeRepo = gblVchtypeRepo;
-        this.dlyndxRepo = dlyndxRepo;
-        this.edongfangProductsRepo = edongfangProductsRepo;
     }
 
     @Override
@@ -71,68 +43,12 @@ public class DictionaryPreloadRunner implements ApplicationRunner {
         SecurityUtil.runAsSystem(() -> {
             long start = System.currentTimeMillis();
 
-            // 预热 btype、SettleBtypeId
-            Cache btypeCache = cacheManager.getCache(BTYPE_CACHE);
-            List<Btype> btypes = btypeRepo.ListAllTypeidAndFullname();
-            for (Btype btype : btypes) {
-                btypeCache.put(btype.getTypeId(), btype.getFullName());
-            }
-
-            // 预热 Employee
-            Cache employeeCache = cacheManager.getCache(EMPLOYEE_CACHE);
-            List<Employee> employees = employeeRepo.ListAllTypeidAndFullname();
-            for (Employee obj : employees) {
-                employeeCache.put(obj.getTypeId(), obj.getFullName());
-            }
-
-            // 预热 Stock 库存
-            Cache stockCache = cacheManager.getCache(STOCK_CACHE);
-            List<Stock> stocks = stockRepo.ListAllTypeidAndFullname();
-            for (Stock obj : stocks) {
-                stockCache.put(obj.getTypeId(), obj.getFullName());
-            }
-
-            // 预热 ptype
-            Cache ptypeCache = cacheManager.getCache(PTYPE_CACHE);
-            List<Ptype> ptypes = ptypeRepo.ListAllTypeidAndFullname();
-            for (Ptype obj : ptypes) {
-                ptypeCache.put(obj.getTypeId(), obj.getFullName());
-            }
-
-            // 预热 vchtype 业务类型
-            Cache vchtypeCache = cacheManager.getCache(VCHTYPE_CACHE);
-            List<GblVchtype> vchtypes = gblVchtypeRepo.ListAllTypeidAndFullname();
-            for (GblVchtype obj : vchtypes) {
-                vchtypeCache.put(obj.getVchtype(), obj.getFullname());
-            }
-
-            // 预热 department 部门
-            Cache departmentCache = cacheManager.getCache(DEPARTMENT_CACHE);
-            List<Department> departments = departmentRepo.ListAllTypeidAndFullname();
-            for (Department obj : departments) {
-                departmentCache.put(obj.getTypeid(), obj.getFullName());
-            }
-
-            // 预热 ptype 发票类型
-            Cache mtypeCache = cacheManager.getCache(MTYPE_CACHE);
-            List<Mtype> mtypes = mtypeRepo.ListAllTypeidAndFullname();
-            for (Mtype obj : mtypes) {
-                mtypeCache.put(obj.getTypeid(), obj.getFullName());
-            }
-
-            // 预热 dlyndx 订单信息
-            Cache dlyndxCache = cacheManager.getCache(DLYNDX_CACHE);
-            List<Dlyndx> dlyndxes = dlyndxRepo.listAllByVchcode();
-            for (Dlyndx obj : dlyndxes) {
-                dlyndxCache.put(obj.getVchcode(), new DlyndxDTO(obj));
-            }
-
-            // 预热 dlyndx 订单信息
-            Cache edongfangProductNameCache = cacheManager.getCache(EDONGFANG_PRODUCT_NAME_CACHE);
-            List<EdongfangProducts> edongfangProducts = edongfangProductsRepo.list();
-            for (EdongfangProducts obj : edongfangProducts) {
-                edongfangProductNameCache.put(obj.getSku(), obj.getName());
-            }
+            // // 预热 Employee
+            // Cache employeeCache = cacheManager.getCache(EMPLOYEE_CACHE);
+            // List<Employee> employees = employeeRepo.ListAllTypeidAndFullname();
+            // for (Employee obj : employees) {
+            // employeeCache.put(obj.getTypeId(), obj.getFullName());
+            // }
 
             // USEDTYPE_CACHE
             // RED_WORD_CACHE

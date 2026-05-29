@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap"
-               type="thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysDictionary">
+               type="thriving.softwood.customer.first.infrastructure.db.master.entity.base.SysDictionary">
         <id column="id" property="id"/>
         <result column="dict_type" property="dictType"/>
         <result column="dict_key" property="dictKey"/>

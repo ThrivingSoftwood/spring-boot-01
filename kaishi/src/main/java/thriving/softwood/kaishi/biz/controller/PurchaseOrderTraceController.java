@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import thriving.softwood.common.auth.pojo.record.FinishPurchaseReq;
 import thriving.softwood.common.core.result.Result;
 import thriving.softwood.kaishi.biz.api.purchase.PurchaseOrderTraceApi;
 import thriving.softwood.kaishi.biz.pojo.dto.PurchaseOrderTraceDTO;
+import thriving.softwood.kaishi.biz.pojo.record.FinishPurchaseReq;
 import thriving.softwood.kaishi.biz.pojo.vo.DlyBuyVO;
 import thriving.softwood.kaishi.biz.pojo.vo.PurchaseTraceVO;
 

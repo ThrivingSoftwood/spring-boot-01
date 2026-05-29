@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
@@ -20,11 +21,11 @@ import thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysUse
 import thriving.softwood.common.auth.infrastructure.db.master.repo.SysDeptRepo;
 import thriving.softwood.common.auth.infrastructure.db.master.repo.SysUserRepo;
 import thriving.softwood.common.auth.infrastructure.db.master.repo.SysUserRoleRepo;
-import thriving.softwood.common.auth.pojo.record.UserReq;
+import thriving.softwood.common.auth.pojo.dto.UserDTO;
 import thriving.softwood.common.auth.pojo.vo.OrganizationNodeVO;
-import thriving.softwood.common.auth.spi.AuthBusinessProvider;
 import thriving.softwood.common.core.exception.DetailException;
 import thriving.softwood.common.core.util.Sm4Util;
+import thriving.softwood.common.security.spi.AuthAssociationProvider;
 
 @Service
 public class UserSvc implements UserApi {
@@ -32,14 +33,14 @@ public class UserSvc implements UserApi {
     private final SysDeptRepo sysDeptRepo;
     private final SysUserRepo sysUserRepo;
     private final SysUserRoleRepo sysUserRoleRepo;
-    private final AuthBusinessProvider bizProvider;
+    private final AuthAssociationProvider assocProvider;
 
     public UserSvc(SysDeptRepo sysDeptRepo, SysUserRepo sysUserRepo, SysUserRoleRepo sysUserRoleRepo,
-        AuthBusinessProvider bizProvider) {
+        ObjectProvider<AuthAssociationProvider> assocProvider) {
         this.sysDeptRepo = sysDeptRepo;
         this.sysUserRepo = sysUserRepo;
         this.sysUserRoleRepo = sysUserRoleRepo;
-        this.bizProvider = bizProvider;
+        this.assocProvider = assocProvider.getIfAvailable();
     }
 
     private static @NonNull List<OrganizationNodeVO> loadAllNodes(List<SysDept> departments, List<SysUser> users) {
@@ -129,14 +130,14 @@ public class UserSvc implements UserApi {
     // ==========================================
     @Override
     @DSTransactional
-    public void updateUser(UserReq req) {
-        SysUser user = getValidUser(req.id());
+    public void updateUser(UserDTO dto) {
+        SysUser user = getValidUser(dto.getId());
 
-        if (req.status() != null) {
-            user.setStatus(req.status());
+        if (dto.getStatus() != null) {
+            user.setStatus(dto.getStatus());
         }
-        if (req.deptId() != null) {
-            user.setDeptId(req.deptId());
+        if (dto.getDeptId() != null) {
+            user.setDeptId(dto.getDeptId());
         }
 
         // 🌟 触发静默刷新防线：更新权限版本号
@@ -148,11 +149,11 @@ public class UserSvc implements UserApi {
     // 5. 重置密码
     // ==========================================
     @Override
-    public void resetPassword(UserReq req) {
-        SysUser user = getValidUser(req.id());
+    public void resetPassword(UserDTO dto) {
+        SysUser user = getValidUser(dto.getId());
 
         // 解析前端传来的 SM4 密文，再用 BCrypt 加密入库
-        String plainPwd = Sm4Util.decWeb(req.newPasswordEnc());
+        String plainPwd = Sm4Util.decWeb(dto.getNewPasswordEnc());
         user.setLastPassword(user.getPassword());
         user.setPassword(BCrypt.hashpw(plainPwd, BCrypt.gensalt()));
 
@@ -170,7 +171,9 @@ public class UserSvc implements UserApi {
         SysUser user = getValidUser(id);
 
         // 先删除关联信息再删主信息
-        bizProvider.associateDelete(id);
+        if (null != assocProvider) {
+            assocProvider.associateDelete(user.getLoginAccount());
+        }
 
         // 1. 逻辑删除主表
         sysUserRepo.logicDelete(id);
@@ -184,7 +187,7 @@ public class UserSvc implements UserApi {
     private SysUser getValidUser(Long id) {
         SysUser user = sysUserRepo.getById(id);
         if (user == null || "kaishi".equals(user.getLoginAccount())) {
-            throw new RuntimeException("非法操作：目标用户不存在或属于系统保护级账号！");
+            throw new DetailException("非法操作：目标用户不存在或属于系统保护级账号！");
         }
         return user;
     }

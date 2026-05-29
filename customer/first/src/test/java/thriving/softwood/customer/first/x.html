@@ -1,0 +1,94 @@
+F-15看法:我们使用接口抽象;
+第一阶段已完成,在 customer/first 中创建的业务包结构如下:
+```
+.
+├── src
+│   └── main
+│       ├── java
+│       │   └── thriving
+│       │       └── softwood
+│       │           └── customer
+│       │               └── first
+│       │                   ├── biz
+│       │                   │   ├── api
+│       │                   │   │   ├── support
+│       │                   │   │   │   ├── DictionaryApi.java
+│       │                   │   │   │   └── DictionarySvc.java
+│       │                   │   ├── constant
+│       │                   │   │   └── BaseConst.java
+│       │                   │   ├── controller
+│       │                   │   ├── enums
+│       │                   │   ├── pojo
+│       │                   │   │   ├── dto
+│       │                   │   │   ├── record
+│       │                   │   │   └── vo
+│       │                   │   ├── runner
+│       │                   │   │   └── DictionaryPreloadRunner.java
+│       │                   │   └── scheduler
+│       │                   ├── component
+│       │                   │   ├── advice
+│       │                   │   ├── annotation
+│       │                   │   ├── aspect
+│       │                   │   ├── config
+│       │                   │   │   └── MultiCacheConfig.java
+│       │                   │   ├── converter
+│       │                   │   ├── decorator
+│       │                   │   ├── exception
+│       │                   │   │   └── handler
+│       │                   │   ├── filter
+│       │                   │   ├── handler
+│       │                   │   ├── interceptor
+│       │                   │   ├── processor
+│       │                   │   ├── resolver
+│       │                   │   │   ├── locale
+│       │                   │   │   └── SmartCacheResolver.java
+│       │                   │   └── security
+│       │                   │       ├── KaishiAuthBusinessProvider.java
+│       │                   │       └── KaishiResourceExtractor.java
+│       │                   ├── infrastructure
+│       │                   │   ├── cache
+│       │                   │   │   └── local
+│       │                   │   │       └── KaishiCaffeineCacheConfig.java
+│       │                   │   └── db
+│       │                   │       └── quotation
+│       │                   │           ├── entity
+│       │                   │           │   └── base
+│       │                   │           │       ├── ContactInfo.java
+│       │                   │           │       ├── ProductInfo.java
+│       │                   │           │       ├── Quotation.java
+│       │                   │           │       └── SupplierInfo.java
+│       │                   │           ├── mapper
+│       │                   │           │   └── base
+│       │                   │           │       ├── ContactInfoMapper.java
+│       │                   │           │       ├── ContactInfoMapper.xml
+│       │                   │           │       ├── ProductInfoMapper.java
+│       │                   │           │       ├── ProductInfoMapper.xml
+│       │                   │           │       ├── QuotationMapper.java
+│       │                   │           │       ├── QuotationMapper.xml
+│       │                   │           │       ├── SupplierInfoMapper.java
+│       │                   │           │       └── SupplierInfoMapper.xml
+│       │                   │           └── repo
+│       │                   │               ├── ContactInfoRepo.java
+│       │                   │               ├── ProductInfoRepo.java
+│       │                   │               ├── QuotationRepo.java
+│       │                   │               └── SupplierInfoRepo.java
+│       │                   ├── util
+│       │                   └── FirstApplication.java
+│       └── resources
+│           └── config
+│               ├── app
+│               │   ├── application-async.yml
+│               │   ├── application-db.yml
+│               │   ├── application-dev.yml
+│               │   ├── application-file.yml
+│               │   ├── application-mybatis.yml
+│               │   ├── application-observability.yml
+│               │   ├── application-prod.yml
+│               │   ├── application-security.yml
+│               │   └── application.yml
+│               └── application.yml
+└── pom.xml
+
+```
+
+基于此,我们从 Phase2 开始

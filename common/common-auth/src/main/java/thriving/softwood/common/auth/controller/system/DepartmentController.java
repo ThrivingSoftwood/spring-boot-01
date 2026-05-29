@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import thriving.softwood.common.auth.api.system.DepartmentApi;
-import thriving.softwood.common.auth.pojo.record.DepartmentReq;
-import thriving.softwood.common.auth.pojo.vo.SysDeptVO;
+import thriving.softwood.common.auth.pojo.dto.DepartmentDTO;
+import thriving.softwood.common.security.pojo.vo.SysDeptVO;
 import thriving.softwood.common.core.result.Result;
 
 @RestController
@@ -28,14 +28,14 @@ public class DepartmentController {
     }
 
     @RequestMapping("/update")
-    public Result update(@RequestBody DepartmentReq departmentReq) {
-        departmentApi.update(departmentReq);
+    public Result update(@RequestBody DepartmentDTO dto) {
+        departmentApi.update(dto);
         return Result.success();
     }
 
     @RequestMapping("/delete")
-    public Result<String> delete(@RequestBody DepartmentReq departmentReq) {
-        return Result.success(departmentApi.delete(departmentReq));
+    public Result<String> delete(@RequestBody DepartmentDTO dto) {
+        return Result.success(departmentApi.delete(dto));
     }
 
 }

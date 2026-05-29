@@ -380,6 +380,7 @@
         ) AS calc
         <where>
             a.vchtype = 34
+            and a.draft = '2'
             <!-- 🌟 位置 1：主分支权限过滤 -->
             /*_DATA_PERMISSION_*/
             AND NOT EXISTS (
@@ -406,6 +407,7 @@
             ON a.dlyorder = b.dly_order AND a.Vchcode = b.vch_code AND a.Vchtype = b.vch_type
             <where>
                 a.vchtype = 34
+                and a.draft = '2'
                 <!-- 🌟 位置 2：Union 分支权限过滤 -->
                 /*_DATA_PERMISSION_*/
                 <include refid="Criteria_Where_Clause"/>
@@ -449,6 +451,7 @@
         and a.dlyorder = b.SourceDlyOrder
         <where>
             a.vchtype = 34
+            and a.draft = '2'
             <!-- 🌟 位置 3：详情页面的权限隔离 -->
             /*_DATA_PERMISSION_*/
             <if test="vchcode != null">

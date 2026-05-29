@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 
 import cn.hutool.v7.core.collection.CollUtil;
 import cn.hutool.v7.core.util.ObjUtil;
-import thriving.softwood.common.auth.pojo.record.FinishPurchaseReq;
 import thriving.softwood.common.core.pojo.dto.SortItemDTO;
 import thriving.softwood.common.core.util.SqlSecurityUtil;
 import thriving.softwood.kaishi.biz.api.support.DictionaryApi;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyBuyDTO;
 import thriving.softwood.kaishi.biz.pojo.dto.DlyndxDTO;
 import thriving.softwood.kaishi.biz.pojo.dto.PurchaseOrderTraceDTO;
+import thriving.softwood.kaishi.biz.pojo.record.FinishPurchaseReq;
 import thriving.softwood.kaishi.biz.pojo.vo.DlyBuyVO;
 import thriving.softwood.kaishi.biz.pojo.vo.PurchaseTraceVO;
 import thriving.softwood.kaishi.infrastructure.db.kaishi2026.entity.extend.PurchaseTraceOrder;

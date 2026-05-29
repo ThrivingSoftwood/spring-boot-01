@@ -2,7 +2,7 @@ package thriving.softwood.customer.first.infrastructure.db.master.mapper.base;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import thriving.softwood.common.auth.infrastructure.db.master.entity.base.SysDictionary;
+import thriving.softwood.customer.first.infrastructure.db.master.entity.base.SysDictionary;
 
 /**
  * <p>
